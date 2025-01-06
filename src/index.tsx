@@ -6,16 +6,8 @@ import reportWebVitals from './reportWebVitals.ts';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { CollaboratorsPage } from './pages/CollaboratorPage.tsx'; 
+import { ClientDashboard } from './pages/ClientDashboard.tsx';
 
-
-// const root = ReactDOM.createRoot(
-//   document.getElementById('root') as HTMLElement
-// );
-// root.render(
-//   <React.StrictMode>
-//     <LoginForm />
-//   </React.StrictMode>
-// );
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -28,6 +20,7 @@ root.render(
         <Route path="/" element={<LoginForm />} />
         {/* Ruta para la página de colaboradores */}
         <Route path="/collaborators" element={<CollaboratorsPage />} />
+        <Route path="/clients" element={<ClientDashboard />} />
       </Routes>
     </Router>
   </React.StrictMode>
