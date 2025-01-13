@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SidebarItem } from '../components/SidebarItem.tsx';
 import { ClientHeader } from '../components/loans/ClientHeader.tsx';
 import { LoanCard } from '../components/loans/LoanCard.tsx';
+import { LoanForm } from '../components/Modal/Loand/LoanForm.tsx';
 
 const sidebarItems = [
   { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/d09fa7973c351f42fadb27aaffc6408f9ecf89c6b3adf2f3fbb8cc091b8e9274?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Home", isActive: true },
@@ -58,6 +59,11 @@ const loans = [
 ];
 
 export const ClientDetails: React.FC = () => {
+  const [isFormVisible, setIsFormVisible] = React.useState(false);
+
+  const toggleFormVisibility = () => {
+    setIsFormVisible(!isFormVisible);
+  };
   return (
     <div className="overflow-hidden pr-14 bg-neutral-900 max-md:pr-5">
       <div className="flex gap-5 max-md:flex-col">
@@ -86,7 +92,10 @@ export const ClientDetails: React.FC = () => {
               <div className="flex flex-wrap gap-5 justify-between max-w-full w-[1009px]">
                 <ClientHeader name="Ricardo morales" code="505" />
                 <div className="flex flex-wrap gap-2 self-end mt-8 text-base font-light tracking-wide text-zinc-100">
-                  <button className="flex gap-2 px-6 py-4 text-xs tracking-wide rounded-md bg-zinc-700 shadow-[0px_0px_10px_rgba(38,71,95,0.25)] max-md:px-5">
+                <button
+                    className="flex gap-2 px-6 py-4 text-xs tracking-wide rounded-md bg-zinc-700 shadow-[0px_0px_10px_rgba(38,71,95,0.25)] max-md:px-5"
+                    onClick={toggleFormVisibility}
+                  >
                     <img
                       loading="lazy"
                       src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/155fcbbe51a48658606cad8c9469975cc4857275ab817ef999d47c8bc8382d28?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
@@ -115,10 +124,42 @@ export const ClientDetails: React.FC = () => {
                   </button>
                 </div>
               </div>
-              <div className="flex shrink-0 self-stretch mt-4 h-px bg-stone-700 max-md:max-w-full" />
-              {loans.map((loan, index) => (
-                <LoanCard key={index} {...loan} />
-              ))}
+              {isFormVisible && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+    <div
+      className="relative bg-neutral-900 rounded-lg shadow-lg"
+      style={{
+        width: '30%', // Aumentar el ancho del modal
+        height: '90%', // Aumentar la altura del modal
+        padding: '20px',
+        overflowY: 'scroll', // Asegura el desplazamiento interno
+        borderRadius: '15px',
+      }}
+    >
+      <style>
+        {`
+          /* Ocultar el scroll en el modal */
+          .relative::-webkit-scrollbar {
+            display: none;
+          }
+          .relative {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE y Edge */
+          }
+        `}
+      </style>
+      <LoanForm valor={'6000'} tipoInteres={'anual'} interes={'10%'} pago={'500'} fechaPrestamo={'2025-01-12'} nota={'prueba'} />
+      <button
+        className="absolute top-3 right-3 text-red-500"
+        onClick={toggleFormVisibility} // Cerrar ventana emergente
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+)}
+              {!isFormVisible &&
+                loans.map((loan, index) => <LoanCard key={index} {...loan} />)}
             </section>
           </div>
         </main>
@@ -126,3 +167,5 @@ export const ClientDetails: React.FC = () => {
     </div>
   );
 };
+
+

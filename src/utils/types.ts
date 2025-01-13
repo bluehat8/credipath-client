@@ -3,6 +3,7 @@ export interface InputFieldProps {
     placeholder: string;
     type?: string;
     id: string;
+    value:string
   }
   
 export interface ButtonProps {
@@ -23,7 +24,6 @@ export interface SidebarItemProps {
     text: string;
     isActive?: boolean;
 }
-
 
 
 export interface LoanFormData {

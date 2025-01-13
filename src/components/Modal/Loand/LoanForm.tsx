@@ -1,17 +1,39 @@
 import * as React from "react";
-import { InputField } from "./LoandInputField";
+import { InputField } from "./LoandInputField.tsx";
 
-export const LoanForm: React.FC = () => {
-  const [formData, setFormData] = React.useState({
-    valor: "10000",
-    tipoInteres: "Fijo",
-    interes: "5%",
-    pago: "200",
-    fechaPrestamo: "2025-01-01",
-    nota: "Préstamo inicial para el cliente A",
+interface LoanFormProps {
+  
+    valor: string;
+    tipoInteres: string;
+    interes: string;
+    pago: string;
+    fechaPrestamo: string;
+    nota: string;
+}
+
+
+export const LoanForm: React.FC<LoanFormProps> = (prop) => {
+  const [formdata1,setFormData] = React.useState({
+    valor:  prop?.valor || "100",
+    tipoInteres: prop?.tipoInteres || "anual",
+    interes: prop?.tipoInteres || "100",
+    pago: prop?.pago || "100",
+    fechaPrestamo:  prop?.fechaPrestamo || "100",
+    nota:  prop?.nota || "100",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const formData = {
+    valor:  prop?.valor || "100",
+    tipoInteres: prop?.tipoInteres || "anual",
+    interes: prop?.tipoInteres || "100",
+    pago: prop?.pago || "100",
+    fechaPrestamo:  prop?.fechaPrestamo || "100",
+    nota:  prop?.nota || "100",
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -24,10 +46,12 @@ export const LoanForm: React.FC = () => {
     console.log("Datos enviados:", formData);
   };
 
+  console.log("Datos enviados:", formData);
+
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex overflow-hidden flex-col px-6 py-7 mx-auto w-full text-lg leading-normal text-white bg-neutral-900 max-w-[480px] rotate-[2.7755575615628914e-17rad] rounded-[42px]"
+      className="flex overflow-hidden flex-col px-6 py-7 mx-auto w-full text-lg leading-normal text-white bg-neutral-900 max-w-[480px] rounded-[42px]"
     >
       <div className="flex gap-5 justify-between w-full text-xl font-medium leading-tight max-w-[273px]">
         <img
@@ -36,14 +60,15 @@ export const LoanForm: React.FC = () => {
           alt=""
           className="object-contain shrink-0 self-start rounded-none aspect-square w-[21px]"
         />
-        <div className="rotate-[-5.316684527466619e-17rad]">Agregar Prestamo</div>
+        <div>Agregar Prestamo</div>
       </div>
 
       <InputField
         label="Valor"
         id="valor"
         value={formData.valor}
-        onChange={handleInputChange} placeholder={""}      />
+        onChange={handleInputChange} 
+        placeholder={""}      />
       <InputField
         label="Tipo de Interes"
         id="tipoInteres"
@@ -73,14 +98,14 @@ export const LoanForm: React.FC = () => {
 
       <button
         type="submit"
-        className="px-16 py-5 mt-8 font-medium whitespace-nowrap bg-blue-600 rounded-3xl rotate-[-5.316684527466619e-17rad]"
+        className="px-16 py-5 mt-8 font-medium whitespace-nowrap bg-blue-600 rounded-3xl"
       >
         Save
       </button>
 
       <button
         type="button"
-        className="self-center mt-9 text-sm leading-loose rotate-[-5.316684527466619e-17rad]"
+        className="self-center mt-9 text-sm leading-loose"
       >
         Cancel
       </button>
