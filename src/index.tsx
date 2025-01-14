@@ -9,6 +9,8 @@ import { CollaboratorsPage } from './pages/CollaboratorPage.tsx';
 import { ClientDashboard } from './pages/ClientDashboard.tsx';
 import { ClientDetails } from './pages/ClientDetailsPage.tsx';
 import { HomePage } from './pages/HomePage.tsx';
+import { RoutesPage } from './pages/RoutesPage.tsx';
+
 
 
 const root = ReactDOM.createRoot(
@@ -25,6 +27,8 @@ root.render(
         <Route path="/clients" element={<ClientDashboard />} />
         <Route path="/details-client" element={<ClientDetails />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/routes" element={<RoutesPage />} />
+
 
       </Routes>
     </Router>
