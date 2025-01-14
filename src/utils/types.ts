@@ -3,6 +3,7 @@ export interface InputFieldProps {
     placeholder: string;
     type?: string;
     id: string;
+    value:string
   }
   
 export interface ButtonProps {
@@ -24,6 +25,23 @@ export interface SidebarItemProps {
     isActive?: boolean;
 }
 
+
+export interface LoanFormData {
+  value: string;
+  interestType: string;
+  interest: string;
+  payment: string;
+  loanDate: string;
+  note: string;
+}
+
+export interface InputFieldProps {
+  label: string;
+  id: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  height?: string;
+}
 
 export interface SidebarItemProps {
     icon: string;
