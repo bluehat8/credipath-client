@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { ClientHeader } from '../components/loans/ClientHeader.tsx';
 import { LoanCard } from '../components/loans/LoanCard.tsx';
-import { Layout as Sidebar } from '../components/sidebar/Layout.tsx'; 
+import { Layout as Sidebar } from '../components/sidebar/Layout.tsx';
+import { LoanForm } from '../components/Modal/Loand/LoanForm.tsx';
+
 
 const loans = [
   {
@@ -47,6 +49,14 @@ const loans = [
 ];
 
 export const ClientDetails: React.FC = () => {
+
+
+  const [isFormVisible, setIsFormVisible] = React.useState(false);
+
+  const toggleFormVisibility = () => {
+    setIsFormVisible(!isFormVisible);
+  };
+
   return (
     <Sidebar>
       <div className="max-md:flex-col w-full">
@@ -61,7 +71,7 @@ export const ClientDetails: React.FC = () => {
               <div className="flex flex-wrap gap-5 justify-between max-w-full w-full">
                   <ClientHeader name="Ricardo morales" code="505" />
                   <div className="flex flex-wrap gap-2 self-end mt-8 text-base font-light tracking-wide text-zinc-100">
-                    <button className="flex gap-2 px-6 py-4 text-xs tracking-wide rounded-md bg-zinc-700 shadow-[0px_0px_10px_rgba(38,71,95,0.25)] max-md:px-5">
+                    <button onClick={toggleFormVisibility} className="flex gap-2 px-6 py-4 text-xs tracking-wide rounded-md bg-zinc-700 shadow-[0px_0px_10px_rgba(38,71,95,0.25)] max-md:px-5">
                       <img
                         loading="lazy"
                         src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/155fcbbe51a48658606cad8c9469975cc4857275ab817ef999d47c8bc8382d28?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
@@ -95,6 +105,43 @@ export const ClientDetails: React.FC = () => {
                   <LoanCard key={index} {...loan} />
                 ))}
               </div>
+
+
+              {isFormVisible && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+                  <div
+                    className="relative bg-neutral-900 rounded-lg shadow-lg"
+                    style={{
+                      width: '30%',
+                      height: '90%', 
+                      padding: '20px',
+                      overflowY: 'scroll', 
+                      borderRadius: '15px',
+                    }}
+                  >
+                    <style>
+                      {`
+                        /* Ocultar el scroll en el modal */
+                        .relative::-webkit-scrollbar {
+                          display: none;
+                        }
+                        .relative {
+                          scrollbar-width: none; /* Firefox */
+                          -ms-overflow-style: none; /* IE y Edge */
+                        }
+                      `}
+                    </style>
+                    <LoanForm valor={'6000'} tipoInteres={'anual'} interes={'10%'} pago={'500'} fechaPrestamo={'2025-01-12'} nota={'prueba'} />
+                    <button
+                      className="absolute top-3 right-3 text-red-500"
+                      onClick={toggleFormVisibility}
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              )}
+              
             </div>
           </section>
         </div>
