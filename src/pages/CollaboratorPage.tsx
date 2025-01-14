@@ -34,12 +34,12 @@ export function CollaboratorsPage() {
         <section className="flex flex-col ml-5  max-md:ml-0 max-md:w-full">
           <div className="flex flex-col self-stretch my-auto max-md:mt-10 max-md:max-w-full">
             <h1 className="self-start text-xl font-medium text-white tracking-[3px]">
-              Colaboradores
+              Rutas
             </h1>
             <section className="flex flex-col items-center pt-12 pb-40 mt-6 w-full rounded-xl bg-zinc-800 max-md:pb-24 max-md:max-w-full">
               <div className="flex flex-wrap gap-5 justify-between max-w-full w-[1019px]">
                 <div className="my-auto text-xl font-medium tracking-wider text-white">
-                  Control de colaboradores
+                  Control de rutas
                 </div>
                 <button className="flex gap-9 px-7 py-3 text-base font-light tracking-wide rounded-md shadow-[0px_0px_10px_rgba(38,71,95,0.25)] text-zinc-100 max-md:px-5">
                   <img
