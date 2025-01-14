@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { CollaboratorsPage } from './pages/CollaboratorPage.tsx'; 
 import { ClientDashboard } from './pages/ClientDashboard.tsx';
 import { ClientDetails } from './pages/ClientDetailsPage.tsx';
-
+import { HomePage } from './pages/HomePage.tsx';
 
 
 const root = ReactDOM.createRoot(
@@ -24,6 +24,7 @@ root.render(
         <Route path="/collaborators" element={<CollaboratorsPage />} />
         <Route path="/clients" element={<ClientDashboard />} />
         <Route path="/details-client" element={<ClientDetails />} />
+        <Route path="/home" element={<HomePage />} />
 
       </Routes>
     </Router>

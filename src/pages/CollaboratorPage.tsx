@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CollaboratorCard } from "../components/CollaboratorCard.tsx";
-import { SidebarItem } from "../components/SidebarItem.tsx";
+import { Layout as Sidebar } from '../components/sidebar/Layout.tsx'; 
 
 const collaborators = [
   {
@@ -25,43 +25,13 @@ const collaborators = [
   }
 ];
 
-const sidebarItems = [
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/265a65d73163a5592ceb1a49c851a0cf2acaff5eb879983589eb155ee337db72?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Home" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/4c2c37551e85533928ad12c06a6aa3f9651d2ef33f33fb30cca9af4960e453c5?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Rutas" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/7e9dc196c1b8f050673419e90c7ffc560d1ff99e233282c449cec6ae029d7f48?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Clientes" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/b9d830dc3450c67d618510326573f2e6a971eadbc72628c776da3a8442345db8?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Cuotas vencidas" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/faf1ca0a9a2b3d3630b50fd37a65f6db303c5d8aeb9a77e69931afba275d3d33?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Cobros pendientes" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/987d2e361ce940f790f57d63595f0b86e1e9ad6fa424e48dd2d55475d01d5123?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Colaboradores" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/3fdd60087f660b5f80dabbac0dfe14a0922a3d9bee3ba2d8fef6d56c07048a72?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Reportes" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/3fdd60087f660b5f80dabbac0dfe14a0922a3d9bee3ba2d8fef6d56c07048a72?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Administración" }
-];
-
 export function CollaboratorsPage() {
   return (
-    <div className="overflow-hidden pr-14 bg-neutral-900 max-md:pr-5">
-      <div className="flex gap-5 max-md:flex-col">
-        <nav className="flex flex-col w-1/5 max-md:ml-0 max-md:w-full" aria-label="Main navigation">
-          <div className="flex flex-col px-10 pt-9 mx-auto w-full text-xs font-semibold bg-zinc-800 pb-[477px] text-slate-50 max-md:px-5 max-md:pb-24 max-md:mt-10">
-            <div className="flex gap-4 text-base font-extrabold text-green-400 whitespace-nowrap tracking-[2.25px]">
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/1a5634e08ceb06be68db61832012e7447a8ef72dfb0574e03a289df23d96806a?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
-                className="object-contain shrink-0 rounded-none aspect-[2] w-[60px]"
-                alt="Credipath logo"
-              />
-              <div className="grow shrink my-auto w-[93px]">CREDIPATH</div>
-            </div>
-            {sidebarItems.map((item, index) => (
-              <SidebarItem
-                key={index}
-                icon={item.icon}
-                text={item.text}
-                isActive={item.text === "Colaboradores"}
-              />
-            ))}
-          </div>
-        </nav>
-        <main className="flex flex-col ml-5 w-4/5 max-md:ml-0 max-md:w-full">
+    <Sidebar>
+    <div className="max-md:flex-col w-full">
+      <div className="gap-5 max-md:flex-col">
+  
+        <section className="flex flex-col ml-5  max-md:ml-0 max-md:w-full">
           <div className="flex flex-col self-stretch my-auto max-md:mt-10 max-md:max-w-full">
             <h1 className="self-start text-xl font-medium text-white tracking-[3px]">
               Colaboradores
@@ -81,7 +51,7 @@ export function CollaboratorsPage() {
                   <span>Agregar colaboradoes</span>
                 </button>
               </div>
-              <div className="flex shrink-0 self-stretch mt-8 h-px bg-stone-700 max-md:max-w-full" />
+              <div className="lex shrink-0 self-stretch mt-4 h-px bg-stone-700 max-md:max-w-full" />
               {collaborators.map((collaborator, index) => (
                 <CollaboratorCard
                   key={index}
@@ -92,8 +62,9 @@ export function CollaboratorsPage() {
               ))}
             </section>
           </div>
-        </main>
+        </section>
       </div>
     </div>
+    </Sidebar>
   );
 }

@@ -3,8 +3,8 @@ import { ClientCardProps } from "../utils/types";
 
 export const ClientCard: React.FC<ClientCardProps> = ({ name, phone, countryCode, email, profileImage }) => {
   return (
-    <div className="flex flex-wrap gap-5 justify-between py-5 pr-14 pl-7 mt-5 max-w-full text-xs font-light tracking-wide text-white rounded-xl bg-zinc-700 w-[1009px] max-md:px-5">
-      <div className="flex gap-5">
+<div className="flex flex-wrap gap-5 justify-between py-5 pr-14 pl-7 mt-5 max-w-full text-xs font-light tracking-wide text-white rounded-xl bg-zinc-700 w-full mx-auto max-lg:w-full max-lg:px-5">
+<div className="flex gap-5">
         <div className="flex shrink-0 my-auto bg-green-400 rounded-full h-[52px] w-[52px]" 
              role="img" 
              aria-label={`Profile picture of ${name}`} />

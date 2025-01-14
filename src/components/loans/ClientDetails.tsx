@@ -1,19 +1,9 @@
 import * as React from 'react';
-import { SidebarItem } from '../SidebarItem';
 import { ClientHeader } from './ClientHeader';
 import { LoanCard } from './LoanCard';
 import { text } from 'stream/consumers';
 
-const sidebarItems = [
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/d09fa7973c351f42fadb27aaffc6408f9ecf89c6b3adf2f3fbb8cc091b8e9274?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Home", isActive: true },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/94a6ad8327b2054489aad3c61bb8819b51c383017e9ad737c70bb3288ddd03f7?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Rutas" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/7e9dc196c1b8f050673419e90c7ffc560d1ff99e233282c449cec6ae029d7f48?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Clientes" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/b9d830dc3450c67d618510326573f2e6a971eadbc72628c776da3a8442345db8?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Cuotas vencidas" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/a11ff7fad8f5fe8f31e4e78b279e24e7847314e26c49279cf5f8e2662c072130?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Cobros pendientes" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/d0e97c591b5287608106897583394155069189e1ca30937d3c7d3eecce2f44ba?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Colaboradores" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/3fdd60087f660b5f80dabbac0dfe14a0922a3d9bee3ba2d8fef6d56c07048a72?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Reportes" },
-  { icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/3fdd60087f660b5f80dabbac0dfe14a0922a3d9bee3ba2d8fef6d56c07048a72?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&", text: "Administración" }
-];
+
 
 const loans = [
   {
@@ -62,31 +52,7 @@ export const ClientDetails: React.FC = () => {
   return (
     <div className="overflow-hidden pr-14 bg-neutral-900 max-md:pr-5">
       <div className="flex gap-5 max-md:flex-col">
-        <nav className="flex flex-col w-1/5 max-md:ml-0 max-md:w-full" aria-label="Main navigation">
-          <div className="flex flex-col px-10 pt-9 mx-auto w-full text-xs font-semibold bg-zinc-800 pb-[477px] text-slate-50 max-md:px-5 max-md:pb-24 max-md:mt-10">
-            <div className="flex gap-4 text-base font-extrabold text-green-400 whitespace-nowrap tracking-[2.25px]">
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/e0105872c3855e766fc1878bbbc5215aea591a49bb6cbdb3b7aad7e38cc5291c?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
-                alt="Credipath logo"
-                className="object-contain shrink-0 rounded-none aspect-[2] w-[60px]"
-              />
-              <div className="grow shrink my-auto w-[93px]">CREDIPATH</div>
-            </div>
-            {/* {sidebarItems.map((item, index) => (
-              <SidebarItem key={index} {...item} />
-            ))} */}
-
-             {sidebarItems.map((item, index) => (
-                          <SidebarItem
-                            key={index}
-                            icon={item.icon}
-                            text={item.text}
-                            isActive={item.text === "Colaboradores"}
-                          />
-            ))}
-          </div>
-        </nav>
+      
         <main className="flex flex-col ml-5 w-4/5 max-md:ml-0 max-md:w-full">
           <div className="flex flex-col self-stretch my-auto max-md:mt-10 max-md:max-w-full">
             <h1 className="self-start text-xl font-medium text-white tracking-[3px]">
