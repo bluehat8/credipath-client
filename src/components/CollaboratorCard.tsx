@@ -9,7 +9,7 @@ export const CollaboratorCard: React.FC<CollaboratorCardProps> = ({
   onDelete
 }) => {
   return (
-    <div className="flex flex-wrap gap-5 justify-between py-5 pr-20 pl-7 mt-5 max-w-full font-light rounded-xl bg-zinc-700 w-[1009px] max-md:px-5">
+    <div className="flex flex-wrap gap-5 justify-between py-5 pr-20 pl-7 mt-5 max-w-full font-light rounded-xl bg-zinc-700 w-full max-md:px-5">
       <div className="flex gap-5 text-xs tracking-wide text-white">
       <div className="flex shrink-0 my-auto bg-green-400 rounded-full h-[52px] w-[52px]" role="presentation" />
       <div className="flex flex-col">

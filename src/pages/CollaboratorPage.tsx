@@ -36,7 +36,7 @@ export function CollaboratorsPage() {
             <h1 className="self-start text-xl font-medium text-white tracking-[3px]">
               Colaboradores
             </h1>
-            <section className="flex flex-col items-center pt-12 pb-40 mt-6 w-full rounded-xl bg-zinc-800 max-md:pb-24 max-md:max-w-full">
+            <section className="flex flex-col items-center p-8 pt-12 pb-40 mt-6 w-full rounded-xl bg-zinc-800 max-md:pb-24 max-md:max-w-full">
               <div className="flex flex-wrap gap-5 justify-between max-w-full w-[1019px]">
                 <div className="my-auto text-xl font-medium tracking-wider text-white">
                   Control de colaboradores
