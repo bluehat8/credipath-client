@@ -1,6 +1,10 @@
 import * as React from "react";
 import { ClientCard } from "../components/ClientCard.tsx";
 import { Layout as Sidebar } from "../components/sidebar/Layout.tsx";
+import { ClientForm } from "../components/Modal/Client/ClientForm.tsx";
+
+
+
 
 const clients = [
   {
@@ -17,11 +21,15 @@ const clients = [
 ];
 
 export const ClientDashboard: React.FC = () => {
+  const [isFormVisible, setIsFormVisible] = React.useState(false);
+
+  const handleOpenForm = () => setIsFormVisible(true);
+  const handleCloseForm = () => setIsFormVisible(false);
+
   return (
     <Sidebar>
       <div className="max-md:flex-col w-full">
-      
-        <section className="flex flex-col ml-5  max-md:ml-0 max-md:w-full" role="main">
+        <section className="flex flex-col ml-5 max-md:ml-0 max-md:w-full" role="main">
           <div className="flex flex-col self-stretch my-auto max-md:mt-10 max-md:max-w-full">
             <h1 className="self-start text-xl font-medium text-white tracking-[3px] w-full">
               Clientes
@@ -31,7 +39,10 @@ export const ClientDashboard: React.FC = () => {
                 <div className="my-auto text-xl font-medium tracking-wider text-white">
                   Control de clientes
                 </div>
-                <button className="flex gap-9 px-7 py-3 text-base font-light tracking-wide rounded-md shadow-[0px_0px_10px_rgba(38,71,95,0.25)] text-zinc-100 max-md:px-5">
+                <button
+                  onClick={handleOpenForm}
+                  className="flex gap-9 px-7 py-3 text-base font-light tracking-wide rounded-md shadow-[0px_0px_10px_rgba(38,71,95,0.25)] text-zinc-100 max-md:px-5"
+                >
                   <img
                     loading="lazy"
                     src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/9591f2ca09194501728cd7a7510d2335660bb9c18ab47b8725e9d36750669016?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
@@ -48,6 +59,23 @@ export const ClientDashboard: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* Formulario emergente */}
+        {isFormVisible && (
+  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div className="relative p-6 rounded-lg">
+      <button
+        onClick={handleCloseForm}
+        className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-700"
+      >
+        X
+      </button>
+      <div className="overflow-auto">
+        <ClientForm />
+      </div>
+    </div>
+  </div>
+)}
       </div>
     </Sidebar>
   );
