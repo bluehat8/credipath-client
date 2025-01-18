@@ -1,19 +1,19 @@
 import React from "react";
 
-const CollaboratorForm = ({ isOpen, onClose,onSave }) => {
+const CollaboratorForm = ({ isOpen, onClose, onSave }) => {
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
       role="dialog"
       aria-labelledby="modal-title"
       aria-hidden="true"
     >
-      <div className="bg-gray-800 rounded-lg shadow-lg w-full max-w-3xl p-6 sm:p-8">
+      <div className="bg-primary-native border-green-native rounded-lg shadow-lg w-full max-w-screen-lg p-6 sm:p-8 lg:px-12 lg:py-10">
         {/* Header */}
         <div className="flex justify-between items-center border-b border-gray-700 pb-4">
-          <h2 id="modal-title" className="text-xl font-semibold text-gray-100">
+          <h2 id="modal-title" className="text-xl lg:text-2xl font-semibold text-gray-100">
             Agregar Colaborador
           </h2>
           <button
@@ -40,7 +40,7 @@ const CollaboratorForm = ({ isOpen, onClose,onSave }) => {
 
         {/* Formulario */}
         <form className="mt-6 space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {/* Inputs del lado izquierdo */}
             <div className="space-y-4">
               <input
@@ -76,38 +76,9 @@ const CollaboratorForm = ({ isOpen, onClose,onSave }) => {
             </div>
 
             {/* Permisos */}
-            <div className="space-y-4">
-              <fieldset>
-                <legend className="text-gray-300 font-medium">Permisos Cliente</legend>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500"
-                    >
-                      Agregar
-                    </button>
-                    <button
-                      type="button"
-                      className="px-4 py-2 bg-gray-600 text-gray-200 rounded-lg hover:bg-gray-500"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      type="button"
-                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-              </fieldset>
-
-
+            <div className="space-y-4 lg:col-span-2">
               
-          {/*permisos de Prestamo*/}
-
-          <fieldset>
+            <fieldset>
                 <legend className="text-gray-300 font-medium">Permisos de Prestamo</legend>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
@@ -166,41 +137,53 @@ const CollaboratorForm = ({ isOpen, onClose,onSave }) => {
           {/*permisos de modulo*/}
 
           <fieldset>
-  <legend className="text-gray-300 font-medium">Permisos de Modulo</legend>
-  <div className="flex flex-wrap gap-3">
-    <button
-      type="button"
-      className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500  w-full sm:w-auto"
-    >
-      Colaboradores
-    </button>
-    <button
-      type="button"
-      className="flex-1 px-4 py-2 bg-gray-600 text-gray-200 rounded-lg hover:bg-gray-500  w-full sm:w-auto"
-    >
-      Pagos Vencidos
-    </button>
-    <button
-      type="button"
-      className="flex-1 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500  w-full sm:w-auto"
-    >
-      Proximos Pagos
-    </button>
-    <button
-      type="button"
-      className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500  w-full sm:w-auto"
-    >
-      Abonar Prestamo
-    </button>
-    <button
-      type="button"
-      className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-500  w-full sm:w-auto"
-    >
-      Reporte Estimado VS Real
-    </button>
-  </div>
-</fieldset>
+            <legend className="text-gray-300 font-medium">Permisos de Módulo</legend>
 
+            <div className="gap-4">
+            <div className="grid grid-cols-3 gap-4">
+              <button
+                type="button"
+                className="px-4 py-2 bg-permission active text-white rounded-lg hover:bg-green-500"
+              >
+                Colaboradores
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 bg-permission rounded-lg hover:bg-gray-500"
+              >
+                Pagos Vencidos
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 bg-permission active text-white rounded-lg"
+              >
+                Próximos Pagos
+              </button>
+
+              </div>
+
+              <div className="grid grid-cols-2 mt-3 gap-4">
+
+              <button
+                type="button"
+                className="px-4 py-2 bg-permission active text-white rounded-lg"
+              >
+                Abonar Préstamo
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 bg-permission active text-white rounded-lg"
+              >
+                Reporte Estimado VS Real
+              </button>
+
+              </div>
+              </div>
+          </fieldset>
+
+
+              {/* Otros permisos */}
+              {/* Aquí van otros fieldsets para préstamos, pagos, módulos */}
             </div>
           </div>
 

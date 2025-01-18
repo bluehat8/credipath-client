@@ -22,3 +22,23 @@ code {
 .bg-green-native{
   background:linear-gradient(45deg, #44995C, #50C271);
 }
+
+
+.border-green-native {
+  border: 1px solid #3c5543; 
+  border-radius: 8px; 
+}
+
+
+.bg-permission{
+  background-color: #FFFFFF;
+}
+
+.bg-permission.active{
+  background-color: rgba(80, 194, 113, 0.15); 
+
+}
+
+.bg-primary-native{
+  background-color: #141618;
+}

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { CollaboratorCard } from "../components/CollaboratorCard.tsx";
 import { Layout as Sidebar } from '../components/sidebar/Layout.tsx'; 
+import CollaboratorForm from "../components/Modal/collaborator/CollaboratorForm.tsx";
 
 const collaborators = [
   {
@@ -26,6 +27,17 @@ const collaborators = [
 ];
 
 export function CollaboratorsPage() {
+
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const handleAddCollaborator = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Sidebar>
     <div className="max-md:flex-col w-full">
@@ -41,15 +53,18 @@ export function CollaboratorsPage() {
                 <div className="my-auto text-xl font-medium tracking-wider text-white">
                   Control de colaboradores
                 </div>
-                <button className="flex gap-9 px-7 py-3 text-base font-light tracking-wide rounded-md shadow-[0px_0px_10px_rgba(38,71,95,0.25)] text-zinc-100 max-md:px-5">
-                  <img
-                    loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/9591f2ca09194501728cd7a7510d2335660bb9c18ab47b8725e9d36750669016?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
-                    className="object-contain shrink-0 w-6 aspect-square"
-                    alt=""
-                  />
-                  <span>Agregar colaboradoes</span>
-                </button>
+                <button
+                    className="flex gap-9 px-7 py-3 text-base font-light tracking-wide rounded-md shadow-[0px_0px_10px_rgba(38,71,95,0.25)] text-zinc-100 max-md:px-5"
+                    onClick={handleAddCollaborator}
+                  >
+                    <img
+                      loading="lazy"
+                      src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/9591f2ca09194501728cd7a7510d2335660bb9c18ab47b8725e9d36750669016?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
+                      className="object-contain shrink-0 w-6 aspect-square"
+                      alt=""
+                    />
+                    <span>Agregar colaborador</span>
+                  </button>
               </div>
               <div className="lex shrink-0 self-stretch mt-4 h-px bg-stone-700 max-md:max-w-full" />
               {collaborators.map((collaborator, index) => (
@@ -65,6 +80,18 @@ export function CollaboratorsPage() {
         </section>
       </div>
     </div>
+
+    {isModalOpen && (      
+            <CollaboratorForm
+                onClose={handleCloseModal}
+                onSave={(collaborator) => {
+                  console.log("Nuevo colaborador:", collaborator);
+                  setIsModalOpen(false);
+                } } isOpen={true}        
+              />
+
+      )}
+
     </Sidebar>
   );
 }
