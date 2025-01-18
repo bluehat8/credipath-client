@@ -17,3 +17,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.bg-green-native{
+  background:linear-gradient(45deg, #44995C, #50C271);
+}

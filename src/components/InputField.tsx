@@ -9,7 +9,7 @@ export const InputField: React.FC<InputFieldProps> = ({ label, placeholder, type
         type={type}
         id={id}
         placeholder={placeholder}
-        className="px-6 py-5 rounded-md border border-solid border-neutral-600 text-neutral-600 max-md:px-5 max-md:max-w-full"
+        className="px-6 py-5 rounded-md border border-solid border-stone-500 bg-transparent max-md:px-5 max-md:max-w-full"
         aria-label={label}
       />
     </div>

@@ -7,6 +7,10 @@
   pointer-events: none;
 }
 
+.bg-green-native{
+  background-color:linear-gradient(45deg, #44995C, #50C271) !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
