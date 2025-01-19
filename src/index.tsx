@@ -10,6 +10,8 @@ import { ClientDashboard } from './pages/ClientDashboard.tsx';
 import { ClientDetails } from './pages/ClientDetailsPage.tsx';
 import { HomePage } from './pages/HomePage.tsx';
 import { RoutesPage } from './pages/RoutesPage.tsx';
+import { LoanDetails } from './pages/LoanDetails.tsx';
+
 
 
 
@@ -28,6 +30,8 @@ root.render(
         <Route path="/details-client" element={<ClientDetails />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/routes" element={<RoutesPage />} />
+        <Route path="/loan-details" element={<LoanDetails />} />
+
 
 
       </Routes>
