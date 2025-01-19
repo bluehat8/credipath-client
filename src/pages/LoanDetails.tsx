@@ -2,6 +2,7 @@ import * as React from "react";
 import { LoanHeader } from "../components/loan-details/LoanHeader.tsx";
 import { LoanPaymentCard } from "../components/loan-details/LoanPaymentCard.tsx";
 import { Layout as Sidebar } from "../components/sidebar/Layout.tsx";
+import { LoanDetailModal } from "../components/Modal/loan-details/LoanDetailModal.tsx";
 
 const paymentData = [
   {
@@ -44,6 +45,15 @@ export const LoanDetails: React.FC = () => {
     return payment.status === filter;
   });
 
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Sidebar>
       <div className="max-md:flex-col w-full">
@@ -77,6 +87,17 @@ export const LoanDetails: React.FC = () => {
                 />
                 <span className="text-sm font-medium text-white">ABONAR</span>
               </button>
+
+              <button onClick={openModal}  className="flex items-center gap-2 px-4 py-2 whitespace-nowrap rounded-md bg-zinc-700 shadow-[0px_0px_10px_rgba(38,71,95,0.25)] hover:bg-zinc-600 max-md:px-3">
+                <img
+                  loading="lazy"
+                  src="/icons/eye.svg"
+                  alt=""
+                  className="object-contain shrink-0 w-5 aspect-square"
+                />
+                <span className="text-sm font-medium text-white">Información</span>
+              </button>
+
               <button className="flex items-center gap-2 px-4 py-2 text-rose-600 whitespace-nowrap rounded-md bg-zinc-700 shadow-[0px_0px_10px_rgba(38,71,95,0.25)] hover:bg-zinc-600 max-md:px-3">
                 <img
                   loading="lazy"
@@ -85,6 +106,13 @@ export const LoanDetails: React.FC = () => {
                   className="object-contain shrink-0 w-5 aspect-square"
                 />
                 <span className="text-sm font-medium">Eliminar</span>
+              </button>
+              
+
+              <button 
+                className="bg-green-300 text-white p-3 rounded-full hover:bg-green-400 transition duration-200"
+              >
+                <img src="/icons/print.svg" alt="" />
               </button>
             </div>
           </div>
@@ -136,6 +164,33 @@ export const LoanDetails: React.FC = () => {
       </div>
       </div>
       </div>
+
+
+      { isModalOpen &&(
+              <LoanDetailModal
+                name="Ricardo Morales"
+                code="505"
+                loanAmount="200"
+                interestRate="0.05"
+                interestType="anual"
+                paymentFrequency="MENSUAL"
+                loanDate="2024-01-01"
+                nextDueDate="2024-02-01"
+                loanDueDate="2025-01-01"
+                overduePayments={2}
+                interestValue="10"
+                totalInterestValue="20"
+                paidInstallments={5}
+                installmentValue="50"
+                totalLoan="250"
+                loanWithInterest="270"
+                totalPaid="200"
+                totalBalance="70"
+                isModalOpen= {true}
+                onClose={handleCloseModal}
+              />
+      )};
+
     </Sidebar>
   );
 };
