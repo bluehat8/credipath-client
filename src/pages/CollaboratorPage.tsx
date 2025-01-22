@@ -5,22 +5,22 @@ import CollaboratorForm from "../components/Modal/collaborator/CollaboratorForm.
 
 const collaborators = [
   {
-    name: "Valeria Sánchez",
+    name: "Maria Sánchez",
     phone: "8222453",
     email: "alguien@example.com"
   },
   {
-    name: "Valeria Sánchez",
+    name: "Maria Sánchez",
     phone: "8222453",
     email: "alguien@example.com"
   },
   {
-    name: "Valeria Sánchez",
+    name: "Maria Sánchez",
     phone: "8222453",
     email: "alguien@example.com"
   },
   {
-    name: "Valeria Sánchez",
+    name: "Maria Sánchez",
     phone: "8222453",
     email: "alguien@example.com"
   }

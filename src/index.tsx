@@ -11,6 +11,8 @@ import { ClientDetails } from './pages/ClientDetailsPage.tsx';
 import { HomePage } from './pages/HomePage.tsx';
 import { RoutesPage } from './pages/RoutesPage.tsx';
 import { LoanDetails } from './pages/LoanDetails.tsx';
+import { ControlBalancePage } from './pages/ControlBalancePage.tsx';
+
 
 
 
@@ -31,6 +33,7 @@ root.render(
         <Route path="/home" element={<HomePage />} />
         <Route path="/routes" element={<RoutesPage />} />
         <Route path="/loan-details" element={<LoanDetails />} />
+        <Route path="/control-balance" element={<ControlBalancePage />} />
 
 
 
