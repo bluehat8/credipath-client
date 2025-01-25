@@ -113,8 +113,7 @@ export const ClientDetails: React.FC = () => {
                   <div
                     className="relative bg-neutral-900 rounded-lg shadow-lg"
                     style={{
-                      width: '30%',
-                      height: '90%', 
+                      
                       padding: '20px',
                       overflowY: 'scroll', 
                       borderRadius: '15px',
@@ -133,11 +132,12 @@ export const ClientDetails: React.FC = () => {
                       `}
                     </style>
                     <LoanForm valor={'6000'} tipoInteres={'anual'} interes={'10%'} pago={'500'} fechaPrestamo={'2025-01-12'} nota={'prueba'} />
+                  
                     <button
-                      className="absolute top-3 right-3 text-red-500"
+                      className="absolute top-4 right-4 text-black bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-400"
                       onClick={toggleFormVisibility}
                     >
-                      Cerrar
+                      &times;
                     </button>
                   </div>
                 </div>

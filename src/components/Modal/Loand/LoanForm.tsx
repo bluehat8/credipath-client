@@ -44,135 +44,103 @@ export const LoanForm: React.FC<LoanFormProps> = (prop) => {
 
   return (
     <>
-      <form
+     
+     <form
         onSubmit={(e) => e.preventDefault()}
-        className="flex flex-col px-6 py-7 mx-auto w-full text-lg leading-normal text-white bg-neutral-900 max-w-[480px] rounded-[42px]"
+        className="flex flex-col px-6 py-7 mx-auto w-full text-lg leading-normal text-white bg-neutral-900 max-w-[580px]"
       >
-        <div className="flex gap-5 justify-between w-full text-xl font-medium leading-tight max-w-[273px]">
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/f15bf28aed9434cafdaee35978df0f6c76ddaedadff30b9b2673601cf75c6d04?placeholderIfAbsent=true&apiKey=7930382fac3c4525a2ab54962694cee8"
-            alt=""
-            className="object-contain shrink-0 self-start rounded-none aspect-square w-[21px]"
-          />
+        <div className="flex gap-5 justify-between w-full text-xl font-medium leading-tight max-w-[273px] mb-5">
           <div>Agregar Préstamo</div>
         </div>
 
-        <InputField
-          label="Valor"
-          id="valor"
-          value={formData.valor}
-          onChange={handleInputChange}
-          placeholder="Ingrese el valor del préstamo"
-        />
-        <InputField
-          label="Tipo de Interés"
-          id="tipoInteres"
-          value={formData.tipoInteres}
-          onChange={handleInputChange}
-          placeholder="Anual, mensual, etc."
-        />
-        <InputField
-          label="Interés"
-          id="interes"
-          value={formData.interes}
-          onChange={handleInputChange}
-          placeholder="Ingrese la tasa de interés"
-        />
-        <InputField
-          label="Pago"
-          id="pago"
-          value={formData.pago}
-          onChange={handleInputChange}
-          placeholder="Ingrese el monto del pago"
-        />
-        <InputField
-          label="Fecha de Préstamo"
-          id="fechaPrestamo"
-          value={formData.fechaPrestamo}
-          onChange={handleInputChange}
-          placeholder="YYYY-MM-DD"
-        />
-        <InputField
-          label="Nota"
-          id="nota"
-          value={formData.nota}
-          height="h-[93px]"
-          onChange={handleInputChange}
-          placeholder="Notas adicionales"
-        />
+        <div className="grid grid-cols-2 gap-4">
+          {["valor", "tipoInteres", "interes", "pago", "fechaPrestamo"].map((field) => (
+            <InputField
+              key={field}
+              label={field.charAt(0).toUpperCase() + field.slice(1)}
+              id={field}
+              value={formData[field as keyof typeof formData]}
+              onChange={handleInputChange}
+              placeholder={`Ingrese ${field}`}
+            />
+          ))}
+        </div>
 
-        <button
-          type="button"
-          onClick={handleSimulation}
-          className="px-16 py-5 mt-4 font-medium whitespace-nowrap bg-green-600 rounded-3xl"
-        >
-          Simulación
-        </button>
-      </form>
+          <div className="mt-4">
+            <InputField
+              label="Nota"
+              id="nota"
+              value={formData.nota}
+              onChange={handleInputChange}
+              placeholder="Ingrese nota"
+              height="h-[93px]"
+            />
+          </div>
 
-      {/* Modal de Simulación */}
+          <button
+            type="button"
+            onClick={handleSimulation}
+            className="px-4 py-2 mt-4 flex items-center gap-2 font-medium text-green-400 bg-transparent border border-green-native rounded-full transition-all hover:bg-green-500 hover:text-white"
+          >
+            Simulación
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+              />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            className="px-6 py-3 mt-3 text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-all"
+          >
+            Guardar
+          </button>
+        </form>
+
+      {/* end form */}
+
       {isLoanListVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative bg-neutral-900 text-white rounded-lg w-[90%] max-w-6xl p-8 flex flex-col md:flex-row gap-8">
-            {/* Botón de Cerrar */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity">
+          <div className="relative bg-neutral-800 text-white rounded-lg w-[90%] max-w-5xl p-8 flex flex-col md:flex-row gap-8 shadow-xl transition-all">
             <button
-              className="absolute top-4 right-4 text-black bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center"
+              className="absolute top-4 right-4 text-black bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-400"
               onClick={closeLoanList}
             >
               &times;
             </button>
 
-            {/* Primera mitad: Formulario */}
-            <div className="flex-1">
+            <div className="flex-1 space-y-4">
               <h2 className="text-2xl font-bold mb-6">Formulario del Préstamo</h2>
-              <div className="space-y-4">
+              {["valor", "tipoInteres", "interes", "pago", "fechaPrestamo"].map((field) => (
                 <InputField
-                  label="Valor"
-                  id="valor"
-                  value={formData.valor}
+                  key={field}
+                  label={field.charAt(0).toUpperCase() + field.slice(1)}
+                  id={field}
+                  value={formData[field as keyof typeof formData]}
                   onChange={handleInputChange}
-                  placeholder="Ingrese el valor del préstamo"
+                  placeholder={`Ingrese ${field}`}
                 />
-                <InputField
-                  label="Tipo de Interés"
-                  id="tipoInteres"
-                  value={formData.tipoInteres}
-                  onChange={handleInputChange}
-                  placeholder="Anual, mensual, etc."
-                />
-                <InputField
-                  label="Interés"
-                  id="interes"
-                  value={formData.interes}
-                  onChange={handleInputChange}
-                  placeholder="Ingrese la tasa de interés"
-                />
-                <InputField
-                  label="Pago"
-                  id="pago"
-                  value={formData.pago}
-                  onChange={handleInputChange}
-                  placeholder="Ingrese el monto del pago"
-                />
-                <InputField
-                  label="Fecha de Préstamo"
-                  id="fechaPrestamo"
-                  value={formData.fechaPrestamo}
-                  onChange={handleInputChange}
-                  placeholder="YYYY-MM-DD"
-                />
-              </div>
+              ))}
             </div>
 
-            {/* Segunda mitad: Simulación */}
-            <div className="flex-1">
+            <div className="flex-1 space-y-4 max-h-[60vh] overflow-y-auto">
               <h2 className="text-2xl font-bold mb-6">Simulación</h2>
               <LoanSimulation />
             </div>
           </div>
         </div>
       )}
+
     </>
   );
 };
