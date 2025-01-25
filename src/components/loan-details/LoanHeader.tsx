@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 interface LoanDetailsProps {
   name: string;
@@ -21,12 +22,18 @@ export const LoanHeader: React.FC<LoanDetailsProps> = ({
     <div className="flex flex-col gap-4 text-white">
       {/* Header */}
       <div className="flex items-center gap-6">
+        <Link
+         to="/details-client" 
+         className="object-contain shrink-0 my-auto aspect-square w-[50px] relative flex items-center"
+         aria-label="Actions menu"
+        >
         <img
           loading="lazy"
           src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/7dd4d3c1b0767ac1023dcf0e825ce64a628057fdf7124b4fceefe0eb48be8874?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
           alt="Icon"
           className="object-contain aspect-square w-8"
         />
+        </Link>
         <span className="text-xl font-medium tracking-wider">{name}</span>
       </div>
 

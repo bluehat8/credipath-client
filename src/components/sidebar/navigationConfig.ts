@@ -45,9 +45,9 @@ export const navigationItems: NavigationItem[] = [
   },
   {
     id: 'reports',
-    icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/3fdd60087f660b5f80dabbac0dfe14a0922a3d9bee3ba2d8fef6d56c07048a72?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&",
-    label: "Reportes",
-    path: "/reports",
+    icon: "/icons/wallets.svg",
+    label: "Control gastos",
+    path: "/control-balance",
     ariaLabel: "View reports"
   },
   {

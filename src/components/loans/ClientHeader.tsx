@@ -1,15 +1,22 @@
 import * as React from 'react';
 import { ClientHeaderProps } from './type';
+import { Link } from 'react-router-dom';
 
 export const ClientHeader: React.FC<ClientHeaderProps> = ({ name, code }) => {
   return (
     <div className="flex flex-col items-start">
+      <Link
+        to="/clients" 
+        className="object-contain aspect-square w-[30px]"
+        aria-label="Actions menu"
+      >
       <img
         loading="lazy"
         src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/7dd4d3c1b0767ac1023dcf0e825ce64a628057fdf7124b4fceefe0eb48be8874?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
         alt=""
-        className="object-contain aspect-square w-[17px]"
+        className="object-contain aspect-square w-[30px]"
       />
+      </Link>
       <div className="mt-2 text-xl font-medium tracking-wider text-white">
         {name}
       </div>

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { LoanPaymentCardProps } from './types';
+import * as React from "react";
+import { LoanPaymentCardProps } from "./types";
 
 export const LoanPaymentCard: React.FC<LoanPaymentCardProps> = ({
   paymentNumber,
@@ -8,28 +8,47 @@ export const LoanPaymentCard: React.FC<LoanPaymentCardProps> = ({
   interestRate,
   amountPaid,
   interestBalance,
-  dueDate, 
-  status
+  dueDate,
+  status,
 }) => {
+
+
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const menuRef = React.useRef<HTMLDivElement | null>(null); 
+
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-wrap gap-5 justify-between py-4 pr-14 pl-6 mt-5 max-w-full text-xs font-light tracking-wide text-white rounded-xl bg-zinc-700 w-full max-md:px-5">
+    <div className="flex flex-wrap gap-5 justify-between py-4 pr-14 pl-6 mt-5 max-w-full text-xs font-light tracking-wide text-white rounded-xl bg-zinc-700 w-full max-md:px-5 relative">
       <div className="flex flex-wrap gap-10 max-md:max-w-full">
         <div className="flex gap-6">
-            <img
-              loading="lazy"
-              src={
-                status === "pending"
-                  ? "/icons/pending-card.svg"
-                  : status === "overdue"
-                  ? "/icons/overdue-card.svg"
-                  : status === "paid"
-                  ? "/icons/credit-card.svg"
-                  : "/icons/credit-card.svg" 
-              }
-              alt={`Loan status ${status}`}
-              className="object-contain shrink-0 my-auto rounded-none aspect-[2] w-[60px]"
-            />
-
+          <img
+            loading="lazy"
+            src={
+              status === "pending"
+                ? "/icons/pending-card.svg"
+                : status === "overdue"
+                ? "/icons/overdue-card.svg"
+                : status === "paid"
+                ? "/icons/credit-card.svg"
+                : "/icons/credit-card.svg"
+            }
+            alt={`Loan status ${status}`}
+            className="object-contain shrink-0 my-auto rounded-none aspect-[2] w-[60px]"
+          />
           <div className="flex flex-col items-start">
             <div className="text-base font-medium tracking-wide">
               Saldo capital: ${capitalBalance}
@@ -78,19 +97,58 @@ export const LoanPaymentCard: React.FC<LoanPaymentCardProps> = ({
                 alt=""
                 className="object-contain shrink-0 aspect-square w-[17px]"
               />
-              <div className="my-auto basis-auto">
-                Vence: {dueDate}
-              </div>
+              <div className="my-auto basis-auto">Vence: {dueDate}</div>
             </div>
           </div>
         </div>
       </div>
-      <img
-        loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/cd790db57f8e125b0bed33476a5de25a6046d988182cad8d13652e993e7a0452?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
-        alt=""
-        className="object-contain shrink-0 my-auto aspect-square w-[50px]"
-      />
+      {/* Dropdown button */}
+    
+      <div className="relative flex items-center">
+            <button
+              className="p-2 rounded-lg bg-gray-800 text-white hover:bg-gray-700 flex items-center justify-center"
+              aria-label="Abrir menú"
+              onClick={toggleMenu}
+            >
+              <svg
+                className="w-6 h-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              </svg>
+            </button>
+            {isMenuOpen && (
+              <div
+                ref={menuRef}
+                className="absolute z-50 right-0 mt-2 bg-gray-900 text-white shadow-xl rounded-lg w-48"
+              >
+                <ul className="py-2">
+                  <li className="px-4 py-3 hover:bg-gray-700 cursor-pointer transition-all duration-200">
+                    Editar fecha de vencimiento
+                  </li>
+                  <li className="px-4 py-3 hover:bg-gray-700 cursor-pointer transition-all duration-200">
+                    Ver detalles
+                  </li>
+                  <li className="px-4 py-3 hover:bg-gray-700 cursor-pointer transition-all duration-200">
+                    Abonar
+                  </li>
+                  <li className="px-4 py-3 hover:bg-gray-700 cursor-pointer transition-all duration-200">
+                    Imprimir
+                  </li>
+                </ul>
+              </div>
+            )}
+      </div>
+
+
     </div>
   );
 };

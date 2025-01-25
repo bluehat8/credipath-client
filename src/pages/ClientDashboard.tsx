@@ -3,28 +3,45 @@ import { ClientCard } from "../components/ClientCard.tsx";
 import { Layout as Sidebar } from "../components/sidebar/Layout.tsx";
 import { ClientForm } from "../components/Modal/Client/ClientForm.tsx";
 
-
-
-
 const clients = [
   {
     name: "Ricardo Morales",
     phone: "8222453",
     countryCode: "505",
     email: "alguien@example.com",
+    route: "Ruta 1",
   },
   {
     name: "Silvia Ramírez",
     phone: "8222453",
+    countryCode: "105",
     email: "alguien@example.com",
+    route: "Ruta 2",
+  },
+  {
+    name: "Antonio Ramírez",
+    phone: "8222453",
+    countryCode: "205",
+    email: "antonio22@example.com",
+    route: "Ruta 2",
   },
 ];
 
 export const ClientDashboard: React.FC = () => {
   const [isFormVisible, setIsFormVisible] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [selectedRoute, setSelectedRoute] = React.useState("");
 
   const handleOpenForm = () => setIsFormVisible(true);
   const handleCloseForm = () => setIsFormVisible(false);
+
+  const filteredClients = clients.filter(
+    (client) =>
+      (selectedRoute === "" || client.route === selectedRoute) &&
+      (client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        client.phone.includes(searchTerm) ||
+        client.email.toLowerCase().includes(searchTerm))
+  );
 
   return (
     <Sidebar>
@@ -35,7 +52,7 @@ export const ClientDashboard: React.FC = () => {
               Clientes
             </h1>
             <div className="flex flex-col items-center p-8 pt-12 pb-96 mt-6 w-full rounded-xl bg-zinc-800 max-md:pb-24 max-md:max-w-full">
-              <div className="flex flex-wrap gap-5 justify-between max-w-full w-[1019px]">
+              <div className="flex flex-wrap gap-5 justify-between max-w-full w-full">
                 <div className="my-auto text-xl font-medium tracking-wider text-white">
                   Control de clientes
                 </div>
@@ -53,29 +70,59 @@ export const ClientDashboard: React.FC = () => {
                 </button>
               </div>
               <div className="flex shrink-0 self-stretch mt-8 mb-8 h-px bg-stone-700 max-md:max-w-full" />
-              {clients.map((client, index) => (
-                <ClientCard key={index} {...client} />
-              ))}
+
+              {/* Filtros */}
+              {/* Filtros */}
+                <div className="flex flex-wrap gap-4 mb-6 w-full">
+                  <input
+                    type="text"
+                    placeholder="Buscar cliente..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="flex-1 px-4 py-2 text-sm text-gray-900 bg-gray-200 rounded-md focus:outline-none focus:ring focus:ring-blue-400 dark:text-gray-200 dark:bg-zinc-700 dark:placeholder-gray-400"
+                  />
+                 
+                 <select
+                    value={selectedRoute}
+                    onChange={(e) => setSelectedRoute(e.target.value)}
+                    className="px-4 py-2 text-sm text-gray-900 bg-gray-200 rounded-md focus:outline-none focus:ring focus:ring-blue-400 dark:text-gray-200 dark:bg-gray-700"
+                  >
+                    <option value="">Todas las rutas</option>
+                    <option value="Ruta 1">Ruta 1</option>
+                    <option value="Ruta 2">Ruta 2</option>
+                  </select>
+
+                </div>
+
+
+                {/* Lista de clientes */}
+                {filteredClients.length > 0 ? (
+                  filteredClients.map((client, index) => (
+                    <ClientCard key={index} {...client} />
+                  ))
+                ) : (
+                  <p className="text-white">No se encontraron clientes.</p>
+                )}
             </div>
           </div>
         </section>
 
         {/* Formulario emergente */}
         {isFormVisible && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-    <div className="relative p-6 rounded-lg">
-      <button
-        onClick={handleCloseForm}
-        className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-700"
-      >
-        X
-      </button>
-      <div className="overflow-auto">
-        <ClientForm />
-      </div>
-    </div>
-  </div>
-)}
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div className="relative p-6 rounded-lg">
+              <button
+                onClick={handleCloseForm}
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-700"
+              >
+                X
+              </button>
+              <div className="overflow-auto">
+                <ClientForm />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Sidebar>
   );

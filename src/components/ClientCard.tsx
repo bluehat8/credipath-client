@@ -1,5 +1,6 @@
 import * as React from "react";
 import { ClientCardProps } from "../utils/types";
+import { Link } from "react-router-dom";
 
 export const ClientCard: React.FC<ClientCardProps> = ({ name, phone, countryCode, email, profileImage }) => {
   return (
@@ -45,12 +46,19 @@ export const ClientCard: React.FC<ClientCardProps> = ({ name, phone, countryCode
           </div>
         </div>
       </div>
-      <img
-        loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/cd790db57f8e125b0bed33476a5de25a6046d988182cad8d13652e993e7a0452?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
+      
+      <Link
+        to="/details-client" 
         className="object-contain shrink-0 my-auto aspect-square w-[50px]"
-        alt="Actions menu"
-      />
+        aria-label="Actions menu"
+      >
+        <img
+          loading="lazy"
+          src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/cd790db57f8e125b0bed33476a5de25a6046d988182cad8d13652e993e7a0452?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
+          alt="Actions menu"
+        />
+      </Link>
+
     </div>
   );
 };

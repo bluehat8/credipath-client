@@ -67,11 +67,12 @@ export const ClientDetails: React.FC = () => {
               <h1 className="self-start text-xl font-medium text-white tracking-[3px]">
                 Clientes
               </h1>
-              <div className="flex flex-col items-center p-8 pt-12 pb-96 mt-6 w-full rounded-xl bg-zinc-800 max-md:pb-24 max-md:max-w-full">
+              <div className="flex flex-col items-center p-8 pt-8 pb-96 mt-6 w-full rounded-xl bg-zinc-800 max-md:pb-24 max-md:max-w-full">
               <div className="flex flex-wrap gap-5 justify-between max-w-full w-full">
                   <ClientHeader name="Ricardo morales" code="505" />
                   <div className="flex flex-wrap gap-2 self-end mt-8 text-base font-light tracking-wide text-zinc-100">
                     <button onClick={toggleFormVisibility} className="flex gap-2 px-6 py-4 text-xs tracking-wide rounded-md bg-zinc-700 shadow-[0px_0px_10px_rgba(38,71,95,0.25)] max-md:px-5">
+                      
                       <img
                         loading="lazy"
                         src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/155fcbbe51a48658606cad8c9469975cc4857275ab817ef999d47c8bc8382d28?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"

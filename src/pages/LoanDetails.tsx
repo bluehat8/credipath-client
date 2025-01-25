@@ -79,7 +79,7 @@ export const LoanDetails: React.FC = () => {
                 >
                   <img
                     loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/497e173d9e5494ea2411c198e4e6bcab010d969d1084d21f1c171b0b9f4f0da4?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
+                    src="/icons/abonar.svg"
                     alt=""
                     className="object-contain shrink-0 w-5 aspect-square"
                   />
@@ -102,11 +102,17 @@ export const LoanDetails: React.FC = () => {
                 <button className="flex items-center gap-2 px-4 py-2 text-rose-600 whitespace-nowrap rounded-md bg-zinc-700 shadow-[0px_0px_10px_rgba(38,71,95,0.25)] hover:bg-zinc-600 max-md:px-3">
                   <img
                     loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/519eb87536b8573346762e6942175d8df1f106fbc27e1320dc8d1f37af9efd77?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
+                    src="/icons/trash.svg"
                     alt=""
                     className="object-contain shrink-0 w-5 aspect-square"
                   />
                   <span className="text-sm font-medium">Eliminar</span>
+                </button>
+
+                <button 
+                  className="bg-green-300 text-white p-3 rounded-full hover:bg-green-400 transition duration-200"
+                >
+                  <img src="/icons/print.svg" alt="" />
                 </button>
               </div>
             </div>
