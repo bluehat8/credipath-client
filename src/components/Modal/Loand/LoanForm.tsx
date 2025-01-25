@@ -110,7 +110,7 @@ export const LoanForm: React.FC<LoanFormProps> = (prop) => {
       {/* end form */}
 
       {isLoanListVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity">
+        <div className="fixed inset-0 z-50 flex md:items-center p-8  justify-center bg-black bg-opacity-50 transition-opacity">
           <div className="relative bg-neutral-800 text-white rounded-lg w-[90%] max-w-5xl p-8 flex flex-col md:flex-row gap-8 shadow-xl transition-all">
             <button
               className="absolute top-4 right-4 text-black bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-400"
