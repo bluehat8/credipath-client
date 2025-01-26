@@ -1,10 +1,14 @@
 export interface InputFieldProps {
-    label: string;
-    placeholder: string;
-    type?: string;
-    id: string;
-    value:string
-  }
+  id: string;
+  label: string;
+  type: string;
+  value: string;
+  onChange: (event: { target: { id: string; value: string } }) => void;
+  placeholder?: string;
+  height?: string;
+  options?: string[]; // Opcional, solo para selects
+}
+
   
 export interface ButtonProps {
     children: React.ReactNode;
@@ -35,13 +39,7 @@ export interface LoanFormData {
   note: string;
 }
 
-export interface InputFieldProps {
-  label: string;
-  id: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  height?: string;
-}
+
 
 export interface SidebarItemProps {
     icon: string;
