@@ -1,6 +1,7 @@
 export interface InputFieldProps {
+  id: string;
   label: string;
-  type?: "text" | "textarea" | "select"; // Tipos permitidos
+  type: string;
   value: string;
   onChange: (event: { target: { id: string; value: string } }) => void;
   placeholder?: string;
