@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ClientHeader } from '../components/loans/ClientHeader.tsx';
-import { LoanCard } from '../components/loans/LoanCard.tsx';
-import { Layout as Sidebar } from '../components/sidebar/Layout.tsx';
-import { LoanForm } from '../components/Modal/Loand/LoanForm.tsx';
+import { ClientHeader } from '../components/loans/ClientHeader';
+import { LoanCard } from '../components/loans/LoanCard';
+import { Layout as Sidebar } from '../components/sidebar/Layout';
+import { LoanForm } from '../components/Modal/Loand/LoanForm';
 
 
 const loans = [

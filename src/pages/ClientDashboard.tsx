@@ -1,7 +1,7 @@
 import * as React from "react";
-import { ClientCard } from "../components/ClientCard.tsx";
-import { Layout as Sidebar } from "../components/sidebar/Layout.tsx";
-import { ClientForm } from "../components/Modal/Client/ClientForm.tsx";
+import { ClientCard } from "../components/ClientCard";
+import { Layout as Sidebar } from "../components/sidebar/Layout";
+import { ClientForm } from "../components/Modal/Client/ClientForm";
 
 const clients = [
   {

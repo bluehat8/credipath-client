@@ -1,9 +1,9 @@
 import * as React from "react";
-import { LoanHeader } from "../components/loan-details/LoanHeader.tsx";
-import { LoanPaymentCard } from "../components/loan-details/LoanPaymentCard.tsx";
-import { Layout as Sidebar } from "../components/sidebar/Layout.tsx";
-import { LoanDetailModal } from "../components/Modal/loan-details/LoanDetailModal.tsx";
-import { PaymentForm } from "../components/Modal/PayLoand/PayLoandForm.tsx";
+import { LoanHeader } from "../components/loan-details/LoanHeader";
+import { LoanPaymentCard } from "../components/loan-details/LoanPaymentCard";
+import { Layout as Sidebar } from "../components/sidebar/Layout";
+import { LoanDetailModal } from "../components/Modal/loan-details/LoanDetailModal";
+import { PaymentForm } from "../components/Modal/PayLoand/PayLoandForm";
 
 const paymentData = [
   {

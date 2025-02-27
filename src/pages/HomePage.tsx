@@ -1,6 +1,6 @@
 // pages/index.tsx
 import * as React from 'react';
-import { Layout } from '../components/sidebar/Layout.tsx';
+import { Layout } from '../components/sidebar/Layout';
 
 export const HomePage: React.FC = () => {
   return (

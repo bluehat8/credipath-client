@@ -1,6 +1,6 @@
 import * as React from "react";
-import { PaymentInfo } from "./PaymentInfo.tsx";
-import { InputField } from "./InputFieldPay.tsx";
+import { PaymentInfo } from "./PaymentInfo";
+import { InputField } from "./InputFieldPay";
 
 interface PaymentFormProps {
   onClose: () => void;

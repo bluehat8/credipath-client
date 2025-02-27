@@ -1,5 +1,5 @@
 import * as React from "react";
-import { RouteCardProps } from "./types.ts";
+import { RouteCardProps } from "./types";
 
 export function RouteCard({ name, district, code, location, onEdit, onDelete }: RouteCardProps) {
   return (

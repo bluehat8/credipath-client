@@ -1,4 +1,4 @@
-import { TransactionData, CategoryData } from '../components/reports/ControlBalance/type.ts';
+import { TransactionData, CategoryData } from '../components/reports/ControlBalance/type';
 
 export const transactions: TransactionData[] = [
   {

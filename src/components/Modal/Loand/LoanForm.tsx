@@ -1,6 +1,6 @@
 import * as React from "react";
-import { InputField } from "./LoandInputField.tsx";
-import { LoanSimulation } from "./LoandSimulation.tsx";
+import { InputField } from "./LoandInputField";
+import { LoanSimulation } from "./LoandSimulation";
 
 interface LoanFormProps {
   valor: string;

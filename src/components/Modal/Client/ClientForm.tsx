@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { InputFieldClient } from './ClientInputField.tsx';
-import { ClientFormData } from './TypesClient.tsx';
+import { InputFieldClient } from './ClientInputField';
+import { ClientFormData } from './TypesClient';
 
 export const ClientForm: React.FC = () => {
   const [formData, setFormData] = React.useState<ClientFormData>({

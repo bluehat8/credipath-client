@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useCallback } from 'react';
 import { SidebarProps } from './types';
-import { SidebarLogo } from './SidebarLogo.tsx';
-import { SidebarItem } from './SidebarItem.tsx';
-import { navigationItems } from './navigationConfig.ts';
+import { SidebarLogo } from './SidebarLogo';
+import { SidebarItem } from './SidebarItem';
+import { navigationItems } from './navigationConfig';
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const [activePath, setActivePath] = React.useState('/');

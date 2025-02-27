@@ -1,7 +1,7 @@
 import * as React from "react";
-import { CollaboratorCard } from "../components/CollaboratorCard.tsx";
-import { Layout as Sidebar } from '../components/sidebar/Layout.tsx'; 
-import CollaboratorForm from "../components/Modal/collaborator/CollaboratorForm.tsx";
+import { CollaboratorCard } from "../components/CollaboratorCard";
+import { Layout as Sidebar } from '../components/sidebar/Layout'; 
+import CollaboratorForm from "../components/Modal/collaborator/CollaboratorForm";
 
 const collaborators = [
   {
@@ -84,8 +84,8 @@ export function CollaboratorsPage() {
     {isModalOpen && (      
             <CollaboratorForm
                 onClose={handleCloseModal}
-                onSave={(collaborator) => {
-                  console.log("Nuevo colaborador:", collaborator);
+                onSave={() => {
+                  console.log("Nuevo colaborador:");
                   setIsModalOpen(false);
                 } } isOpen={true}        
               />

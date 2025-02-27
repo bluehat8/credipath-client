@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+      "target": "ESNext", // Usar ESNext para aprovechar las últimas características de JavaScript
+      "module": "ESNext", // Usar módulos ES para compatibilidad con Vite
+      "moduleResolution": "node", // Mantener la resolución de módulos de Node
+      "jsx": "react-jsx", // Soporte para JSX (React 17+)
+      "baseUrl": "./src", // Base para rutas absolutas
+      "paths": {
+        "components/*": ["components/*"],
+        "hooks/*": ["hooks/*"],
+        "services/*": ["services/*"],
+        "constants/*": ["constants/*"],
+        "types/*": ["types/*"],
+        "context/*": ["context/*"],
+        "utils/*": ["utils/*"]
+  
+      },
+      "esModuleInterop": true, // Permitir importaciones de CommonJS
+      "strict": true, // Habilitar todas las opciones de tipo estricto
+      "skipLibCheck": true, // Omitir la verificación de tipos en archivos .d.ts
+      "forceConsistentCasingInFileNames": true, // Forzar consistencia en mayúsculas/minúsculas en nombres de archivos
+      "resolveJsonModule": true, // Permitir la importación de archivos JSON
+      "isolatedModules": true, // Asegurar que los módulos sean transpilables de forma independiente
+      "noEmit": true // No emitir archivos JS (Vite se encarga de la compilación)
+    },
+    "include": ["src"], // Incluir solo la carpeta src
+    "exclude": ["node_modules", "dist"] // Excluir node_modules y la carpeta de build
+}
