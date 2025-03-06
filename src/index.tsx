@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import {LoginForm} from './App.tsx';
-import reportWebVitals from './reportWebVitals.ts';
+import {LoginForm} from './App';
+import reportWebVitals from './reportWebVitals';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { CollaboratorsPage } from './pages/CollaboratorPage.tsx'; 
-import { ClientDashboard } from './pages/ClientDashboard.tsx';
-import { ClientDetails } from './pages/ClientDetailsPage.tsx';
-import { HomePage } from './pages/HomePage.tsx';
-import { RoutesPage } from './pages/RoutesPage.tsx';
-import { LoanDetails } from './pages/LoanDetails.tsx';
-import { ControlBalancePage } from './pages/ControlBalancePage.tsx';
+import { CollaboratorsPage } from './pages/CollaboratorPage'; 
+import { ClientDashboard } from './pages/ClientDashboard';
+import { ClientDetails } from './pages/ClientDetailsPage';
+import { HomePage } from './pages/HomePage';
+import { RoutesPage } from './pages/RoutesPage';
+import { LoanDetails } from './pages/LoanDetails';
+import { ControlBalancePage } from './pages/ControlBalancePage';
 
 
 
