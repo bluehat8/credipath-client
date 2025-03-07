@@ -5,7 +5,7 @@ import { Layout as Sidebar } from "../components/sidebar/Layout";
 import { LoanDetailModal } from "../components/Modal/loan-details/LoanDetailModal";
 import { PaymentForm } from "../components/Modal/PayLoand/PayLoandForm";
 
-const paymentData = [
+export const paymentData = [
   {
     paymentNumber: "16",
     capitalBalance: 50.0,

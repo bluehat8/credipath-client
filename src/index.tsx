@@ -13,10 +13,6 @@ import { RoutesPage } from './pages/RoutesPage.tsx';
 import { LoanDetails } from './pages/LoanDetails.tsx';
 import { ControlBalancePage } from './pages/ControlBalancePage.tsx';
 
-
-
-
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -27,16 +23,13 @@ root.render(
         {/* Ruta principal que muestra el formulario de login */}
         <Route path="/" element={<LoginForm />} />
         {/* Ruta para la página de colaboradores */}
+        <Route path="/home" element={<HomePage />} />
         <Route path="/collaborators" element={<CollaboratorsPage />} />
         <Route path="/clients" element={<ClientDashboard />} />
         <Route path="/details-client" element={<ClientDetails />} />
-        <Route path="/home" element={<HomePage />} />
         <Route path="/routes" element={<RoutesPage />} />
         <Route path="/loan-details" element={<LoanDetails />} />
         <Route path="/control-balance" element={<ControlBalancePage />} />
-
-
-
       </Routes>
     </Router>
   </React.StrictMode>

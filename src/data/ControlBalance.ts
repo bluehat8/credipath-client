@@ -1,4 +1,4 @@
-import { TransactionData, CategoryData } from '../components/reports/ControlBalance/type';
+import { TransactionData, CategoryData, PendingPayments } from '../components/reports/ControlBalance/type';
 
 export const transactions: TransactionData[] = [
   {
@@ -159,5 +159,98 @@ export const categories: CategoryData[] = [
     label: "Pagos",
     icon: "https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/3a07252b2c9b8ef06d76a1bd4ad9bb1a7d8573ee65e3c1d016f4e6017c9a3cba?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&",
     hasDropdown: true
+  }
+];
+
+export const pendingPayments : PendingPayments[] = [
+  {
+    id: "001",
+    collaborator: "Juan Pérez",
+    client: "Ricardo Morales",
+    amount: 100,
+    installmentNumber: "5/10",
+    dueDate: "2025-03-06",
+    status: "pending",
+  },
+  {
+    id: "002",
+    collaborator: "Juan Pérez",
+    client: "María Gómez",
+    amount: 150,
+    installmentNumber: "3/6",
+    dueDate: "2025-03-06",
+    status: "pending",
+  },
+  {
+    id: "003",
+    collaborator: "Ana López",
+    client: "Carlos Rivas",
+    amount: 200,
+    installmentNumber: "7/12",
+    dueDate: "2025-03-06",
+    status: "pending",
+  },
+  {
+    id: "004",
+    collaborator: "Ana López",
+    client: "Sofía Méndez",
+    amount: 120,
+    installmentNumber: "2/5",
+    dueDate: "2025-03-05",
+    status: "pending",
+  },
+  {
+    id: "005",
+    collaborator: "Luis Rodríguez",
+    client: "Javier Castro",
+    amount: 80,
+    installmentNumber: "4/8",
+    dueDate: "2025-03-02",
+    status: "overdue",
+  },
+  {
+    id: "006",
+    collaborator: "Luis Rodríguez",
+    client: "Fernando Torres",
+    amount: 90,
+    installmentNumber: "6/10",
+    dueDate: "2025-03-05",
+    status: "pending",
+  },
+  {
+    id: "007",
+    collaborator: "Pedro Sánchez",
+    client: "Gabriela Fernández",
+    amount: 130,
+    installmentNumber: "5/9",
+    dueDate: "2025-03-05",
+    status: "pending",
+  },
+  {
+    id: "008",
+    collaborator: "Pedro Sánchez",
+    client: "Lucas Martínez",
+    amount: 110,
+    installmentNumber: "3/7",
+    dueDate: "2025-03-05",
+    status: "overdue",
+  },
+  {
+    id: "009",
+    collaborator: "Claudia Morales",
+    client: "Isabel Reyes",
+    amount: 140,
+    installmentNumber: "8/12",
+    dueDate: "2025-03-05",
+    status: "pending",
+  },
+  {
+    id: "010",
+    collaborator: "Claudia Morales",
+    client: "Diego Vargas",
+    amount: 95,
+    installmentNumber: "2/5",
+    dueDate: "2025-03-05",
+    status: "pending",
   }
 ];

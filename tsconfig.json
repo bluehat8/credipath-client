@@ -5,6 +5,7 @@
       "moduleResolution": "node", // Mantener la resolución de módulos de Node
       "jsx": "react-jsx", // Soporte para JSX (React 17+)
       "baseUrl": "./src", // Base para rutas absolutas
+      "allowImportingTsExtensions": true,
       "paths": {
         "components/*": ["components/*"],
         "hooks/*": ["hooks/*"],

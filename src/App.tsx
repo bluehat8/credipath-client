@@ -1,10 +1,9 @@
 
 import * as React from "react";
-import { InputField } from "./components/InputField.tsx";
-import { Button } from "./components/Button.tsx";
+import { InputField } from "components/InputField";
+import { Button } from "./components/Button";
 import { Routes, Route } from 'react-router-dom';
-
-import { CollaboratorsPage } from "./pages/CollaboratorPage.tsx";
+import { CollaboratorsPage } from "./pages/CollaboratorPage";
 
 
 export const LoginForm: React.FC = () => {
@@ -48,7 +47,7 @@ export const LoginForm: React.FC = () => {
         onChange={() => {}}
       />
 
-      <Button href="/clients">Iniciar sesión</Button>
+      <Button>Iniciar sesión</Button>
     </form>
 
     <div className="flex flex-col items-center gap-2 mt-7">
