@@ -1,7 +1,7 @@
 import * as React from "react";
 import { CollaboratorCard } from "../components/CollaboratorCard";
-import { Layout as Sidebar } from '../components/sidebar/Layout'; 
 import CollaboratorForm from "../components/Modal/collaborator/CollaboratorForm";
+import { MainSidebar } from "components/sidebar/Sidebar";
 
 const collaborators = [
   {
@@ -39,7 +39,7 @@ export function CollaboratorsPage() {
   };
 
   return (
-    <Sidebar>
+    <MainSidebar>
     <div className="max-md:flex-col w-full">
       <div className="gap-5 max-md:flex-col">
   
@@ -92,6 +92,6 @@ export function CollaboratorsPage() {
 
       )}
 
-    </Sidebar>
+    </MainSidebar>
   );
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Layout as Sidebar } from '../components/sidebar/Layout'; 
 import { RouteCard } from "../components/rutas/RouteCard";
 import { ModalAddRoute } from '../components/rutas/AddRouteModal';
+import { MainSidebar } from 'components/sidebar/Sidebar';
 
 const routesData = [
   {
@@ -27,7 +27,7 @@ export function RoutesPage() {
   };
 
   return (
-    <Sidebar>
+    <MainSidebar>
       <div className="max-md:flex-col w-full">
         <div className="gap-5 max-md:flex-col">
           <section className="flex flex-col ml-5 max-md:ml-0 max-md:w-full">
@@ -78,6 +78,6 @@ export function RoutesPage() {
         onClose={() => setIsModalOpen(false)}
         onAddRoute={handleAddRoute}
       />
-    </Sidebar>
+    </MainSidebar>
   );
 }

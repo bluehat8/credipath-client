@@ -1,6 +1,5 @@
 import * as React from "react";
 import { ClientCard } from "../components/ClientCard";
-import { Layout as Sidebar } from "../components/sidebar/Layout";
 import { ClientForm } from "../components/Modal/Client/ClientForm";
 import { MainSidebar } from "components/sidebar/Sidebar";
 

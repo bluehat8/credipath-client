@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Layout as Sidebar } from '../components/sidebar/Layout';
 import { CategoryFilter } from '../components/reports/ControlBalance/CategoryFilter';
 import { TransactionTable } from '../components/reports/ControlBalance/TransactionTable';
 import { transactions, categories } from '../data/ControlBalance';
+import { MainSidebar } from 'components/sidebar/Sidebar';
 
 export function ControlBalancePage() {
   return (
-    <Sidebar>
+    <MainSidebar>
       <section className="flex flex-col w-full" role="main">
         <div className="my-2">
           <h1 className="text-2xl font-semibold text-white tracking-wide">
@@ -94,6 +94,6 @@ export function ControlBalancePage() {
           </div>
         </section>
       </section>
-    </Sidebar>
+    </MainSidebar>
   );
 }

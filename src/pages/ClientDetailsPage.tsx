@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ClientHeader } from '../components/loans/ClientHeader';
 import { LoanCard } from '../components/loans/LoanCard';
-import { Layout as Sidebar } from '../components/sidebar/Layout';
 import { LoanForm } from '../components/Modal/Loand/LoanForm';
+import { MainSidebar } from 'components/sidebar/Sidebar';
 
 
 export const loans = [
@@ -58,7 +58,7 @@ export const ClientDetails: React.FC = () => {
   };
 
   return (
-    <Sidebar>
+    <MainSidebar>
       <div className="max-md:flex-col w-full">
         <div className="gap-5 max-md:flex-col">
         
@@ -147,6 +147,6 @@ export const ClientDetails: React.FC = () => {
           </section>
         </div>
       </div>
-    </Sidebar>
+    </MainSidebar>
   );
 };
