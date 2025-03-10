@@ -156,7 +156,7 @@ export function MainSidebar({ children }: { children: React.ReactNode }) {
                       <SidebarMenuButton
                         isActive={isActive(item.path)}
                         onClick={() => handleNavigation(item.path)}
-                        className="hover:bg-zinc-700 data-[active=true]:bg-zinc-700"
+                        className="hover:bg-zinc-700 data-[active=true]:bg-zinc-700 hover:text-green-cpt"
                       >
                         <item.icon className="h-5 w-5" />
                         {isOpen && <span>{item.title}</span>}

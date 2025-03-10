@@ -12,6 +12,7 @@ import {
   ChevronRight,
   UserPlus,
   MapPin,
+  RefreshCcw,
 } from "lucide-react"
 
 export const navigationItems: NavigationItem[] = [
@@ -145,6 +146,31 @@ export const NewNavigationItems = [
     icon: UserPlus, 
     items: [],
   },
+
+  {
+    id: "retanqueo",
+    title: "Retanqueo",
+    path: "/retanqueo",
+    icon: RefreshCcw,
+    items: [
+      {
+        id: "resumen",
+        title: "Resumen de fondos",
+        path: "/retanqueo",
+      },
+      {
+        id: "",
+        title: "Desembolsos",
+        path: "/retanqueo/confirmacion",
+      },
+      {
+        id: "gestion-solicitudes",
+        title: "Gestionar solicitudes",
+        path: "/retanqueo/solicitudes",
+      },
+    ],
+  },
+
   {
     id: "administration",
     title: "Administración",

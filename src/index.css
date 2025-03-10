@@ -30,6 +30,10 @@ code {
 }
 
 
+.text-green-cpt{
+  color: #85fca7 !important;
+}
+
 .border-green-native {
   border: 1px solid #3c5543; 
   border-radius: 8px; 
