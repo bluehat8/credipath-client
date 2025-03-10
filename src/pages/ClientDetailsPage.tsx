@@ -3,6 +3,8 @@ import { ClientHeader } from '../components/loans/ClientHeader';
 import { LoanCard } from '../components/loans/LoanCard';
 import { LoanForm } from '../components/Modal/Loand/LoanForm';
 import { MainSidebar } from 'components/sidebar/Sidebar';
+import { X } from 'lucide-react';
+import { ThemeProvider } from 'context/ThemeContext';
 
 
 export const loans = [
@@ -58,6 +60,8 @@ export const ClientDetails: React.FC = () => {
   };
 
   return (
+    <ThemeProvider>
+    
     <MainSidebar>
       <div className="max-md:flex-col w-full">
         <div className="gap-5 max-md:flex-col">
@@ -110,35 +114,29 @@ export const ClientDetails: React.FC = () => {
 
               {isFormVisible && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-                  <div
-                    className="relative bg-neutral-900 rounded-lg shadow-lg"
-                    style={{
-                      
-                      padding: '20px',
-                      overflowY: 'scroll', 
-                      borderRadius: '15px',
-                    }}
-                  >
-                    <style>
-                      {`
-                        /* Ocultar el scroll en el modal */
-                        .relative::-webkit-scrollbar {
-                          display: none;
-                        }
-                        .relative {
-                          scrollbar-width: none; /* Firefox */
-                          -ms-overflow-style: none; /* IE y Edge */
-                        }
-                      `}
-                    </style>
-                    <LoanForm valor={'6000'} tipoInteres={'anual'} interes={'10%'} pago={'500'} fechaPrestamo={'2025-01-12'} nota={'prueba'} />
-                  
+                  {/* Contenedor interno del modal */}
+                  <div className="w-full max-w-4xl  rounded-3xl shadow-2xl p-8 overflow-y-auto h-[90vh]">
+                    {/* Botón de cierre */}
                     <button
-                      className="absolute top-4 right-4 text-black bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-400"
+                      className="absolute top-4 right-4 text-neutral-400 hover:text-white transition-colors"
                       onClick={toggleFormVisibility}
                     >
-                      &times;
+                      <X className="w-6 h-6" />
                     </button>
+
+                    {/* Contenido del formulario */}
+                    <div className="space-y-8">
+                      <LoanForm
+                        valor={'6000'}
+                        tipoInteres={'anual'}
+                        interes={'10%'}
+                        pago={'500'}
+                        fechaPrestamo={'2025-01-12'}
+                        nota={'prueba'}
+                        numeroCuotas={''}
+                        tipoPago={''}
+                      />
+                    </div>
                   </div>
                 </div>
               )}
@@ -148,5 +146,7 @@ export const ClientDetails: React.FC = () => {
         </div>
       </div>
     </MainSidebar>
+    </ThemeProvider>
+
   );
 };
