@@ -214,9 +214,10 @@ export function MainSidebar({ children }: { children: React.ReactNode }) {
 
         {/* Desktop sidebar */}
         <Sidebar
-          className={`hidden md:flex bg-zinc-800 text-slate-50 border-r border-zinc-700 transition-all duration-300 ease-in-out ${
+          className={`hidden md:flex bg-sidebar  text-slate-50 border-r border-zinc-700 transition-all duration-300 ease-in-out ${
             isOpen ? "w-64" : "w-20" 
           }`}
+        
         >
           <SidebarHeader className="p-4">
             <div className="flex items-center gap-2">

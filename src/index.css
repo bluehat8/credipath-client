@@ -50,6 +50,10 @@ code {
   background-color: #141618;
 }
 
+.bg-sidebar{
+  background-color: hsl(222deg 4.28% 11.07%);
+}
+
 
 
 @layer base {

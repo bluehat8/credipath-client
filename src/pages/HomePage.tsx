@@ -7,6 +7,7 @@ import ListWidget from 'components/dashboard/ListWidget';
 import PendingPayments from 'components/dashboard/PendingPayments';
 import { DashboardHeader } from 'components/dashboard/DashboardHeader';
 import { ThemeProvider } from 'context/ThemeContext';
+import { MainSidebar } from 'components/sidebar/Sidebar';
 
 export const HomePage: React.FC = () => {
   const [filterDays, setFilterDays] = React.useState(0)
@@ -17,7 +18,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <ThemeProvider>
-    <Layout>
+    <MainSidebar>
       <div className="flex min-h-screen flex-col">
         <div className="flex-1 space-y-4 p-4 pt-4 md:p-4">
           <DashboardHeader />
@@ -35,7 +36,7 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
     </div>
-    </Layout>
+    </MainSidebar>
     </ThemeProvider>
   );
 };
