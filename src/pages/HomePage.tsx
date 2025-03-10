@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Layout } from '../components/sidebar/Layout';
 import FilterButtons from 'components/dashboard/FilterButtons';
 import PaymentWidget from 'components/dashboard/PaymentWidget';
 import GeneralWidget from 'components/dashboard/GeneralWidget';
