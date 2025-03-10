@@ -102,7 +102,7 @@ export const LoanSimulation: React.FC<LoanSimulationProps> = ({ formData }) => {
               <DollarSign className="w-3.5 h-3.5" />
               <span>Monto Total</span>
             </div>
-            <p className="text-lg font-medium text-white">C${totalPayment}</p>
+            <p className="text-lg font-medium text-white">${totalPayment}</p>
           </div>
 
           <div className="space-y-1">
@@ -110,7 +110,7 @@ export const LoanSimulation: React.FC<LoanSimulationProps> = ({ formData }) => {
               <Percent className="w-3.5 h-3.5" />
               <span>Interés Total</span>
             </div>
-            <p className="text-lg font-medium text-white">C${totalInterest}</p>
+            <p className="text-lg font-medium text-white">${totalInterest}</p>
           </div>
 
           <div className="space-y-1">
@@ -150,6 +150,7 @@ export const LoanSimulation: React.FC<LoanSimulationProps> = ({ formData }) => {
       </div>
 
       {/* Payment Cards */}
+      <div className="max-h-[400px] overflow-y-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {simulationData.map((payment) => (
           <div
@@ -189,7 +190,7 @@ export const LoanSimulation: React.FC<LoanSimulationProps> = ({ formData }) => {
               {/* Payment Amount */}
               <div className="flex justify-between items-center">
                 <span className="text-xs text-neutral-400">Pago Total</span>
-                <span className="text-base font-medium">C${payment.paymentAmount}</span>
+                <span className="text-base font-medium">${payment.paymentAmount}</span>
               </div>
 
               {/* Payment Breakdown */}
@@ -197,11 +198,11 @@ export const LoanSimulation: React.FC<LoanSimulationProps> = ({ formData }) => {
                 <div className="flex-1 space-y-1">
                   <div className="flex justify-between">
                     <span className="text-neutral-400">Capital</span>
-                    <span>C${payment.principalPayment}</span>
+                    <span>${payment.principalPayment}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-neutral-400">Interés</span>
-                    <span>C${payment.interestPayment}</span>
+                    <span>${payment.interestPayment}</span>
                   </div>
                 </div>
 
@@ -211,7 +212,7 @@ export const LoanSimulation: React.FC<LoanSimulationProps> = ({ formData }) => {
 
                 <div className="space-y-1">
                   <span className="text-neutral-400 text-xs">Saldo</span>
-                  <p className="text-sm">C${payment.remainingBalance}</p>
+                  <p className="text-sm">${payment.remainingBalance}</p>
                 </div>
               </div>
 
@@ -233,6 +234,9 @@ export const LoanSimulation: React.FC<LoanSimulationProps> = ({ formData }) => {
           </div>
         ))}
       </div>
+      </div>
+
+      {/* end */}
     </div>
   )
 }
