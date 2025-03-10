@@ -2,6 +2,7 @@ import * as React from "react";
 import { ClientCard } from "../components/ClientCard";
 import { Layout as Sidebar } from "../components/sidebar/Layout";
 import { ClientForm } from "../components/Modal/Client/ClientForm";
+import { MainSidebar } from "components/sidebar/Sidebar";
 
 const clients = [
   {
@@ -44,9 +45,9 @@ export const ClientDashboard: React.FC = () => {
   );
 
   return (
-    <Sidebar>
+    <MainSidebar>
       <div className="max-md:flex-col w-full">
-        <section className="flex flex-col ml-5 max-md:ml-0 max-md:w-full" role="main">
+        <section className="flex flex-col ml-2 max-md:ml-0 max-md:w-full" role="main">
           <div className="flex flex-col self-stretch my-auto max-md:mt-10 max-md:max-w-full">
             <h1 className="self-start text-xl font-medium text-white tracking-[3px] w-full">
               Clientes
@@ -72,14 +73,13 @@ export const ClientDashboard: React.FC = () => {
               <div className="flex shrink-0 self-stretch mt-8 mb-8 h-px bg-stone-700 max-md:max-w-full" />
 
               {/* Filtros */}
-              {/* Filtros */}
                 <div className="flex flex-wrap gap-4 mb-6 w-full">
                   <input
                     type="text"
                     placeholder="Buscar cliente..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="flex-1 px-4 py-2 text-sm text-gray-900 bg-gray-200 rounded-md focus:outline-none focus:ring focus:ring-blue-400 dark:text-gray-200 dark:bg-zinc-700 dark:placeholder-gray-400"
+                    className="flex-1 px-4 py-2 text-sm rounded-md focus:outline-none focus:ring focus:ring-blue-400 text-gray-200 bg-zinc-700 dark:placeholder-gray-400"
                   />
                  
                  <select
@@ -124,6 +124,6 @@ export const ClientDashboard: React.FC = () => {
           </div>
         )}
       </div>
-    </Sidebar>
+    </MainSidebar>
   );
 };

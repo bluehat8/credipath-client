@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Sidebar } from './Sidebar';
+import { MainSidebar } from './Sidebar';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex h-screen bg-neutral-900">
       {/* Sidebar */}
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <MainSidebar />
 
       {/* Botón de hamburguesa */}
       <button
