@@ -61,6 +61,7 @@ code {
 @layer base {
   :root {
     --background: 0 0% 100%;
+    --backgroundprop: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -83,7 +84,8 @@ code {
   }
 
   .dark {
-    --background: 222 0% 9%;
+    --background: 210, 9.09%, 8.63%;
+    --backgroundprop: 240, 5.38%, 18.24%;
     --foreground: 0 0% 98%;
     --card: 222deg 4.28% 11.07%;
     --card-foreground: 0 0% 98%;

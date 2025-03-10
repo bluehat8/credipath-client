@@ -46,7 +46,7 @@ export const DateField: React.FC<DateFieldProps> = ({ label, id, value, onChange
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           className={cn(
-            "w-full h-14 px-3 pt-6 pb-2 bg-background/50 border rounded-md",
+            "w-full h-14 px-3 pt-6 pb-2 bg-backgroundprop border rounded-md",
             "text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary",
             "transition-all duration-200 appearance-none",
             disabled && "opacity-70 cursor-not-allowed",

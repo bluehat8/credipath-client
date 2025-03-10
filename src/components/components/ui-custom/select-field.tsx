@@ -52,7 +52,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
           value={value}
           onChange={onChange}
           className={cn(
-            "w-full h-14 px-3 pt-6 pb-2 bg-background/70 border rounded-md",
+            "w-full h-14 px-3 pt-6 pb-2 bg-backgroundprop border rounded-md",
             "text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary",
             "transition-all duration-200 appearance-none",
             disabled && "opacity-70 cursor-not-allowed"

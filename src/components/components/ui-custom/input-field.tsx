@@ -36,7 +36,7 @@ export const InputField: React.FC<InputFieldProps> = ({
     onFocus: () => setIsFocused(true),
     onBlur: () => setIsFocused(false),
     className: cn(
-      "w-full bg-background/70 border rounded-md",
+      "w-full bg-backgroundprop border rounded-md",
       "text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary",
       "transition-all duration-200",
       isTextarea ? "h-32 px-3 pt-6 pb-2 resize-none" : "h-14 px-3 pt-6 pb-2",
