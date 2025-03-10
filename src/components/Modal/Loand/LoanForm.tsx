@@ -611,7 +611,7 @@ export const LoanForm: React.FC<LoanFormProps> = (prop) => {
 
   return (
     <>
-      <Card className="bg-background border-border shadow-lg">
+      <Card className="bg-background border-green-native shadow-lg">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xl font-medium">Agregar Préstamo</CardTitle>

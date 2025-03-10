@@ -113,9 +113,9 @@ export const ClientDetails: React.FC = () => {
 
 
               {isFormVisible && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
                   {/* Contenedor interno del modal */}
-                  <div className="w-full max-w-4xl  rounded-3xl shadow-2xl p-8 overflow-y-auto h-[90vh]">
+                  <div className="w-full max-w-4xl  rounded-3xl p-8 overflow-y-auto h-[90vh]">
                     {/* Botón de cierre */}
                     <button
                       className="absolute top-4 right-4 text-neutral-400 hover:text-white transition-colors"
