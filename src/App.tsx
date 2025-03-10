@@ -49,7 +49,6 @@ export const LoginForm: React.FC = () => {
       />
 
       <Button>Iniciar sesión</Button>
-      <Button>Iniciar sesión</Button>
     </form>
 
     <div className="flex flex-col items-center gap-2 mt-7">

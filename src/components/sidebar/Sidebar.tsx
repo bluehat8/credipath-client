@@ -2,18 +2,7 @@
 "use client"
 
 import * as React from "react"
-import {
-  BarChart3,
-  CreditCard,
-  FileText,
-  Home,
-  Menu,
-  Settings,
-  Users,
-  X,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react"
+import { Menu, X, ChevronLeft, ChevronRight} from "lucide-react"
 
 import {
   Sidebar,
@@ -32,79 +21,8 @@ import {
 } from "components/components/ui/sidebar"
 import { Button } from "components/components/ui/button"
 
-// Navigation items with support for nested items
-const navigationItems = [
-  {
-    id: "dashboard",
-    title: "Dashboard",
-    path: "/",
-    icon: Home,
-    items: [],
-  },
-  {
-    id: "loans",
-    title: "Loans",
-    path: "/loans",
-    icon: CreditCard,
-    items: [
-      {
-        id: "active-loans",
-        title: "Active Loans",
-        path: "/loans/active",
-      },
-      {
-        id: "loan-applications",
-        title: "Applications",
-        path: "/loans/applications",
-      },
-      {
-        id: "loan-history",
-        title: "History",
-        path: "/loans/history",
-      },
-    ],
-  },
-  {
-    id: "reports",
-    title: "Reports",
-    path: "/reports",
-    icon: FileText,
-    items: [
-      {
-        id: "monthly-reports",
-        title: "Monthly Reports",
-        path: "/reports/monthly",
-      },
-      {
-        id: "annual-reports",
-        title: "Annual Reports",
-        path: "/reports/annual",
-      },
-    ],
-  },
-  {
-    id: "analytics",
-    title: "Analytics",
-    path: "/analytics",
-    icon: BarChart3,
-    items: [],
-  },
-  {
-    id: "customers",
-    title: "Customers",
-    path: "/customers",
-    icon: Users,
-    items: [],
-  },
-  {
-    id: "settings",
-    title: "Settings",
-    path: "/settings",
-    icon: Settings,
-    items: [],
-  },
-]
-
+import { NewNavigationItems } from "./navigationConfig"
+import { useNavigate } from "react-router-dom"
 
 
 
@@ -112,13 +30,13 @@ export function MainSidebar({ children }: { children: React.ReactNode }) {
   const [currentPath, setCurrentPath] = React.useState("/")
   const [openMobile, setOpenMobile] = React.useState(false)
   const [isOpen, setIsOpen] = React.useState(true)
+  const navigate = useNavigate();
 
   // Handle navigation
   const handleNavigation = (path: any) => {
     setCurrentPath(path)
     setOpenMobile(false)
-    // You would typically use your router here
-    // history.push(path) or similar
+    navigate(path);
   }
 
   // Check if a path is active
@@ -142,7 +60,7 @@ export function MainSidebar({ children }: { children: React.ReactNode }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>
-            {navigationItems.map((item) => (
+            {NewNavigationItems.map((item) => (
               <SidebarMenuItem key={item.id}>
                 <SidebarMenuButton
                   isActive={isActive(item.path)}
@@ -233,7 +151,7 @@ export function MainSidebar({ children }: { children: React.ReactNode }) {
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {navigationItems.map((item) => (
+                  {NewNavigationItems.map((item) => (
                     <SidebarMenuItem key={item.id}>
                       <SidebarMenuButton
                         isActive={isActive(item.path)}
