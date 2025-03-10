@@ -1,89 +1,68 @@
 "use client"
 
-import { Bar, BarChart, XAxis, YAxis } from "recharts"
-
-import {
-    Card,
-    CardContent, CardHeader,
-    CardTitle
-} from "components/components/ui/card"
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-} from "components/components/ui/chart"
-import { totalAmount, paidAmount, totalCapital, totalInterest, totalOverdueInterest } from "helpers"
+import { Card, CardContent, CardHeader, CardTitle } from "components/components/ui/card"
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts"
 
 const chartData = [
-  { browser: "ganancia", visitors: paidAmount, fill: "#A5D8FF " },
-  { browser: "prestado", visitors: totalAmount, fill: "#B0E57C " },
-  { browser: "capital", visitors: totalCapital, fill: "#FFD700 " },
-  { browser: "interes", visitors: totalInterest, fill: "#FFB3B3 " },
-  { browser: "interesMora", visitors: totalOverdueInterest, fill: "#FFB3E0 " },
+  { name: "Ganancia", value: 15000, fill: "hsl(var(--primary))" },
+  { name: "Prestado", value: 55000, fill: "hsl(var(--primary))" },
+  { name: "Capital", value: 20000, fill: "hsl(var(--primary))" },
+  { name: "Interés", value: 5000, fill: "hsl(var(--primary))" },
+  { name: "Interés Mora", value: 1000, fill: "hsl(var(--destructive))" },
 ]
 
-const chartConfig = {
-  visitors: {
-    label: "Amount",
-  },
-  ganancia: {
-    label: "Ganancia",
-    color: "hsl(var(--chart-1))",
-  },
-  prestado: {
-    label: "Prestado",
-    color: "hsl(var(--chart-2))",
-  },
-  capital: {
-    label: "Capital",
-    color: "hsl(var(--chart-3))",
-  },
-  interes: {
-    label: "Interés",
-    color: "hsl(var(--chart-4))",
-  },
-  interesMora: {
-    label: "Interés por mora",
-    color: "hsl(var(--chart-5))",
-  },
-} satisfies ChartConfig
+type GeneralWidgetProps = {
+  className?: string
+}
 
-export default function GeneralWidget() {
+
+export default function GeneralWidget({ className }: GeneralWidgetProps) {
   return (
-    <Card className="mt-3">
+    <Card className={className}>
       <CardHeader>
         <CardTitle>Visión General</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            layout="vertical"
-            margin={{
-              left: 15,
-            }}
-          >
+        <ResponsiveContainer width="100%" height={500}>
+          <BarChart data={chartData} layout="vertical" margin={{ top: 10}}>
+            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+            <XAxis type="number" axisLine={true} tickLine={true} tickFormatter={(value) => `$${value / 1000}k`} />
             <YAxis
-              dataKey="browser"
+              dataKey="name"
               type="category"
+              scale="band"
+              axisLine={true}
               tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) =>
-                chartConfig[value as keyof typeof chartConfig]?.label
-              }
+              fontSize={12}
+              width={70}
+              tickMargin={5}
             />
-            <XAxis dataKey="visitors" type="number" hide />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "var(--card-background, white)",
+                border: "1px solid #3c5543",
+                borderRadius: "0.5rem",
+                fontSize: "0.875rem",
+                color: "black",
+              }}
+              formatter={(value) => [`$${value.toLocaleString()}`, "Monto"]}
+              cursor={{ fill: "rgba(80, 194, 113, 0.1)" }}
             />
-            <Bar dataKey="visitors" layout="vertical" radius={5} />
+            <Bar
+              dataKey="value"
+              radius={[0, 4, 4, 0]}
+              barSize={30}
+              label={{
+                position: "right",
+                formatter: (value: any) => `$${value / 1000}k`,
+                fill: "white",
+                fontSize: 12,
+              }}
+            />
           </BarChart>
-        </ChartContainer>
+        </ResponsiveContainer>
       </CardContent>
     </Card>
   )
 }
+
