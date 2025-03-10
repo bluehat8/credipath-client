@@ -98,51 +98,51 @@ export const LoanSimulation: React.FC<LoanSimulationProps> = ({ formData }) => {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-neutral-400">
-              <DollarSign className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 text-xs text-blue-400">
+              <DollarSign className="w-3.5 h-3.5 text-blue-400" />
               <span>Monto Total</span>
             </div>
-            <p className="text-lg font-medium text-white">${totalPayment}</p>
+            <p className="text-lg font-medium text-blue-400">${totalPayment}</p>
           </div>
 
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-neutral-400">
-              <Percent className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 text-xs text-red-400">
+              <Percent className="w-3.5 h-3.5 text-red-400" />
               <span>Interés Total</span>
             </div>
-            <p className="text-lg font-medium text-white">${totalInterest}</p>
+            <p className="text-lg font-medium text-red-400">${totalInterest}</p>
           </div>
 
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-neutral-400">
-              <Clock className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 text-xs text-yellow-400">
+              <Clock className="w-3.5 h-3.5 text-yellow-400" />
               <span>Cuotas</span>
             </div>
-            <p className="text-lg font-medium text-white">{formData?.numeroCuotas || "12"}</p>
+            <p className="text-lg font-medium text-yellow-400">{formData?.numeroCuotas || "12"}</p>
           </div>
 
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-neutral-400">
-              <Calendar className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 text-xs text-green-400">
+              <Calendar className="w-3.5 h-3.5 text-green-400" />
               <span>Frecuencia</span>
             </div>
-            <p className="text-lg font-medium text-white capitalize">{formData?.pago}</p>
+            <p className="text-lg font-medium text-green-400 capitalize">{formData?.pago}</p>
           </div>
 
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-neutral-400">
-              <CreditCard className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 text-xs text-purple-400">
+              <CreditCard className="w-3.5 h-3.5 text-purple-400" />
               <span>Tipo de Pago</span>
             </div>
-            <p className="text-lg font-medium text-white capitalize">{getPaymentTypeLabel()}</p>
+            <p className="text-lg font-medium text-purple-400 capitalize">{getPaymentTypeLabel()}</p>
           </div>
 
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-neutral-400">
-              <Calendar className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 text-xs text-teal-400">
+              <Calendar className="w-3.5 h-3.5 text-teal-400" />
               <span>Fecha Inicio</span>
             </div>
-            <p className="text-lg font-medium text-white">
+            <p className="text-lg font-medium text-teal-400">
               {formData?.fechaPrestamo ? new Date(formData.fechaPrestamo).toLocaleDateString("es-ES") : ""}
             </p>
           </div>
@@ -151,93 +151,90 @@ export const LoanSimulation: React.FC<LoanSimulationProps> = ({ formData }) => {
 
       {/* Payment Cards */}
       <div className="max-h-[400px] overflow-y-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {simulationData.map((payment) => (
-          <div
-            key={payment.paymentNumber}
-            className={`rounded-lg border overflow-hidden transition-all ${
-              payment.status === "pendiente"
-                ? "border-green-native/30 bg-green-native/5"
-                : "border-neutral-700/30 bg-neutral-800/30"
-            }`}
-          >
-            {/* Card Header */}
-            <div className="flex items-center justify-between p-3 border-b border-neutral-700/20">
-              <div className="flex items-center gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+          {simulationData.map((payment) => (
+            <div
+              key={payment.paymentNumber}
+              className={`rounded-lg border overflow-hidden transition-all ${
+                payment.status === "pendiente"
+                  ? "border-green-500/30 bg-green-500/5"
+                  : "border-neutral-700/30 bg-neutral-800/30"
+              }`}
+            >
+              {/* Card Header */}
+              <div className="flex items-center justify-between p-3 border-b border-neutral-700/20">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium ${
+                      payment.status === "pendiente" ? "bg-green-500 text-black" : "bg-neutral-700 text-white"
+                    }`}
+                  >
+                    {payment.paymentNumber}
+                  </span>
+                  <span className="text-sm font-light">{new Date(payment.paymentDate).toLocaleDateString("es-ES")}</span>
+                </div>
+
                 <span
-                  className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium ${
-                    payment.status === "pendiente" ? "bg-green-native text-black" : "bg-neutral-700 text-white"
+                  className={`text-xs px-2 py-0.5 rounded-full ${
+                    payment.status === "pendiente"
+                      ? "bg-green-500/20 text-green-500"
+                      : "bg-neutral-700/30 text-neutral-400"
                   }`}
                 >
-                  {payment.paymentNumber}
+                  {payment.status === "pendiente" ? "Pendiente" : "Futuro"}
                 </span>
-                <span className="text-sm font-light">{new Date(payment.paymentDate).toLocaleDateString("es-ES")}</span>
               </div>
 
-              <span
-                className={`text-xs px-2 py-0.5 rounded-full ${
-                  payment.status === "pendiente"
-                    ? "bg-green-native/20 text-green-native"
-                    : "bg-neutral-700/30 text-neutral-400"
-                }`}
-              >
-                {payment.status === "pendiente" ? "Pendiente" : "Futuro"}
-              </span>
-            </div>
+              {/* Card Body */}
+              <div className="p-3 space-y-3">
+                {/* Payment Amount */}
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-neutral-400">Pago Total</span>
+                  <span className="text-base font-medium text-blue-400">${payment.paymentAmount}</span>
+                </div>
 
-            {/* Card Body */}
-            <div className="p-3 space-y-3">
-              {/* Payment Amount */}
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-neutral-400">Pago Total</span>
-                <span className="text-base font-medium">${payment.paymentAmount}</span>
-              </div>
-
-              {/* Payment Breakdown */}
-              <div className="flex items-center gap-2 text-xs">
-                <div className="flex-1 space-y-1">
-                  <div className="flex justify-between">
-                    <span className="text-neutral-400">Capital</span>
-                    <span>${payment.principalPayment}</span>
+                {/* Payment Breakdown */}
+                <div className="flex items-center gap-2 text-xs">
+                  <div className="flex-1 space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-neutral-400">Capital</span>
+                      <span className="text-green-400">${payment.principalPayment}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-400">Interés</span>
+                      <span className="text-red-400">${payment.interestPayment}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-neutral-400">Interés</span>
-                    <span>${payment.interestPayment}</span>
+
+                  <div className="text-neutral-600">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+
+                  <div className="space-y-1">
+                    <span className="text-neutral-400 text-xs">Saldo</span>
+                    <p className="text-sm text-yellow-400">${payment.remainingBalance}</p>
                   </div>
                 </div>
 
-                <div className="text-neutral-600">
-                  <ArrowRight className="w-4 h-4" />
-                </div>
-
-                <div className="space-y-1">
-                  <span className="text-neutral-400 text-xs">Saldo</span>
-                  <p className="text-sm">${payment.remainingBalance}</p>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="pt-2">
-                <div className="h-1 w-full bg-neutral-700/30 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full ${
-                      payment.status === "pendiente" ? "bg-green-native" : "bg-neutral-600"
-                    }`}
-                    style={{ width: `${payment.progressPercent}%` }}
-                  ></div>
-                </div>
-                <div className="flex justify-end mt-1">
-                  <span className="text-xs text-neutral-500">{payment.progressPercent}% completado</span>
+                {/* Progress Bar */}
+                <div className="pt-2">
+                  <div className="h-1 w-full bg-neutral-700/30 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${
+                        payment.status === "pendiente" ? "bg-green-500" : "bg-neutral-600"
+                      }`}
+                      style={{ width: `${payment.progressPercent}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-end mt-1">
+                    <span className="text-xs text-neutral-500">{payment.progressPercent}% completado</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      </div>
-
-      {/* end */}
     </div>
   )
 }
-
