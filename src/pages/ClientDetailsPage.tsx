@@ -5,7 +5,7 @@ import { Layout as Sidebar } from '../components/sidebar/Layout';
 import { LoanForm } from '../components/Modal/Loand/LoanForm';
 
 
-const loans = [
+export const loans = [
   {
     amount: 500,
     installments: 4,

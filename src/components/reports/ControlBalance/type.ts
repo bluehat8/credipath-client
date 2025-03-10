@@ -16,3 +16,13 @@ export interface TransactionData {
     icon?: string;
     hasDropdown?: boolean;
   }
+
+  export interface PendingPayments {
+    id: string
+    collaborator: string
+    client: string
+    amount: number
+    installmentNumber: string
+    dueDate: string
+    status: string
+  }
