@@ -2,6 +2,8 @@ import * as React from "react";
 import { ClientCard } from "../components/ClientCard";
 import { ClientForm } from "../components/Modal/Client/ClientForm";
 import { MainSidebar } from "components/sidebar/Sidebar";
+import { ThemeProvider } from "context/ThemeContext";
+
 
 const clients = [
   {
@@ -44,6 +46,8 @@ export const ClientDashboard: React.FC = () => {
   );
 
   return (
+    
+    <ThemeProvider>
     <MainSidebar>
       <div className="max-md:flex-col w-full">
         <section className="flex flex-col ml-2 max-md:ml-0 max-md:w-full" role="main">
@@ -124,5 +128,6 @@ export const ClientDashboard: React.FC = () => {
         )}
       </div>
     </MainSidebar>
+    </ThemeProvider>
   );
 };
