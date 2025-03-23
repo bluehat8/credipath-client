@@ -12,6 +12,9 @@ import { HomePage } from './pages/HomePage';
 import { RoutesPage } from './pages/RoutesPage';
 import { LoanDetails } from './pages/LoanDetails';
 import { ControlBalancePage } from './pages/ControlBalancePage';
+import RetanqueoPage from 'pages/RetanqueoPage';
+import SolicitudRetanqueo from 'components/retanqueo/SolicitudRetanqueo';
+import Desembolso from 'components/retanqueo/Desembolso';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -30,6 +33,11 @@ root.render(
         <Route path="/routes" element={<RoutesPage />} />
         <Route path="/loan-details" element={<LoanDetails />} />
         <Route path="/control-balance" element={<ControlBalancePage />} />
+        
+        <Route path="/retanqueo" element={<RetanqueoPage />} />
+
+        <Route path='/solicitud' element={<SolicitudRetanqueo />} />
+        <Route path='/desembolso' element={<Desembolso />} />
       </Routes>
     </Router>
   </React.StrictMode>
