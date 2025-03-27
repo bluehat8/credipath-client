@@ -13,7 +13,8 @@
         "constants/*": ["constants/*"],
         "types/*": ["types/*"],
         "context/*": ["context/*"],
-        "utils/*": ["utils/*"]
+        "utils/*": ["utils/*"],
+        "schemas/*": ["schemas/*"]
   
       },
       "esModuleInterop": true, // Permitir importaciones de CommonJS
