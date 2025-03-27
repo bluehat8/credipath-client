@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CollaboratorCard } from "../components/CollaboratorCard";
+import { CollaboratorCard } from "components/common/CollaboratorCard";
 import CollaboratorForm from "../components/Modal/collaborator/CollaboratorForm";
 import { MainSidebar } from "components/sidebar/Sidebar";
 
