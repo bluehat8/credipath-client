@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SidebarItemProps } from "../utils/types";
+import { SidebarItemProps } from "utils/types";
 
 export const SidebarItem: React.FC<SidebarItemProps> = ({ icon, text, isActive }) => {
   return (

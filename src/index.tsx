@@ -15,7 +15,7 @@ import { ControlBalancePage } from './pages/ControlBalancePage';
 import RetanqueoPage from 'pages/RetanqueoPage';
 import SolicitudRetanqueo from 'components/retanqueo/SolicitudRetanqueo';
 import Desembolso from 'components/retanqueo/Desembolso';
-// import Rutas from 'components/route';
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CollaboratorCardProps } from "../utils/types";
+import { CollaboratorCardProps } from "utils/types";
 
 export const CollaboratorCard: React.FC<CollaboratorCardProps> = ({
   name,

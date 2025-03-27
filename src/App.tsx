@@ -1,7 +1,7 @@
 
 import * as React from "react";
-import { InputField } from "./components/InputField";
-import { Button } from "./components/Button";
+import { InputField } from "components/common/InputField";
+import { Button } from "components/common/Button";
 
 export const LoginForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {

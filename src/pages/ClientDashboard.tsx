@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Plus, Search, Filter } from "lucide-react"
-import { ClientCard } from "../components/ClientCard"
+import { ClientCard } from "components/common/ClientCard"
 import { ClientForm } from "../components/Modal/Client/ClientForm"
 import { MainSidebar } from "components/sidebar/Sidebar"
 import { ThemeProvider } from "context/ThemeContext"

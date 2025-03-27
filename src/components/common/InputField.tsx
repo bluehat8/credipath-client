@@ -1,5 +1,5 @@
 import * as React from "react";
-import { InputFieldProps } from "../utils/types";
+import { InputFieldProps } from "utils/types";
 
 export const InputField: React.FC<InputFieldProps> = ({ label, placeholder, type = "text", id }) => {
   return (

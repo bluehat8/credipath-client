@@ -1,6 +1,7 @@
 import React from "react"
 import { X, Calendar } from "lucide-react"
 import { Separator } from "components/components/ui/separator"
+import { ThemeProvider } from "context/ThemeContext"
 
 interface FilterSidePanelProps {
   isOpen: boolean
@@ -55,7 +56,7 @@ export const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
   }
 
   return (
-    <>
+    <ThemeProvider>
       {/* Overlay */}
       <div
         className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${
@@ -225,7 +226,7 @@ export const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
           </div>
         </div>
       </div>
-    </>
+    </ThemeProvider>
   )
 }
 
