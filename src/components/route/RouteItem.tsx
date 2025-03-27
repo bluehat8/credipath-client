@@ -5,7 +5,6 @@ import ActionButton from "components/ui/ActionButton";
 interface RouteItemProps {
   name: string;
   district: string;
-  phoneNumber: string;
   location: string;
   onEdit: () => void;
   onDelete: () => void;
@@ -17,7 +16,6 @@ interface RouteItemProps {
 const RouteItem: React.FC<RouteItemProps> = ({
   name,
   district,
-  phoneNumber,
   location,
   onEdit,
   onDelete,
@@ -46,14 +44,6 @@ const RouteItem: React.FC<RouteItemProps> = ({
                 <span>{district}</span>
               </div>
             </div>
-            <img
-              src="/identifier.svg"
-              className="object-contain shrink-0 mt-7 aspect-square w-[15px]"
-              alt="Phone icon"
-            />
-            <span className="mt-7 text-xs font-light tracking-wide">
-              {phoneNumber}
-            </span>
           </div>
           <div className="flex gap-1.5 text-xs font-light tracking-wide">
             <img
@@ -67,21 +57,21 @@ const RouteItem: React.FC<RouteItemProps> = ({
       </div>
       <div className="flex gap-8 my-auto text-base font-light tracking-wide whitespace-nowrap">
         <ActionButton
-          icon="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/8c263edc0c0432df154a44ec9aec13eb10fab18a?placeholderIfAbsent=true"
+          icon="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/497e173d9e5494ea2411c198e4e6bcab010d969d1084d21f1c171b0b9f4f0da4?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
           text="Editar"
           onClick={onEdit}
           variant="primary"
           isLoading={isEditLoading}
-          disabled={isDisabled || isEditLoading || isDeleteLoading}
+          disabled={isDisabled}
           ariaLabel={`Editar ${name}`}
         />
         <ActionButton
-          icon="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/502aef42978c20e751b099b41d6c5b65a6ed69fa?placeholderIfAbsent=true"
+          icon="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/519eb87536b8573346762e6942175d8df1f106fbc27e1320dc8d1f37af9efd77?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
           text="Eliminar"
           onClick={onDelete}
           variant="danger"
           isLoading={isDeleteLoading}
-          disabled={isDisabled || isEditLoading || isDeleteLoading}
+          disabled={isDisabled}
           ariaLabel={`Eliminar ${name}`}
         />
       </div>

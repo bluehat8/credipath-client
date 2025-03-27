@@ -32,7 +32,6 @@ const RouteFormModal: React.FC<RouteFormModalProps> = ({
     defaultValues: {
       name: "",
       district: "",
-      phoneNumber: "",
       location: "",
     },
   });
@@ -169,37 +168,6 @@ const RouteFormModal: React.FC<RouteFormModalProps> = ({
               )}
             </div>
 
-            {/* Phone Number Field */}
-            <div className="form-group">
-              <label
-                htmlFor="phoneNumber"
-                className="block text-sm font-medium text-zinc-300 mb-1"
-              >
-                Número de Teléfono
-              </label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                {...register("phoneNumber")}
-                className={`w-full px-4 py-2 bg-zinc-700 border ${
-                  errors.phoneNumber ? "border-red-500" : "border-zinc-600"
-                } rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                aria-invalid={errors.phoneNumber ? "true" : "false"}
-                aria-describedby={
-                  errors.phoneNumber ? "phoneNumber-error" : undefined
-                }
-                disabled={isSubmitting}
-              />
-              {errors.phoneNumber && (
-                <p
-                  id="phoneNumber-error"
-                  className="mt-1 text-sm text-red-500"
-                  role="alert"
-                >
-                  {errors.phoneNumber.message}
-                </p>
-              )}
-            </div>
 
             {/* Location Field */}
             <div className="form-group">

@@ -3,7 +3,6 @@ export interface Route {
     id: string;
     name: string;
     district: string;
-    phoneNumber: string;
     location: string;
   }
   

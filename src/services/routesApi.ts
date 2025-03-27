@@ -78,42 +78,121 @@ export async function deleteRoute(id: string): Promise<ApiResponse<null>> {
   return handleResponse<ApiResponse<null>>(response);
 }
 
-// Mock data for development/testing
 const mockRoutes: Route[] = [
-  {
-    id: "1",
-    name: "Ruta del norte",
-    district: "Distrito V",
-    phoneNumber: "505",
-    location: "Bo. Larreynaga - Col. 10 junio",
-  },
-  {
-    id: "2",
-    name: "Ruta del sur",
-    district: "Distrito III",
-    phoneNumber: "506",
-    location: "Col. Centroamérica - Altamira",
-  },
+    {
+      id: "1",
+      name: "Ruta Norte",
+      district: "Distrito V",
+      location: "Bo. Larreynaga - Col. 10 junio"
+    },
+    {
+      id: "2",
+      name: "Ruta Sur",
+      district: "Distrito III", 
+      location: "Col. Centroamérica"
+    },
+    {
+      id: "3",
+      name: "Ruta Este",
+      district: "Distrito II",
+      location: "Reparto Schick"
+    },
+    {
+      id: "4", 
+      name: "Ruta Oeste",
+      district: "Distrito IV",
+      location: "Barrio Martha Quezada"
+    },
+    {
+      id: "5",
+      name: "Ruta Central",
+      district: "Distrito I",
+      location: "Col. Primero de Mayo"
+    },
+    {
+      id: "6",
+      name: "Ruta Universitaria",
+      district: "Distrito I",
+      location: "UNI - UCA"
+    },
+    {
+      id: "7",
+      name: "Ruta Histórica",
+      district: "Distrito II",
+      location: "Centro Histórico"
+    },
+    {
+      id: "8",
+      name: "Ruta Comercial",
+      district: "Distrito V",
+      location: "Mercado Oriental"
+    },
+    {
+      id: "9",
+      name: "Ruta Residencial",
+      district: "Distrito IV",
+      location: "Las Colinas"
+    },
+    {
+      id: "10",
+      name: "Ruta Express",
+      district: "Distrito III",
+      location: "Carretera a Masaya"
+    },
+    {
+      id: "11",
+      name: "Ruta Escolar",
+      district: "Distrito II",
+      location: "Zona de Colegios"
+    },
+    {
+      id: "12",
+      name: "Ruta Hospitalaria",
+      district: "Distrito I",
+      location: "Hospitales principales"
+    }
 ];
 
 // Mock API implementation for development/testing
 export const mockRoutesApi = {
-  getRoutes: async function (
-    page?: number,
-    limit?: number,
-    search?: string
-  ): Promise<PaginatedResponse<Route>> {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    getRoutes: async function (
+        page: number = 1,
+        limit: number = 10,
+        search?: string
+        ): Promise<PaginatedResponse<Route>> {
+        // Simulate network delay
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-    return {
-      data: [...mockRoutes], // Return a copy to prevent mutations
-      total: mockRoutes.length,
-      page: 1,
-      limit: 10,
-      totalPages: 1,
-    };
-  },
+        // Filter routes if search query is provided
+        let filteredRoutes = [...mockRoutes];
+        if (search) {
+            const searchTerm = search.toLowerCase();
+            filteredRoutes = filteredRoutes.filter(route => 
+            route.name.toLowerCase().includes(searchTerm) ||
+            route.district.toLowerCase().includes(searchTerm) ||
+            route.location.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        const total = filteredRoutes.length;
+        const totalPages = Math.ceil(total / limit);
+        
+        // Validate page number
+        const currentPage = Math.max(1, Math.min(page, totalPages));
+        
+        // Implement pagination
+        const startIndex = (currentPage - 1) * limit;
+        const endIndex = Math.min(startIndex + limit, total);
+        const paginatedRoutes = filteredRoutes.slice(startIndex, endIndex);
+
+        return {
+            data: paginatedRoutes,
+            total,
+            page: currentPage,
+            limit,
+            totalPages,
+        };
+    },
 
   getRouteById: async function (id: string): Promise<ApiResponse<Route>> {
     await new Promise((resolve) => setTimeout(resolve, 800));
