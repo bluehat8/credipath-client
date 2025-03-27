@@ -11,7 +11,15 @@ module.exports = {
 		},
 	  },
 	  extend: {
+		fontFamily: {
+			sans: ['Poppins', 'sans-serif'], 
+			poppins: ['Poppins', 'sans-serif']
+		},
+		letterSpacing: {
+			'15percent': '0.15em'
+		},
 		colors: {
+		  green:'var(--green)',
 		  border: "hsl(var(--border))",
 		  input: "hsl(var(--input))",
 		  ring: "hsl(var(--ring))",
