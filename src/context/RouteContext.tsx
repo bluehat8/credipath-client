@@ -26,12 +26,15 @@ export const RouteProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     data: routesData, 
     isLoading, 
     isError, 
-    error 
+    error: queryError 
   } = useQuery(
     ['routes', page, limit, searchQuery],
     () => api.mockRoutesApi.getRoutes(page, limit, searchQuery),
     { keepPreviousData: true }
   );
+
+  const error = queryError instanceof Error ? queryError : 
+             queryError ? new Error(String(queryError)) : null;
 
   // Mutation for adding a route
   const addMutation = useMutation(api.mockRoutesApi.createRoute, {

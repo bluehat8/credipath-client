@@ -9,13 +9,13 @@ import { CollaboratorsPage } from './pages/CollaboratorPage';
 import { ClientDashboard } from './pages/ClientDashboard';
 import { ClientDetails } from './pages/ClientDetailsPage';
 import { HomePage } from './pages/HomePage';
-import { RoutesPage } from './pages/RoutesPage';
+import  Rutas  from './pages/RoutesPage';
 import { LoanDetails } from './pages/LoanDetails';
 import { ControlBalancePage } from './pages/ControlBalancePage';
 import RetanqueoPage from 'pages/RetanqueoPage';
 import SolicitudRetanqueo from 'components/retanqueo/SolicitudRetanqueo';
 import Desembolso from 'components/retanqueo/Desembolso';
-import Rutas from 'components/route';
+// import Rutas from 'components/route';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -25,13 +25,11 @@ root.render(
       <Routes>
         {/* Ruta principal que muestra el formulario de login */}
         <Route path="/" element={<LoginForm />} />
-        {/* Ruta para la página de colaboradores */}
         <Route path="/home" element={<HomePage />} />
         <Route path="/collaborators" element={<CollaboratorsPage />} />
         <Route path="/clients" element={<ClientDashboard />} />
         <Route path="/details-client" element={<ClientDetails />} />
-        {/* <Route path="/routes" element={<RoutesPage />} /> */}
-        <Route path="/routes" element={<Rutas />} />
+        <Route path="/routes" element={<Rutas/>} />
 
         <Route path="/loan-details" element={<LoanDetails />} />
         <Route path="/control-balance" element={<ControlBalancePage />} />
