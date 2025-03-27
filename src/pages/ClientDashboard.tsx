@@ -4,7 +4,7 @@ import { ClientCard } from "../components/ClientCard"
 import { ClientForm } from "../components/Modal/Client/ClientForm"
 import { MainSidebar } from "components/sidebar/Sidebar"
 import { ThemeProvider } from "context/ThemeContext"
-import { FilterSidePanel } from "components/side-panel/client-filter"
+import { FilterSidePanel } from "components/filters/client-filter"
 import { useClientDashboard } from "hooks/clients/useClientDashboard"
 
 export const ClientDashboard: React.FC = () => {
