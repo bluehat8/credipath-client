@@ -1,157 +1,79 @@
-import { Route, ApiResponse, PaginatedResponse, ApiError } from "types/types";
+import { Route, ApiResponse, PaginatedResponse } from "types/types";
+import { createApiClient, handleAxiosResponse, handleAxiosError } from 'utils/axiosClient';
+import { AxiosError } from 'axios';
+import { ROUTES_ENDPOINTS } from "constants/endpoints";
 
-// Base API URL - would typically come from environment variables
-const API_BASE_URL = "https://api.example.com/api";
+const API_BASE_URL = ROUTES_ENDPOINTS;
+const routesClient = createApiClient();
 
-// Helper function to handle API responses
-async function handleResponse<T>(response: Response): Promise<T> {
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw {
-      status: response.status,
-      message: errorData.message || "An error occurred",
-      errors: errorData.errors,
-    };
-  }
-  return await response.json();
-}
-
-// Get all routes with optional pagination and filtering
-export async function getRoutes(
-  page = 1,
-  limit = 10,
-  search?: string,
-): Promise<PaginatedResponse<Route>> {
-  const queryParams = new URLSearchParams({
-    page: page.toString(),
-    limit: limit.toString(),
-  });
-
-  if (search) {
-    queryParams.append("search", search);
-  }
-
-  const response = await fetch(`${API_BASE_URL}/routes?${queryParams}`);
-  return handleResponse<PaginatedResponse<Route>>(response);
-}
-
-// Get a single route by ID
-export async function getRouteById(id: string): Promise<ApiResponse<Route>> {
-  const response = await fetch(`${API_BASE_URL}/routes/${id}`);
-  return handleResponse<ApiResponse<Route>>(response);
-}
-
-// Create a new route
-export async function createRoute(
-  routeData: Omit<Route, "id">,
-): Promise<ApiResponse<Route>> {
-  const response = await fetch(`${API_BASE_URL}/routes`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(routeData),
-  });
-  return handleResponse<ApiResponse<Route>>(response);
-}
-
-// Update an existing route
-export async function updateRoute(
-  id: string,
-  routeData: Partial<Route>,
-): Promise<ApiResponse<Route>> {
-  const response = await fetch(`${API_BASE_URL}/routes/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(routeData),
-  });
-  return handleResponse<ApiResponse<Route>>(response);
-}
-
-// Delete a route
-export async function deleteRoute(id: string): Promise<ApiResponse<null>> {
-  const response = await fetch(`${API_BASE_URL}/routes/${id}`, {
-    method: "DELETE",
-  });
-  return handleResponse<ApiResponse<null>>(response);
-}
-
-const mockRoutes: Route[] = [
-    {
-      id: "1",
-      name: "Ruta Norte",
-      district: "Distrito V",
-      location: "Bo. Larreynaga - Col. 10 junio"
-    },
-    {
-      id: "2",
-      name: "Ruta Sur",
-      district: "Distrito III", 
-      location: "Col. Centroamérica"
-    },
-    {
-      id: "3",
-      name: "Ruta Este",
-      district: "Distrito II",
-      location: "Reparto Schick"
-    },
-    {
-      id: "4", 
-      name: "Ruta Oeste",
-      district: "Distrito IV",
-      location: "Barrio Martha Quezada"
-    },
-    {
-      id: "5",
-      name: "Ruta Central",
-      district: "Distrito I",
-      location: "Col. Primero de Mayo"
-    },
-    {
-      id: "6",
-      name: "Ruta Universitaria",
-      district: "Distrito I",
-      location: "UNI - UCA"
-    },
-    {
-      id: "7",
-      name: "Ruta Histórica",
-      district: "Distrito II",
-      location: "Centro Histórico"
-    },
-    {
-      id: "8",
-      name: "Ruta Comercial",
-      district: "Distrito V",
-      location: "Mercado Oriental"
-    },
-    {
-      id: "9",
-      name: "Ruta Residencial",
-      district: "Distrito IV",
-      location: "Las Colinas"
-    },
-    {
-      id: "10",
-      name: "Ruta Express",
-      district: "Distrito III",
-      location: "Carretera a Masaya"
-    },
-    {
-      id: "11",
-      name: "Ruta Escolar",
-      district: "Distrito II",
-      location: "Zona de Colegios"
-    },
-    {
-      id: "12",
-      name: "Ruta Hospitalaria",
-      district: "Distrito I",
-      location: "Hospitales principales"
+export const routesApi = {
+  async getRoutes(
+    page = 1,
+    limit = 10,
+    search?: string,
+  ): Promise<PaginatedResponse<Route>> {
+    try {
+      const params = { page, limit, ...(search && { search }) };
+      const response = await routesClient.get<PaginatedResponse<Route>>(
+        `${ROUTES_ENDPOINTS.GET_ROUTES}`,
+        { params }
+      );
+      return handleAxiosResponse(response);
+    } catch (error) {
+      return handleAxiosError(error as AxiosError);
     }
-];
+  },
+
+  async getRouteById(id: string): Promise<ApiResponse<Route>> {
+    try {
+      const response = await routesClient.get<ApiResponse<Route>>(
+        `${ROUTES_ENDPOINTS.GET_ROUTES}/${id}`
+      );
+      return handleAxiosResponse(response);
+    } catch (error) {
+      return handleAxiosError(error as AxiosError);
+    }
+  },
+
+  async createRoute(routeData: Omit<Route, "id">): Promise<ApiResponse<Route>> {
+    try {
+      const response = await routesClient.post<ApiResponse<Route>>(
+        `${ROUTES_ENDPOINTS.ADD_ROUTES}`,
+        routeData
+      );
+      return handleAxiosResponse(response);
+    } catch (error) {
+      return handleAxiosError(error as AxiosError);
+    }
+  },
+
+  async updateRoute(
+    id: string,
+    routeData: Partial<Route>,
+  ): Promise<ApiResponse<Route>> {
+    try {
+      const response = await routesClient.put<ApiResponse<Route>>(
+        `${ROUTES_ENDPOINTS.UPDATE_ROUTE}/${id}`,
+        routeData
+      );
+      return handleAxiosResponse(response);
+    } catch (error) {
+      return handleAxiosError(error as AxiosError);
+    }
+  },
+
+  async deleteRoute(id: string): Promise<ApiResponse<null>> {
+    try {
+      const response = await routesClient.delete<ApiResponse<null>>(
+        `${API_BASE_URL.DELETE_ROUTE}/routes/${id}`
+      );
+      return handleAxiosResponse(response);
+    } catch (error) {
+      return handleAxiosError(error as AxiosError);
+    }
+  },
+};
+
 
 // Mock API implementation for development/testing
 export const mockRoutesApi = {
@@ -226,7 +148,6 @@ export const mockRoutesApi = {
     };
 
     // In a real implementation, we would add to the database
-    // For mock purposes, we'll add to our array (but this won't persist between page refreshes)
     mockRoutes.push(newRoute);
 
     return {
@@ -258,7 +179,6 @@ export const mockRoutesApi = {
     };
 
     // In a real implementation, we would update the database
-    // For mock purposes, we'll update our array
     mockRoutes[index] = updatedRoute;
 
     return {
@@ -281,7 +201,6 @@ export const mockRoutesApi = {
     }
 
     // In a real implementation, we would delete from the database
-    // For mock purposes, we'll remove from our array
     mockRoutes.splice(index, 1);
 
     return {
@@ -291,3 +210,79 @@ export const mockRoutesApi = {
     };
   },
 };
+
+
+const mockRoutes: Route[] = [
+  {
+    id: "1",
+    name: "Ruta Norte",
+    district: "Distrito V",
+    location: "Bo. Larreynaga - Col. 10 junio"
+  },
+  {
+    id: "2",
+    name: "Ruta Sur",
+    district: "Distrito III", 
+    location: "Col. Centroamérica"
+  },
+  {
+    id: "3",
+    name: "Ruta Este",
+    district: "Distrito II",
+    location: "Reparto Schick"
+  },
+  {
+    id: "4", 
+    name: "Ruta Oeste",
+    district: "Distrito IV",
+    location: "Barrio Martha Quezada"
+  },
+  {
+    id: "5",
+    name: "Ruta Central",
+    district: "Distrito I",
+    location: "Col. Primero de Mayo"
+  },
+  {
+    id: "6",
+    name: "Ruta Universitaria",
+    district: "Distrito I",
+    location: "UNI - UCA"
+  },
+  {
+    id: "7",
+    name: "Ruta Histórica",
+    district: "Distrito II",
+    location: "Centro Histórico"
+  },
+  {
+    id: "8",
+    name: "Ruta Comercial",
+    district: "Distrito V",
+    location: "Mercado Oriental"
+  },
+  {
+    id: "9",
+    name: "Ruta Residencial",
+    district: "Distrito IV",
+    location: "Las Colinas"
+  },
+  {
+    id: "10",
+    name: "Ruta Express",
+    district: "Distrito III",
+    location: "Carretera a Masaya"
+  },
+  {
+    id: "11",
+    name: "Ruta Escolar",
+    district: "Distrito II",
+    location: "Zona de Colegios"
+  },
+  {
+    id: "12",
+    name: "Ruta Hospitalaria",
+    district: "Distrito I",
+    location: "Hospitales principales"
+  }
+];
