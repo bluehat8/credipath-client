@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout } from './layouts/MainLayout';
-import { LoginPage } from './pages/auth/LoginPage';
+import LoginPage  from './pages/auth/LoginPage';
 import { CollaboratorsPage } from './pages/CollaboratorPage';
 import { ClientDashboard } from './pages/ClientDashboard';
 import { ClientDetails } from './pages/ClientDetailsPage';
