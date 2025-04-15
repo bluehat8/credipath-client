@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { CategoryData } from './type';
+import { Search } from 'lucide-react';
 
 interface CategoryFilterProps {
   categories: CategoryData[];
@@ -7,54 +8,41 @@ interface CategoryFilterProps {
 
 export function CategoryFilter({ categories }: CategoryFilterProps) {
   return (
-    <div className="flex items-center gap-4 mt-3 mr-8 max-md:mr-2.5">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
       {/* Categorías */}
-      <div className="flex flex-wrap gap-2.5 items-center text-sm font-medium text-white bg-neutral-800 rounded-lg p-3 max-md:overflow-x-scroll">
+      <div className="flex-1 flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-zinc-800">
         {categories.map((category, index) => (
           <button
             key={index}
-            className="flex items-center gap-2 px-4 py-2 bg-neutral-700 rounded-lg hover:bg-neutral-600 transition-colors min-w-[120px] max-w-full"
+            className="flex items-center gap-2 px-4 py-2.5 bg-zinc-700/50 hover:bg-zinc-700 transition-colors rounded-lg border border-zinc-600/50 whitespace-nowrap"
             aria-label={`Filter by ${category.label}`}
           >
             {category.icon ? (
               <img
                 src={category.icon}
                 alt={`${category.label} icon`}
-                className="w-6 h-6 object-contain"
+                className="w-5 h-5 object-contain"
               />
             ) : (
-              <div className="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center text-xs font-bold">
+              <div className="w-5 h-5 bg-zinc-600 rounded-lg flex items-center justify-center text-xs font-bold text-white">
                 {category.label[0].toUpperCase()}
               </div>
             )}
-            <span>{category.label}</span>
-            {category.hasDropdown && (
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/88cd06c805f15897d9e4f673647491c8790a6cc3e9758472a2378477c407449e?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
-                alt=""
-                className="w-3 h-3"
-              />
-            )}
+            <span className="text-white/90 text-sm font-medium">{category.label}</span>
           </button>
         ))}
       </div>
 
       {/* Búsqueda */}
-      <div className="flex items-center gap-2 px-4 py-2 bg-zinc-700 rounded-full border border-gray-600 text-slate-400 flex-grow">
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/e2482ddd8588ea8745953fa897ce7266e621823b2ea1d33544a9b0565ee87e4d?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
-          alt="Search icon"
-          className="w-5 h-5"
-        />
+      <div className="relative min-w-[280px]">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
         <input
           type="search"
-          placeholder="Search"
+          placeholder="Buscar transacción..."
           aria-label="Search transactions"
-          className="w-full bg-transparent outline-none border-none placeholder:text-slate-500 text-white"
+          className="w-full bg-zinc-700/30 border border-zinc-600/50 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
         />
       </div>
-
     </div>
   );
 }
-
