@@ -1,4 +1,4 @@
-import { MainSidebar } from 'components/sidebar/Sidebar';
+
 import { ThemeProvider } from 'context/ThemeContext';
 import '../index.css';
 import { RadialChart } from 'components/retanqueo/RadialChart';
@@ -7,7 +7,7 @@ import HistorialMovimientos from 'components/retanqueo/HistorialMovimientos';
 const RetanqueoPage = () => {
   return (
     <ThemeProvider>
-      <MainSidebar>
+      {/* <MainSidebar> */}
         <div className='font-poppins p-4 sm:p-5'>
           <h1 className="text-white tracking-[0.15em] text-[18px] sm:text-[20px] mb-6 sm:mb-8">
             Resumen de fondos
@@ -71,7 +71,7 @@ const RetanqueoPage = () => {
           {/* Historial de Movimientos */}
           <HistorialMovimientos />
         </div>
-      </MainSidebar>
+
     </ThemeProvider>
   );
 };

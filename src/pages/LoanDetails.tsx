@@ -3,7 +3,7 @@ import { LoanHeader } from "../components/loan-details/LoanHeader";
 import { LoanPaymentCard } from "../components/loan-details/LoanPaymentCard";
 import { LoanDetailModal } from "../components/Modal/loan-details/LoanDetailModal";
 import { PaymentForm } from "../components/Modal/PayLoand/PayLoandForm";
-import { MainSidebar } from "components/sidebar/Sidebar";
+
 import { ThemeProvider } from "context/ThemeContext";
 
 export const paymentData = [
@@ -58,7 +58,6 @@ export const LoanDetails: React.FC = () => {
 
   return (
     <ThemeProvider>
-    <MainSidebar>
       <div className="max-md:flex-col w-full">
         <div className="gap-5 max-md:flex-col">
           <h1 className="text-2xl font-semibold text-white tracking-wide">Detalle de Préstamo</h1>
@@ -192,7 +191,6 @@ export const LoanDetails: React.FC = () => {
       )}
 
       {isPaymentFormOpen && <PaymentForm onClose={closePaymentForm} />}
-    </MainSidebar>
     </ThemeProvider>
   );
 };

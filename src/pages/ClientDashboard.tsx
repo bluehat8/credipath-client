@@ -2,7 +2,7 @@ import * as React from "react"
 import { Plus, Search, Filter } from "lucide-react"
 import { ClientCard } from "components/common/ClientCard"
 import { ClientForm } from "../components/Modal/Client/ClientForm"
-import { MainSidebar } from "components/sidebar/Sidebar"
+
 import { ThemeProvider } from "context/ThemeContext"
 import { FilterSidePanel } from "components/filters/client-filter"
 import { useClientDashboard } from "hooks/clients/useClientDashboard"
@@ -27,7 +27,7 @@ export const ClientDashboard: React.FC = () => {
 
   return (
     <ThemeProvider>
-      <MainSidebar>
+      {/* <MainSidebar> */}
         <div className="max-md:flex-col w-full">
           <section className="flex flex-col ml-2 max-md:ml-0 max-md:w-full" role="main">
             <div className="flex flex-col self-stretch my-auto max-md:mt-10 max-md:max-w-full">
@@ -147,7 +147,7 @@ export const ClientDashboard: React.FC = () => {
             </div>
           )}
         </div>
-      </MainSidebar>
+
     </ThemeProvider>
   )
 }

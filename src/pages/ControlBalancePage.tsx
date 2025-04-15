@@ -6,7 +6,7 @@ import { MainSidebar } from 'components/sidebar/Sidebar';
 
 export function ControlBalancePage() {
   return (
-    <MainSidebar>
+    <div>
       <section className="flex flex-col w-full" role="main">
         <div className="my-2">
           <h1 className="text-2xl font-semibold text-white tracking-wide">
@@ -94,6 +94,6 @@ export function ControlBalancePage() {
           </div>
         </section>
       </section>
-    </MainSidebar>
+    </div>
   );
 }

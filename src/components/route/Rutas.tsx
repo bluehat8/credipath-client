@@ -62,7 +62,7 @@ const Rutas: React.FC = () => {
   };
 
   return (
-    <MainSidebar>
+    <div>
       <div className="overflow-hidden bg-neutral-900 max-md:pr-5">
         <div className="flex gap-5 max-md:flex-col">
           <section className="w-full max-md:ml-0 max-md:w-full">
@@ -180,7 +180,7 @@ const Rutas: React.FC = () => {
           variant="danger"
         />
       </div>
-    </MainSidebar>
+    </div>
   );
 };
 

@@ -62,7 +62,7 @@ export const ClientDetails: React.FC = () => {
   return (
     <ThemeProvider>
     
-    <MainSidebar>
+    {/* <MainSidebar> */}
       <div className="max-md:flex-col w-full">
         <div className="gap-5 max-md:flex-col">
         
@@ -145,7 +145,7 @@ export const ClientDetails: React.FC = () => {
           </section>
         </div>
       </div>
-    </MainSidebar>
+    {/* </MainSidebar> */}
     </ThemeProvider>
 
   );

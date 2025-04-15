@@ -39,7 +39,8 @@ export function CollaboratorsPage() {
   };
 
   return (
-    <MainSidebar>
+    // <MainSidebar>
+    <>
     <div className="max-md:flex-col w-full">
       <div className="gap-5 max-md:flex-col">
   
@@ -91,7 +92,8 @@ export function CollaboratorsPage() {
               />
 
       )}
+      </>
 
-    </MainSidebar>
+    // </MainSidebar>
   );
 }

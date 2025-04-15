@@ -1,9 +1,7 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import {LoginForm} from './App';
+import { App } from './App';
 
-test('renders learn react link', () => {
-  render(<LoginForm />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test('renders app component', () => {
+  render(<App />);
+  expect(document.querySelector('div')).toBeInTheDocument();
 });
