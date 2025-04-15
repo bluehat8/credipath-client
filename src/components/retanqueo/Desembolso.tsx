@@ -4,8 +4,7 @@ import TablaDesembolso from "./TablaDesembolso";
 
 const Desembolso = () => {
   return (
-    <ThemeProvider>
-      <MainSidebar>
+    <div>
         {/* Título */}
         <h1 className="text-white tracking-[0.15em] mx-5 text-[20px] lg:text-[24px] xl:text-[28px]">
           Desembolsos
@@ -27,8 +26,7 @@ const Desembolso = () => {
         <section className="bg-[#24272A] p-4 sm:p-6 md:p-8 mx-5 rounded-b-lg">
           <TablaDesembolso />
         </section>
-      </MainSidebar>
-    </ThemeProvider>
+    </div>
   );
 };
 
