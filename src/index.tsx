@@ -15,6 +15,7 @@ import { ControlBalancePage } from './pages/ControlBalancePage';
 import RetanqueoPage from 'pages/RetanqueoPage';
 import SolicitudRetanqueo from 'components/retanqueo/SolicitudRetanqueo';
 import Desembolso from 'components/retanqueo/Desembolso';
+import GestionRetanqueo from 'pages/GestionRetanqueo';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -35,6 +36,7 @@ root.render(
         <Route path="/control-balance" element={<ControlBalancePage />} />
         
         <Route path="/retanqueo" element={<RetanqueoPage />} />
+        <Route path="/retanqueo/solicitudes" element={<GestionRetanqueo />} />
 
         <Route path='/solicitud' element={<SolicitudRetanqueo />} />
         <Route path='/desembolso' element={<Desembolso />} />
