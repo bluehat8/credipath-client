@@ -36,24 +36,24 @@ export const NewNavigationItems = [
     icon: Users,
     items: [],
   },
-  {
-    id: "loans",
-    title: "Préstamos",
-    path: "/loans",
-    icon: CreditCard,
-    items: [
-      {
-        id: "overdue-payments",
-        title: "Cuotas vencidas",
-        path: "/overdue",
-      },
-      {
-        id: "pending-payments",
-        title: "Cobros pendientes",
-        path: "/pending",
-      },
-    ],
-  },
+  // {
+  //   id: "loans",
+  //   title: "Préstamos",
+  //   path: "/loans",
+  //   icon: CreditCard,
+  //   items: [
+  //     {
+  //       id: "overdue-payments",
+  //       title: "Cuotas vencidas",
+  //       path: "/overdue",
+  //     },
+  //     {
+  //       id: "pending-payments",
+  //       title: "Cobros pendientes",
+  //       path: "/pending",
+  //     },
+  //   ],
+  // },
   {
     id: "reports",
     title: "Informes",
@@ -65,16 +65,16 @@ export const NewNavigationItems = [
         title: "Control de gastos",
         path: "/control-balance",
       },
-      {
-        id: "monthly-reports",
-        title: "Informes mensuales",
-        path: "/reports/monthly",
-      },
-      {
-        id: "annual-reports",
-        title: "Informes anuales",
-        path: "/reports/annual",
-      },
+      // {
+      //   id: "monthly-reports",
+      //   title: "Informes mensuales",
+      //   path: "/reports/monthly",
+      // },
+      // {
+      //   id: "annual-reports",
+      //   title: "Informes anuales",
+      //   path: "/reports/annual",
+      // },
     ],
   },
   {
@@ -109,13 +109,13 @@ export const NewNavigationItems = [
     ],
   },
 
-  {
-    id: "administration",
-    title: "Administración",
-    path: "/admin",
-    icon: Settings,
-    items: [],
-  },
+  // {
+  //   id: "administration",
+  //   title: "Administración",
+  //   path: "/admin",
+  //   icon: Settings,
+  //   items: [],
+  // },
   {
     id: "settings",
     title: "Configuración",
