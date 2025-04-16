@@ -99,7 +99,7 @@ export const NewNavigationItems = [
       {
         id: "",
         title: "Desembolsos",
-        path: "/retanqueo/confirmacion",
+        path: "/retanqueo/desembolsos",
       },
       {
         id: "gestion-solicitudes",

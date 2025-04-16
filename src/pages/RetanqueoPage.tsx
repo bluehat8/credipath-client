@@ -3,6 +3,7 @@ import { ThemeProvider } from 'context/ThemeContext';
 import '../index.css';
 import { RadialChart } from 'components/retanqueo/RadialChart';
 import HistorialMovimientos from 'components/retanqueo/HistorialMovimientos';
+import { Link } from 'react-router-dom';
 
 const RetanqueoPage = () => {
   return (
@@ -25,6 +26,8 @@ const RetanqueoPage = () => {
               <p className="text-white font-medium text-xs">
                 Actualizado: 12/12/205
               </p>
+
+              <Link to={'/solicitud'}>
               <button
                 className='bg-green-native rounded-md text-sm text-white mt-8 sm:mt-12 px-5 sm:px-7 py-2 flex items-center'
               >
@@ -35,6 +38,7 @@ const RetanqueoPage = () => {
                 </div>
                 Solicitar retanqueo
               </button>
+              </Link>
             </section>
 
             {/* Sección de Resumen de Movimientos */}

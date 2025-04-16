@@ -46,7 +46,7 @@ export const App = () => {
           <Route path="control-balance" element={<ControlBalancePage />} />
           <Route path="retanqueo" element={<RetanqueoPage />} />
           <Route path="solicitud" element={<SolicitudRetanqueo />} />
-          <Route path="desembolso" element={<Desembolso />} />
+          <Route path="/retanqueo/desembolsos" element={<Desembolso />} />
         </Route>
 
         {/* Ruta 404 */}
