@@ -20,6 +20,11 @@ module.exports = {
 		},
 		colors: {
 		  green:'var(--green)',
+		  green: {
+			500: '#22c55e',
+			600: '#16a34a',
+			700: '#15803d',
+		  },
 		  border: "hsl(var(--border))",
 		  input: "hsl(var(--input))",
 		  ring: "hsl(var(--ring))",
