@@ -104,7 +104,7 @@ export const NewNavigationItems = [
       {
         id: "gestion-solicitudes",
         title: "Gestionar solicitudes",
-        path: "/retanqueo/solicitudes",
+        path: "/retanqueo/gestion-solicitudes",
       },
     ],
   },

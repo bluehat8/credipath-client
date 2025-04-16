@@ -11,6 +11,7 @@ import { ControlBalancePage } from './pages/ControlBalancePage';
 import RetanqueoPage from './pages/RetanqueoPage';
 import SolicitudRetanqueo from './components/retanqueo/SolicitudRetanqueo';
 import Desembolso from './components/retanqueo/Desembolso';
+import GestionRetanqueo from 'pages/GestionRetanqueo';
 
 export const App = () => {
   // Aquí puedes agregar tu lógica de autenticación
@@ -47,6 +48,8 @@ export const App = () => {
           <Route path="retanqueo" element={<RetanqueoPage />} />
           <Route path="solicitud" element={<SolicitudRetanqueo />} />
           <Route path="/retanqueo/desembolsos" element={<Desembolso />} />
+          <Route path="/retanqueo/gestion-solicitudes" element={<GestionRetanqueo />} />
+
         </Route>
 
         {/* Ruta 404 */}

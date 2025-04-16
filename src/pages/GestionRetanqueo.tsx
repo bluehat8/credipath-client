@@ -48,8 +48,7 @@ const GestionRetanqueo = () => {
   };
 
   return (
-    <ThemeProvider>
-      <MainSidebar>
+    <div>
         <h1 className="text-white tracking-[0.15em] md:mx-5 text-[18px] sm:text-[20px] mb-6 sm:mb-8">
           Solicitudes de retanqueo
         </h1>
@@ -102,8 +101,7 @@ const GestionRetanqueo = () => {
             </button>
           </div>
         </section>
-      </MainSidebar>
-    </ThemeProvider>
+    </div>
   );
 };
 
