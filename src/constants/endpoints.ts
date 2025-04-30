@@ -1,5 +1,4 @@
-//SE MANDARÁN A LLAMAR LAS VARIABLES DE ENTORNO CUANDO LA API YA ESTÉ ALOJADA EN UN HOSTING O VPS
-export const API_URL = "https://credipath/api"
+export const API_URL = process.env.VITE_API_URL;
 
 /**
  * Endpoints relacionados con autenticación.
