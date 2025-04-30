@@ -1,6 +1,6 @@
 const RetanqueoStats = () => {
   return (
-    <ul className="flex flex-wrap justify-center gap-4 mt-5 md:px-4">
+    <ul className="flex flex-wrap gap-4 mt-5 md:px-4">
       {/* Total de solicitudes */}
       <li className="bg-[#181A1C] w-full sm:w-[calc(50%-8px)] md:w-[246px] h-[80px] px-4 rounded-lg flex gap-4 sm:gap-10 justify-between items-center">
         <div className="flex flex-col">
