@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getUserData, getToken, setToken, setUserData, clearAuthData, isAuthenticated as checkIsAuthenticated } from '../utils/localStorage';
 import axiosInstance from '../utils/axios';
+import { jwtDecode } from 'jwt-decode';
 
 interface User {
   id: string;
@@ -52,11 +53,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(true);
     try {
       const response = await axiosInstance.post('/User/Login', { usernameOrEmail, password });
-      const { token, user } = response.data;
       
-      setToken(token);
-      setUserData(user);
-      setUser(user);
+      // La respuesta tiene el formato {success, message, tokenValue}
+      const { success, message, tokenValue } = response.data;
+      
+      if (!success || !tokenValue) {
+        throw new Error(message || 'Error de autenticación');
+      }
+      
+      // Decodificar el token JWT para obtener los datos del usuario
+      type DecodedToken = {
+        id: string;
+        user: string;
+        usertype: string;
+        exp: number;
+        [key: string]: any;
+      };
+      
+      // Decodificar el token para extraer información
+      const decoded = jwtDecode<DecodedToken>(tokenValue);
+      
+      // Crear objeto de usuario con datos del token
+      const userData = {
+        id: decoded.id,
+        name: decoded.user,
+        email: usernameOrEmail, // El email no está en el token, usamos el del login
+        role: decoded.usertype   // 'admin', 'user', etc.
+      };
+      
+      // Guardar token y datos
+      setToken(tokenValue);
+      setUserData(userData);
+      setUser(userData);
     } catch (error) {
       console.error('Login failed', error);
       throw error;

@@ -15,16 +15,32 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("") 
   const navigate = useNavigate()
-  const { login, isLoading } = useAuthService()
+  const { login, isLoading, user } = useAuthService() // Extraemos user también
+
+  // Efecto para manejar redirección cuando el usuario cambia (login exitoso)
+  useEffect(() => {
+    // Solo si el usuario está autenticado y terminamos de cargar
+    if (user && !isLoading) {
+      // Redirigir según el rol del usuario
+      if (user.role === "admin") {
+        navigate("/home") // Dashboard para administradores
+      } else if (user.role === "collaborator") {
+        navigate("/routes") // Pantalla de rutas para colaboradores
+      } else {
+        navigate("/clients") // Vista de clientes para otros roles
+      }
+    }
+  }, [user, isLoading, navigate]) // Se ejecuta cuando cambia el usuario o isLoading
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("") // Limpiar errores anteriores
     
     try {
+      // El login actualizará el estado del usuario en el contexto
+      // lo que activará el useEffect de arriba para la redirección
       await login({ email, password })
-      // Redirige a /clients si la autenticación es exitosa
-      navigate("/clients")
+      // No necesitamos redirección aquí, el useEffect se encargará
     } catch (error) {
       console.error("Error de autenticación:", error)
       setError("Credenciales incorrectas. Por favor, inténtalo de nuevo.")
