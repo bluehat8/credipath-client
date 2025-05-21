@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { getUserData, getToken, setToken, setUserData, clearAuthData, isAuthenticated as checkIsAuthenticated } from '../utils/localStorage';
 import axiosInstance from '../utils/axios';
 import { jwtDecode } from 'jwt-decode';
+import { isTokenExpired, checkTokenOnPageLoad } from '../utils/tokenUtils';
+import { PATHS } from '../routes/routes';
 
 interface User {
   id: string;
@@ -18,6 +20,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
+  navigateByRole: () => void; // Nuevo método para redirección basada en roles
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,6 +37,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Load user from localStorage on initial render
     const loadUser = () => {
       try {
+        // Verificar si el token ha expirado
+        if (isTokenExpired()) {
+          console.warn('Token expirado al cargar la aplicación');
+          clearAuthData();
+          setUser(null);
+          setIsLoading(false);
+          
+          // No redirigimos aquí para evitar loops de redirección
+          // La redirección se maneja en los guardianes de ruta
+          return;
+        }
+        
+        // Si el token es válido, cargar datos del usuario
         const userData = getUserData();
         if (userData && checkIsAuthenticated()) {
           setUser(userData);
@@ -46,6 +62,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     };
 
+    // Verificar token al cargar la página
+    checkTokenOnPageLoad();
+    
+    // Cargar usuario si todo está bien
     loadUser();
   }, []);
 
@@ -107,6 +127,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUserData(updatedUser);
     }
   };
+  
+  /**
+   * Navega a diferentes rutas según el rol del usuario
+   * Este método centraliza la lógica de navegación basada en roles
+   */
+  const navigateByRole = (): void => {
+    if (!user) return;
+    
+    // Redirección basada en el rol del usuario
+    switch (user.role) {
+      case 'admin':
+        window.location.href = PATHS.HOME; // Dashboard para administradores
+        break;
+      case 'collaborator':
+        window.location.href = PATHS.ROUTES; // Vista de rutas para colaboradores
+        break;
+      default:
+        window.location.href = PATHS.CLIENTS; // Vista general de clientes para otros roles
+        break;
+    }
+  };
 
   const value = {
     user,
@@ -114,7 +155,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isLoading,
     login,
     logout,
-    updateUser
+    updateUser,
+    navigateByRole
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

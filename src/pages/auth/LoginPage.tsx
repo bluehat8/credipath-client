@@ -8,6 +8,7 @@ import { Input } from "components/components/ui/input"
 import { Label } from "components/components/ui/label"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuthService } from "../../hooks/auth/use-auth-service"
+import { PATHS } from "../../routes/routes"
 
 
 export default function LoginPage() {
@@ -15,22 +16,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("") 
   const navigate = useNavigate()
-  const { login, isLoading, user } = useAuthService() // Extraemos user también
+  const { login, isLoading, user, navigateByRole } = useAuthService() // Ahora también extraemos navigateByRole
 
   // Efecto para manejar redirección cuando el usuario cambia (login exitoso)
   useEffect(() => {
     // Solo si el usuario está autenticado y terminamos de cargar
     if (user && !isLoading) {
-      // Redirigir según el rol del usuario
-      if (user.role === "admin") {
-        navigate("/home") // Dashboard para administradores
-      } else if (user.role === "collaborator") {
-        navigate("/routes") // Pantalla de rutas para colaboradores
-      } else {
-        navigate("/clients") // Vista de clientes para otros roles
-      }
+      // Usar el método centralizado para redirección basada en roles
+      navigateByRole();
     }
-  }, [user, isLoading, navigate]) // Se ejecuta cuando cambia el usuario o isLoading
+  }, [user, isLoading, navigateByRole]) // Se ejecuta cuando cambia el usuario o isLoading
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -18,7 +18,7 @@ interface ChangePasswordPayload {
 }
 
 export const useAuthService = () => {
-  const { login: contextLogin, logout: contextLogout, user, isAuthenticated, isLoading } = useAuth();
+  const { login: contextLogin, logout: contextLogout, user, isAuthenticated, isLoading, navigateByRole } = useAuth();
 
   // Login method that uses the AuthContext
   const login = useCallback(
@@ -93,6 +93,7 @@ export const useAuthService = () => {
     resetPassword,
     user,
     isAuthenticated,
-    isLoading
+    isLoading,
+    navigateByRole // Añadimos el método de navegación basada en roles
   };
 };
