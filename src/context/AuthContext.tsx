@@ -48,10 +48,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loadUser();
   }, []);
 
-  const login = async (email: string, password: string): Promise<void> => {
+  const login = async (usernameOrEmail: string, password: string): Promise<void> => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.post('/auth/login', { email, password });
+      const response = await axiosInstance.post('/User/Login', { usernameOrEmail, password });
       const { token, user } = response.data;
       
       setToken(token);

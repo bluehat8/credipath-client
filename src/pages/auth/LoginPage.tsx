@@ -7,22 +7,27 @@ import { Button } from "components/components/ui/button"
 import { Input } from "components/components/ui/input"
 import { Label } from "components/components/ui/label"
 import { Link, useNavigate } from "react-router-dom"
+import { useAuthService } from "../../hooks/auth/use-auth-service"
 
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("") 
   const navigate = useNavigate()
+  const { login, isLoading } = useAuthService()
 
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Simula la autenticación
-    if (email === "agustin.amaya.g21@gmail.com" && password === "password") {
+    setError("") // Limpiar errores anteriores
+    
+    try {
+      await login({ email, password })
       // Redirige a /clients si la autenticación es exitosa
       navigate("/clients")
-    } else {
-      alert("Credenciales incorrectas");
+    } catch (error) {
+      console.error("Error de autenticación:", error)
+      setError("Credenciales incorrectas. Por favor, inténtalo de nuevo.")
     }
   }
 
@@ -72,11 +77,18 @@ export default function LoginPage() {
             />
           </div>
 
+          {error && (
+            <div className="text-red-400 text-sm mt-2 bg-red-400/10 px-3 py-2 rounded border border-red-400/20">
+              {error}
+            </div>
+          )}
+          
           <Button
-            type="submit" // Mantén el tipo 'submit'
-            className="bg-white/5 border-white/20 to-emerald-400 hover:from-green-400 hover:to-emerald-300 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+            type="submit"
+            disabled={isLoading}
+            className="bg-white/5 border-white/20 to-emerald-400 hover:from-green-400 hover:to-emerald-300 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Iniciar sesión
+            {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </Button>
         </form>
 

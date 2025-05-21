@@ -1,4 +1,5 @@
-export const API_URL = process.env.VITE_API_URL;
+export const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3000/api';
+
 
 /**
  * Endpoints relacionados con autenticación.
