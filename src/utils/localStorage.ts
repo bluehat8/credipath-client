@@ -1,8 +1,8 @@
 // localStorage.ts
 // Utility functions for handling localStorage
 
-const TOKEN_KEY = 'auth_token';
-const USER_KEY = 'user_data';
+export const TOKEN_KEY = 'auth_token';
+export const USER_KEY = 'user_data';
 
 /**
  * Store authentication token in localStorage

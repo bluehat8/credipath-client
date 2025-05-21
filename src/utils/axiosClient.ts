@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import { getToken } from './localStorage';
 
 export const createApiClient = (baseURL?: string): AxiosInstance => {
   const client = axios.create({
@@ -9,7 +10,7 @@ export const createApiClient = (baseURL?: string): AxiosInstance => {
 
   // Interceptor para JWT
   client.interceptors.request.use(config => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
