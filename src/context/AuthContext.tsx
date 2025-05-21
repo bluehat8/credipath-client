@@ -105,6 +105,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setToken(tokenValue);
       setUserData(userData);
       setUser(userData);
+      console.log("Login successful:", userData);
     } catch (error) {
       console.error('Login failed', error);
       throw error;

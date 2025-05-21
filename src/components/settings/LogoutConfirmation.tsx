@@ -3,16 +3,17 @@ import { Button } from "components/components/ui/button";
 import { Card } from "components/components/ui/card";
 import { AlertTriangle, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuthService } from "../../hooks/auth/use-auth-service";
+import { PATHS } from "../../routes/routes";
 
 export default function LogoutConfirmation() {
   const navigate = useNavigate();
 
+  const { logout } = useAuthService();
+
   const handleLogout = () => {
-    // Aquí iría la lógica para cerrar sesión
-    // Por ejemplo, eliminar tokens de autenticación, limpiar el estado, etc.
-    
-    // Redirigir al usuario a la página de inicio de sesión
-    navigate("/auth/login");
+    logout(); 
+    navigate(PATHS.LOGIN);
   };
 
   return (

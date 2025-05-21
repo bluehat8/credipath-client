@@ -139,7 +139,7 @@ export const routes: Route[] = [
     path: PATHS.RETANQUEO_SOLICITUD,
     label: 'Solicitud Retanqueo',
     requiresAuth: true,
-    roles: ['admin', 'user'],
+    roles: ['collaborator'],  // Solo collaborators pueden acceder a la solicitud
   },
   {
     path: PATHS.RETANQUEO_DESEMBOLSOS,

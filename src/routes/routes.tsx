@@ -43,9 +43,11 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children, requiredRoles = [] }) =
 
   // Check role-based permissions if requiredRoles are specified
   if (requiredRoles.length > 0 && user) {
-    const hasAccess = userHasRouteAccess(location.pathname, [user.role]);
+    // Verificar si el rol del usuario está en los roles requeridos
+    const hasRequiredRole = requiredRoles.includes(user.role);
     
-    if (!hasAccess) {
+    if (!hasRequiredRole) {
+      console.log(`Usuario con rol '${user.role}' no tiene permiso para acceder a ${location.pathname} que requiere roles: [${requiredRoles.join(', ')}]`);
       // Redirect to home if user doesn't have required role
       return <Navigate to={PATHS.HOME} replace />;
     }
@@ -170,7 +172,7 @@ export const AppRouter: React.FC = () => {
         <Route 
           path={PATHS.RETANQUEO_SOLICITUD} 
           element={
-            <AuthGuard requiredRoles={['admin', 'user']}>
+            <AuthGuard requiredRoles={['collaborator', 'admin']}>
               <SolicitudRetanqueo />
             </AuthGuard>
           } 
