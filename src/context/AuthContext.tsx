@@ -4,6 +4,8 @@ import axiosInstance from '../utils/axios';
 import { jwtDecode } from 'jwt-decode';
 import { isTokenExpired, checkTokenOnPageLoad } from '../utils/tokenUtils';
 import { PATHS } from '../routes/routes';
+import { usePermissionStore } from 'store/usePermissionStore';
+
 
 interface User {
   id: string;
@@ -116,9 +118,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = (): void => {
     clearAuthData();
+    usePermissionStore.getState().clearPermissions();
     setUser(null);
-    // Optionally call a logout endpoint if your API requires it
-    // axiosInstance.post('/auth/logout');
   };
 
   const updateUser = (userData: Partial<User>): void => {

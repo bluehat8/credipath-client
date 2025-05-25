@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Button } from "components/components/ui/button";
 import { Input } from "components/components/ui/input";
@@ -7,6 +7,7 @@ import { Label } from "components/components/ui/label";
 import { Card } from "components/components/ui/card";
 import { Collaborator } from "../../../hooks/collaborator/use-collaborator-service";
 import { usePermissions, PermissionState } from "../../../hooks/collaborator/use-permissions";
+import { usePermissionStore } from "../../../store/usePermissionStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/components/ui/tabs";
 import { X } from "lucide-react";
 
@@ -33,26 +34,17 @@ interface FormValues {
 const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = false }: CollaboratorFormProps) => {
   const [activeTab, setActiveTab] = useState("personal");
   
-  const { 
-    permissions: allPermissions,
-    permissionsByModule,
-    dynamicPermissions,
-    uniqueModules,
-    fetchPermissions,
-    convertPermissionIdsToState,
-    convertStateToPermissionIds,
-    loading: permissionsLoading,
-    isReady,
-    getGroupedModules,
-    getFriendlyModuleName,
-    getFriendlyActionName
-  } = usePermissions();
+  // Usar useRef para evitar re-renders innecesarios
+  const initializationDone = useRef(false);
   
-  useEffect(() => {
-    fetchPermissions().catch(error => {
-      console.error('Error al cargar permisos:', error);
-    });
-  }, [fetchPermissions]);
+  // Obtener permisos del store global
+  const allPermissions = usePermissionStore(state => state.permissions);
+  const fetchPermissions = usePermissionStore(state => state.fetchPermissions);
+  
+  const { 
+    convertPermissionIdsToState,
+    convertStateToPermissionIds
+  } = usePermissions();
 
   const {
     register,
@@ -86,17 +78,47 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
     }, { shouldValidate: true });
   }
 
-  // Solo inicializa el formulario una vez por apertura de modal (no en cada render)
+  // UN SOLO useEffect para inicializar el formulario una vez
   useEffect(() => {
-    if (!isOpen || !isReady) return;
-    if (!isEditMode) {
-      // Crear un estado de permisos inicial con todos los permisos en false
-      const initialPermState: PermissionState = {};
-      allPermissions.forEach(perm => {
-        const permKey = `${perm.module}_${perm.action}`;
-        initialPermState[permKey] = false;
+    // Solo inicializar una vez cuando se abre el modal
+    if (!isOpen || initializationDone.current) return;
+    
+    // Asegurarnos de que solo inicializamos una vez
+    initializationDone.current = true;
+    
+    // Asegurar que tenemos permisos
+    if (allPermissions.length === 0) {
+      fetchPermissions().catch(e => console.error('Error fetching permissions:', e));
+    }
+    
+    // Crear valores iniciales del formulario
+    let initialValues: FormValues;
+    
+    if (isEditMode && collaborator) {
+      // Modo edición: usar datos del colaborador
+      const permissionIds = Array.isArray(collaborator.permissions)
+        ? collaborator.permissions.map((p: any) => p.id)
+        : [];
+        
+      initialValues = {
+        identifier: collaborator.identifier || '',
+        name: collaborator.name || '',
+        email: collaborator.email || '',
+        password: '',
+        confirmPassword: '',
+        address: collaborator.address || '',
+        mobile: collaborator.mobile || '',
+        phone: collaborator.phone || '',
+        permissionState: convertPermissionIdsToState(permissionIds)
+      };
+    } else {
+      // Modo creación: inicializar vacío
+      const emptyPermissions: PermissionState = {};
+      allPermissions.forEach(p => {
+        emptyPermissions[`${p.module}_${p.action}`] = false;
       });
-      reset({
+      
+      initialValues = {
         identifier: '',
         name: '',
         email: '',
@@ -105,29 +127,18 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
         address: '',
         mobile: '',
         phone: '',
-        permissionState: initialPermState
-      });
-    } else if (isEditMode && collaborator) {
-      // Extraer los IDs de permisos del colaborador
-      const permissionIds = Array.isArray(collaborator.permissions)
-        ? collaborator.permissions.map((p: any) => p.id)
-        : [];
-      const permState = convertPermissionIdsToState(permissionIds);
-      reset({
-        identifier: collaborator.identifier || '',
-        name: collaborator.name || '',
-        email: collaborator.email || '',
-        password: '',  
-        confirmPassword: '',
-        address: collaborator.address || '',
-        mobile: collaborator.mobile || '',
-        phone: collaborator.phone || '',
-        permissionState: permState
-      });
+        permissionState: emptyPermissions
+      };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, isReady]);
+    
+    // Establecer valores iniciales
+    reset(initialValues);
+    
+  }, [isOpen, reset, isEditMode, collaborator, allPermissions, convertPermissionIdsToState, fetchPermissions]);
 
+  // Si el modal no está abierto, no renderizar nada
+  if (!isOpen) return null;
+  
   const onSubmit: SubmitHandler<FormValues> = (data) => {
 
     const permissionIds = convertStateToPermissionIds(data.permissionState);
