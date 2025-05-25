@@ -147,7 +147,7 @@ export function CollaboratorsPage() {
                       phone={collaborator.phone}
                       email={collaborator.email}
                       onEdit={() => handleEditCollaborator(collaborator)}
-                      onDelete={() => handleDeleteCollaborator(collaborator.id)}
+                      onDelete={() => handleDeleteCollaborator(collaborator.id?.toString())}
                     />
                   ))
                 )}

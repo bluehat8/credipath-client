@@ -9,6 +9,13 @@ import { Collaborator } from "../../../hooks/collaborator/use-collaborator-servi
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/components/ui/tabs";
 import { X } from "lucide-react";
 
+// Interfaz para los permisos que vienen de la API
+interface ApiPermission {
+  id: number;
+  module: string;
+  action: string;
+}
+
 interface CollaboratorFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -50,6 +57,53 @@ interface FormValues {
 
 const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = false }: CollaboratorFormProps) => {
   const [activeTab, setActiveTab] = useState("personal")
+  
+  // Función para convertir los permisos de la API al formato del formulario
+  const convertApiPermissionsToFormFormat = (apiPermissions: ApiPermission[] | undefined) => {
+    // Inicializar permisos por defecto
+    const defaultPermissions = {
+      loan: { add: false, edit: false, delete: false },
+      payment: { add: false, edit: false, delete: false },
+      modules: {
+        collaborators: false,
+        overduePayments: false,
+        upcomingPayments: false,
+        loanPayment: false,
+        report: false
+      }
+    };
+
+    // Si no hay permisos, devolver los valores por defecto
+    if (!apiPermissions || !Array.isArray(apiPermissions)) {
+      return defaultPermissions;
+    }
+
+    // Convertir permisos de la API al formato del formulario
+    apiPermissions.forEach(permission => {
+      // Permisos de Préstamos
+      if (permission.module === 'Prestamos') {
+        if (permission.action === 'Agregar') defaultPermissions.loan.add = true;
+        if (permission.action === 'Editar') defaultPermissions.loan.edit = true;
+        if (permission.action === 'Eliminar') defaultPermissions.loan.delete = true;
+      }
+      // Permisos de Pagos
+      else if (permission.module === 'Pagos') {
+        if (permission.action === 'Agregar') defaultPermissions.payment.add = true;
+        if (permission.action === 'Editar') defaultPermissions.payment.edit = true;
+        if (permission.action === 'Eliminar') defaultPermissions.payment.delete = true;
+      }
+      // Permisos de módulos
+      else if (permission.action === 'Ver') {
+        if (permission.module === 'Colaboradores') defaultPermissions.modules.collaborators = true;
+        if (permission.module === 'PagosVencidos') defaultPermissions.modules.overduePayments = true;
+        if (permission.module === 'ProximosPagos') defaultPermissions.modules.upcomingPayments = true;
+        if (permission.module === 'AbonarPrestamo') defaultPermissions.modules.loanPayment = true;
+        if (permission.module === 'Reportes') defaultPermissions.modules.report = true;
+      }
+    });
+
+    return defaultPermissions;
+  };
 
   // Inicializar React Hook Form
   const {
@@ -110,6 +164,11 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
   // Cargar datos del colaborador en modo edición
   useEffect(() => {
     if (isEditMode && collaborator) {
+      console.log('Cargando colaborador para edición:', collaborator);
+      
+      // Convertir permisos de la API al formato del formulario
+      const formattedPermissions = convertApiPermissionsToFormFormat(collaborator.permissions as any);
+      
       // Rellenar el formulario con los datos del colaborador
       reset({
         identifier: collaborator.identifier || '',
@@ -120,35 +179,26 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
         address: collaborator.address || '',
         mobile: collaborator.mobile || '',
         phone: collaborator.phone || '',
-        // Inicializar los permisos si existen
-        permissions: collaborator.permissions || {
-          loan: { add: false, edit: false, delete: false },
-          payment: { add: false, edit: false, delete: false },
-          modules: {
-            collaborators: false,
-            overduePayments: false,
-            upcomingPayments: false,
-            loanPayment: false,
-            report: false
-          }
-        }
+        permissions: formattedPermissions
       });
     }
   }, [isEditMode, collaborator, reset]);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    // En modo edición, no enviamos password si está vacío
+    // Crear payload con la estructura correcta
+    const payload = {
+      ...data,
+      role: 'collaborator' // Asegurarnos de enviar siempre el rol
+    };
+    
+    // En modo edición, si la contraseña está vacía, mantenerla así
     if (isEditMode && !data.password) {
-      // En lugar de eliminar los campos, los mantenemos con valores vacíos
-      const updatedData = {
-        ...data,
-        password: "", // Mantener el campo pero con valor vacío
-        confirmPassword: "" // Mantener el campo pero con valor vacío
-      };
-      onSave(updatedData);
-    } else {
-      onSave(data);
+      payload.password = "";
+      payload.confirmPassword = "";
     }
+    
+    console.log('Enviando datos del colaborador:', payload);
+    onSave(payload);
   };
 
   if (!isOpen) return null
