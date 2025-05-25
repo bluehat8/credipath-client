@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
 import { CollaboratorCard } from "components/common/CollaboratorCard";
 import CollaboratorForm from "../components/Modal/collaborator/CollaboratorForm";
-import { MainSidebar } from "components/sidebar/Sidebar";
 import { useCollaboratorService, Collaborator } from "../hooks/collaborator/use-collaborator-service";
 import { toast } from "../components/components/ui/use-toast";
 
 export function CollaboratorsPage() {
-  // Estado para el modal de colaboradores
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedCollaborator, setSelectedCollaborator] = useState<Collaborator | undefined>();
 
-  // Usar el hook para gestionar colaboradores
   const { 
     collaborators, 
     loading, 
@@ -22,7 +20,6 @@ export function CollaboratorsPage() {
     deleteCollaborator 
   } = useCollaboratorService();
 
-  // Cargar colaboradores al montar el componente
   useEffect(() => {
     fetchCollaborators().catch(error => {
       toast({
@@ -33,21 +30,18 @@ export function CollaboratorsPage() {
     });
   }, [fetchCollaborators]);
 
-  // Abrir modal para agregar colaborador
   const handleAddCollaborator = () => {
     setIsEditMode(false);
     setSelectedCollaborator(undefined);
     setIsModalOpen(true);
   };
 
-  // Abrir modal para editar colaborador
   const handleEditCollaborator = (collaborator: Collaborator) => {
     setIsEditMode(true);
     setSelectedCollaborator(collaborator);
     setIsModalOpen(true);
   };
 
-  // Eliminar colaborador
   const handleDeleteCollaborator = async (id?: string) => {
     if (!id) return;
 
@@ -68,14 +62,15 @@ export function CollaboratorsPage() {
     }
   };
 
-  // Cerrar modal
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  // Guardar colaborador (crear o actualizar)
   const handleSaveCollaborator = async (data: any) => {
     try {
+      console.log('Datos recibidos del formulario:', data);
+      // { identifier, name, email, ..., role: 'collaborator', permissions: [1, 2, 7, ...] }
+      
       if (isEditMode && selectedCollaborator?.id) {
         await updateCollaborator(selectedCollaborator.id, data);
         toast({
@@ -90,6 +85,7 @@ export function CollaboratorsPage() {
         });
       }
 
+      await fetchCollaborators();
       setIsModalOpen(false);
     } catch (error: any) {
       toast({
@@ -101,7 +97,6 @@ export function CollaboratorsPage() {
   };
 
   return (
-    // <MainSidebar>
     <>
       <div className="max-md:flex-col w-full">
         <div className="gap-5 max-md:flex-col">
@@ -167,6 +162,5 @@ export function CollaboratorsPage() {
         />
       )}
     </>
-    // </MainSidebar>
   );
 }

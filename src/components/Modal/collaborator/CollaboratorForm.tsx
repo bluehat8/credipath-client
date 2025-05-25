@@ -6,15 +6,9 @@ import { Input } from "components/components/ui/input";
 import { Label } from "components/components/ui/label";
 import { Card } from "components/components/ui/card";
 import { Collaborator } from "../../../hooks/collaborator/use-collaborator-service";
+import { usePermissions, PermissionState } from "../../../hooks/collaborator/use-permissions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/components/ui/tabs";
 import { X } from "lucide-react";
-
-// Interfaz para los permisos que vienen de la API
-interface ApiPermission {
-  id: number;
-  module: string;
-  action: string;
-}
 
 interface CollaboratorFormProps {
   isOpen: boolean;
@@ -24,7 +18,6 @@ interface CollaboratorFormProps {
   isEditMode?: boolean;
 }
 
-// Definición de la estructura de datos del formulario
 interface FormValues {
   identifier: string
   name: string
@@ -34,78 +27,33 @@ interface FormValues {
   address: string
   mobile: string
   phone: string
-  permissions: {
-    loan: {
-      add: boolean
-      edit: boolean
-      delete: boolean
-    }
-    payment: {
-      add: boolean
-      edit: boolean
-      delete: boolean
-    }
-    modules: {
-      collaborators: boolean
-      overduePayments: boolean
-      upcomingPayments: boolean
-      loanPayment: boolean
-      report: boolean
-    }
-  }
+  permissionState: PermissionState
 }
 
 const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = false }: CollaboratorFormProps) => {
-  const [activeTab, setActiveTab] = useState("personal")
+  const [activeTab, setActiveTab] = useState("personal");
   
-  // Función para convertir los permisos de la API al formato del formulario
-  const convertApiPermissionsToFormFormat = (apiPermissions: ApiPermission[] | undefined) => {
-    // Inicializar permisos por defecto
-    const defaultPermissions = {
-      loan: { add: false, edit: false, delete: false },
-      payment: { add: false, edit: false, delete: false },
-      modules: {
-        collaborators: false,
-        overduePayments: false,
-        upcomingPayments: false,
-        loanPayment: false,
-        report: false
-      }
-    };
-
-    // Si no hay permisos, devolver los valores por defecto
-    if (!apiPermissions || !Array.isArray(apiPermissions)) {
-      return defaultPermissions;
-    }
-
-    // Convertir permisos de la API al formato del formulario
-    apiPermissions.forEach(permission => {
-      // Permisos de Préstamos
-      if (permission.module === 'Prestamos') {
-        if (permission.action === 'Agregar') defaultPermissions.loan.add = true;
-        if (permission.action === 'Editar') defaultPermissions.loan.edit = true;
-        if (permission.action === 'Eliminar') defaultPermissions.loan.delete = true;
-      }
-      // Permisos de Pagos
-      else if (permission.module === 'Pagos') {
-        if (permission.action === 'Agregar') defaultPermissions.payment.add = true;
-        if (permission.action === 'Editar') defaultPermissions.payment.edit = true;
-        if (permission.action === 'Eliminar') defaultPermissions.payment.delete = true;
-      }
-      // Permisos de módulos
-      else if (permission.action === 'Ver') {
-        if (permission.module === 'Colaboradores') defaultPermissions.modules.collaborators = true;
-        if (permission.module === 'PagosVencidos') defaultPermissions.modules.overduePayments = true;
-        if (permission.module === 'ProximosPagos') defaultPermissions.modules.upcomingPayments = true;
-        if (permission.module === 'AbonarPrestamo') defaultPermissions.modules.loanPayment = true;
-        if (permission.module === 'Reportes') defaultPermissions.modules.report = true;
-      }
+  const { 
+    permissions: allPermissions,
+    permissionsByModule,
+    dynamicPermissions,
+    uniqueModules,
+    fetchPermissions,
+    convertPermissionIdsToState,
+    convertStateToPermissionIds,
+    loading: permissionsLoading,
+    isReady,
+    getGroupedModules,
+    getFriendlyModuleName,
+    getFriendlyActionName
+  } = usePermissions();
+  
+  useEffect(() => {
+    fetchPermissions().catch(error => {
+      console.error('Error al cargar permisos:', error);
     });
+  }, [fetchPermissions]);
 
-    return defaultPermissions;
-  };
-
-  // Inicializar React Hook Form
   const {
     register,
     handleSubmit,
@@ -123,82 +71,91 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
       address: "",
       mobile: "",
       phone: "",
-      permissions: {
-        loan: {
-          add: false,
-          edit: false,
-          delete: false,
-        },
-        payment: {
-          add: false,
-          edit: false,
-          delete: false,
-        },
-        modules: {
-          collaborators: false,
-          overduePayments: false,
-          upcomingPayments: false,
-          loanPayment: false,
-          report: false,
-        },
-      },
+      permissionState: {}
     },
   })
 
-  // Observar los valores actuales para reflejar el estado en la UI
-  const permissions = watch("permissions")
+  const permissionState = watch("permissionState") || {}
 
-  // Función para manejar el toggle de permisos de préstamo y pago
-  const togglePermission = (category: "loan" | "payment", type: "add" | "edit" | "delete") => {
-    const currentValue = permissions[category][type]
-    setValue(`permissions.${category}.${type}`, !currentValue, { shouldValidate: true })
+  // Función para alternar un permiso
+  const togglePermission = (permKey: string) => {
+    const currentValue = permissionState[permKey] || false;
+    setValue('permissionState', {
+      ...permissionState,
+      [permKey]: !currentValue
+    }, { shouldValidate: true });
   }
 
-  // Función para manejar el toggle de permisos de módulos
-  const toggleModulePermission = (module: keyof typeof permissions.modules) => {
-    const currentValue = permissions.modules[module]
-    setValue(`permissions.modules.${module}`, !currentValue, { shouldValidate: true })
-  }
-
-  // Manejar el envío del formulario
-  // Cargar datos del colaborador en modo edición
+  // Solo inicializa el formulario una vez por apertura de modal (no en cada render)
   useEffect(() => {
-    if (isEditMode && collaborator) {
-      console.log('Cargando colaborador para edición:', collaborator);
-      
-      // Convertir permisos de la API al formato del formulario
-      const formattedPermissions = convertApiPermissionsToFormFormat(collaborator.permissions as any);
-      
-      // Rellenar el formulario con los datos del colaborador
+    if (!isOpen || !isReady) return;
+    if (!isEditMode) {
+      // Crear un estado de permisos inicial con todos los permisos en false
+      const initialPermState: PermissionState = {};
+      allPermissions.forEach(perm => {
+        const permKey = `${perm.module}_${perm.action}`;
+        initialPermState[permKey] = false;
+      });
+      reset({
+        identifier: '',
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        address: '',
+        mobile: '',
+        phone: '',
+        permissionState: initialPermState
+      });
+    } else if (isEditMode && collaborator) {
+      // Extraer los IDs de permisos del colaborador
+      const permissionIds = Array.isArray(collaborator.permissions)
+        ? collaborator.permissions.map((p: any) => p.id)
+        : [];
+      const permState = convertPermissionIdsToState(permissionIds);
       reset({
         identifier: collaborator.identifier || '',
         name: collaborator.name || '',
         email: collaborator.email || '',
-        password: '',  // No mostramos la contraseña por seguridad
+        password: '',  
         confirmPassword: '',
         address: collaborator.address || '',
         mobile: collaborator.mobile || '',
         phone: collaborator.phone || '',
-        permissions: formattedPermissions
+        permissionState: permState
       });
     }
-  }, [isEditMode, collaborator, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, isReady]);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    // Crear payload con la estructura correcta
-    const payload = {
-      ...data,
-      role: 'collaborator' // Asegurarnos de enviar siempre el rol
+
+    const permissionIds = convertStateToPermissionIds(data.permissionState);
+    
+    const { identifier, name, email, password, confirmPassword, address, mobile, phone } = data;
+    
+    const finalPayload = {
+      identifier,
+      name,
+      email,
+      password,
+      confirmPassword,
+      address,
+      mobile,
+      phone,
+      role: 'collaborator',
+      permissions: permissionIds 
     };
     
-    // En modo edición, si la contraseña está vacía, mantenerla así
-    if (isEditMode && !data.password) {
-      payload.password = "";
-      payload.confirmPassword = "";
+    if (isEditMode && !finalPayload.password) {
+      finalPayload.password = "";
+      finalPayload.confirmPassword = "";
     }
     
-    console.log('Enviando datos del colaborador:', payload);
-    onSave(payload);
+    console.log('Enviando datos del colaborador:', finalPayload);
+    
+    // Llamar a onSave con el payload final (typescript lo trata como any implícitamente)
+    onSave(finalPayload as any);
   };
 
   if (!isOpen) return null
@@ -237,6 +194,138 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
               </TabsTrigger>
             </TabsList>
 
+            <TabsContent value="permissions" className="space-y-6 mt-4">
+              {/* Permisos de Prestamo */}
+              <Card className="bg-card border-zinc-800 p-4">
+                <fieldset>
+                  <legend className="text-gray-300 font-medium mb-3">Permisos de Prestamo</legend>
+                  <div className="flex items-center gap-2">
+                    {['Agregar', 'Editar', 'Eliminar'].map(action => {
+                      const perm = allPermissions.find(
+                        p => p.module.toLowerCase() === 'prestamos' && p.action.toLowerCase() === action.toLowerCase()
+                      );
+                      if (!perm) return null;
+                      const permKey = `${perm.module}_${perm.action}`;
+                      const isActive = permissionState[permKey] || false;
+                      return (
+                        <Button
+                          key={perm.id}
+                          type="button"
+                          className={`px-4 py-2 rounded-lg transition-colors ${
+                            isActive
+                              ? (action === 'Eliminar'
+                                  ? 'bg-red-600 text-white hover:bg-red-500'
+                                  : 'bg-green-600 text-white hover:bg-green-500')
+                              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                          }`}
+                          onClick={() => togglePermission(permKey)}
+                        >
+                          {action}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+              </Card>
+
+              {/* Permisos de Pago */}
+              <Card className="bg-card border-zinc-800 p-4">
+                <fieldset>
+                  <legend className="text-gray-300 font-medium mb-3">Permisos de Pago</legend>
+                  <div className="flex items-center gap-2">
+                    {['Agregar', 'Editar', 'Eliminar'].map(action => {
+                      const perm = allPermissions.find(
+                        p => p.module.toLowerCase() === 'pagos' && p.action.toLowerCase() === action.toLowerCase()
+                      );
+                      if (!perm) return null;
+                      const permKey = `${perm.module}_${perm.action}`;
+                      const isActive = permissionState[permKey] || false;
+                      return (
+                        <Button
+                          key={perm.id}
+                          type="button"
+                          className={`px-4 py-2 rounded-lg transition-colors ${
+                            isActive
+                              ? (action === 'Eliminar'
+                                  ? 'bg-red-600 text-white hover:bg-red-500'
+                                  : 'bg-green-600 text-white hover:bg-green-500')
+                              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                          }`}
+                          onClick={() => togglePermission(permKey)}
+                        >
+                          {action}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+              </Card>
+
+              {/* Permisos de Módulo */}
+              <Card className="bg-card border-zinc-800 p-4">
+                <fieldset>
+                  <legend className="text-gray-300 font-medium mb-3">Permisos de Módulo</legend>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-3 gap-4">
+                      {[
+                        { module: 'Colaboradores', label: 'Colaboradores' },
+                        { module: 'PagosVencidos', label: 'Pagos Vencidos' },
+                        { module: 'PagosProximos', label: 'Próximos Pagos' }
+                      ].map(({ module, label }) => {
+                        const perm = allPermissions.find(
+                          p => p.module.toLowerCase() === module.toLowerCase()
+                        );
+                        if (!perm) return null;
+                        const permKey = `${perm.module}_${perm.action}`;
+                        const isActive = permissionState[permKey] || false;
+                        return (
+                          <Button
+                            key={perm.id}
+                            type="button"
+                            className={`px-4 py-2 rounded-lg transition-colors ${
+                              isActive
+                                ? 'bg-green-600 text-white hover:bg-green-500'
+                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                            }`}
+                            onClick={() => togglePermission(permKey)}
+                          >
+                            {label}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      {[
+                        { module: 'PagoPrestamos', label: 'Abonar Préstamo' },
+                        { module: 'Reportes', label: 'Reporte Estimado VS Real' }
+                      ].map(({ module, label }) => {
+                        const perm = allPermissions.find(
+                          p => p.module.toLowerCase() === module.toLowerCase()
+                        );
+                        if (!perm) return null;
+                        const permKey = `${perm.module}_${perm.action}`;
+                        const isActive = permissionState[permKey] || false;
+                        return (
+                          <Button
+                            key={perm.id}
+                            type="button"
+                            className={`px-4 py-2 rounded-lg transition-colors ${
+                              isActive
+                                ? 'bg-green-600 text-white hover:bg-green-500'
+                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                            }`}
+                            onClick={() => togglePermission(permKey)}
+                          >
+                            {label}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </fieldset>
+              </Card>
+            </TabsContent>
+
             <TabsContent value="personal" className="mt-4">
               <div className="grid gap-6 sm:grid-cols-2">
                 <div>
@@ -251,7 +340,6 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                   />
                   {errors.identifier && <p className="text-red-500 text-sm mt-1">{errors.identifier.message}</p>}
                 </div>
-
                 <div>
                   <Label htmlFor="name" className="text-gray-300">
                     Nombre
@@ -265,7 +353,6 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                   {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                 </div>
               </div>
-
               <div className="mt-4">
                 <Label htmlFor="email" className="text-gray-300">
                   Email
@@ -285,7 +372,6 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
               </div>
-
               <div className="grid gap-6 sm:grid-cols-2 mt-4">
                 <div>
                   <Label htmlFor="password" className="text-gray-300">
@@ -300,7 +386,6 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                   />
                   {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                 </div>
-
                 <div>
                   <Label htmlFor="confirmPassword" className="text-gray-300">
                     Repetir contraseña
@@ -322,158 +407,6 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
               </div>
             </TabsContent>
 
-            <TabsContent value="permissions" className="space-y-6 mt-4">
-              <Card className="bg-card border-zinc-800 p-4">
-                <fieldset>
-                  <legend className="text-gray-300 font-medium mb-3">Permisos de Prestamo</legend>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        permissions.loan.add
-                          ? "bg-green-600 text-white hover:bg-green-500"
-                          : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                      }`}
-                      onClick={() => togglePermission("loan", "add")}
-                    >
-                      Agregar
-                    </Button>
-                    <Button
-                      type="button"
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        permissions.loan.edit
-                          ? "bg-green-600 text-white hover:bg-green-500"
-                          : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                      }`}
-                      onClick={() => togglePermission("loan", "edit")}
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      type="button"
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        permissions.loan.delete
-                          ? "bg-red-600 text-white hover:bg-red-500"
-                          : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                      }`}
-                      onClick={() => togglePermission("loan", "delete")}
-                    >
-                      Eliminar
-                    </Button>
-                  </div>
-                </fieldset>
-              </Card>
-
-              <Card className="bg-card border-zinc-800 p-4">
-                <fieldset>
-                  <legend className="text-gray-300 font-medium mb-3">Permisos de Pago</legend>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        permissions.payment.add
-                          ? "bg-green-600 text-white hover:bg-green-500"
-                          : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                      }`}
-                      onClick={() => togglePermission("payment", "add")}
-                    >
-                      Agregar
-                    </Button>
-                    <Button
-                      type="button"
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        permissions.payment.edit
-                          ? "bg-green-600 text-white hover:bg-green-500"
-                          : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                      }`}
-                      onClick={() => togglePermission("payment", "edit")}
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      type="button"
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        permissions.payment.delete
-                          ? "bg-red-600 text-white hover:bg-red-500"
-                          : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                      }`}
-                      onClick={() => togglePermission("payment", "delete")}
-                    >
-                      Eliminar
-                    </Button>
-                  </div>
-                </fieldset>
-              </Card>
-
-              <Card className="bg-card border-zinc-800 p-4">
-                <fieldset>
-                  <legend className="text-gray-300 font-medium mb-3">Permisos de Módulo</legend>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-3 gap-4">
-                      <Button
-                        type="button"
-                        className={`px-4 py-2 rounded-lg transition-colors ${
-                          permissions.modules.collaborators
-                            ? "bg-green-600 text-white hover:bg-green-500"
-                            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                        }`}
-                        onClick={() => toggleModulePermission("collaborators")}
-                      >
-                        Colaboradores
-                      </Button>
-                      <Button
-                        type="button"
-                        className={`px-4 py-2 rounded-lg transition-colors ${
-                          permissions.modules.overduePayments
-                            ? "bg-green-600 text-white hover:bg-green-500"
-                            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                        }`}
-                        onClick={() => toggleModulePermission("overduePayments")}
-                      >
-                        Pagos Vencidos
-                      </Button>
-                      <Button
-                        type="button"
-                        className={`px-4 py-2 rounded-lg transition-colors ${
-                          permissions.modules.upcomingPayments
-                            ? "bg-green-600 text-white hover:bg-green-500"
-                            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                        }`}
-                        onClick={() => toggleModulePermission("upcomingPayments")}
-                      >
-                        Próximos Pagos
-                      </Button>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <Button
-                        type="button"
-                        className={`px-4 py-2 rounded-lg transition-colors ${
-                          permissions.modules.loanPayment
-                            ? "bg-green-600 text-white hover:bg-green-500"
-                            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                        }`}
-                        onClick={() => toggleModulePermission("loanPayment")}
-                      >
-                        Abonar Préstamo
-                      </Button>
-                      <Button
-                        type="button"
-                        className={`px-4 py-2 rounded-lg transition-colors ${
-                          permissions.modules.report
-                            ? "bg-green-600 text-white hover:bg-green-500"
-                            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                        }`}
-                        onClick={() => toggleModulePermission("report")}
-                      >
-                        Reporte Estimado VS Real
-                      </Button>
-                    </div>
-                  </div>
-                </fieldset>
-              </Card>
-            </TabsContent>
-
             <TabsContent value="contact" className="mt-4">
               <div className="grid gap-6 sm:grid-cols-3">
                 <div>
@@ -487,7 +420,6 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                     {...register("address")}
                   />
                 </div>
-
                 <div>
                   <Label htmlFor="mobile" className="text-gray-300">
                     Celular
@@ -500,7 +432,6 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                     {...register("mobile")}
                   />
                 </div>
-
                 <div>
                   <Label htmlFor="phone" className="text-gray-300">
                     Teléfono
@@ -515,6 +446,7 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                 </div>
               </div>
             </TabsContent>
+
           </Tabs>
 
           <div className="flex justify-end space-x-4 mt-8 pt-4 border-t border-gray-700">
