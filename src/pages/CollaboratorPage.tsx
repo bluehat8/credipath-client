@@ -42,12 +42,6 @@ export function CollaboratorsPage() {
 
   useEffect(() => {
     fetchCollaborators().catch((error) => {
-      // toast({
-      //   title: "Error",
-      //   description: `No se pudieron cargar los colaboradores: ${error.message}`,
-      //   variant: "destructive",
-      // })
-
       toast.error('No se pudieron cargar los colaboradores:', {
           style: {
             borderLeft: '4px solid #10b981',
@@ -124,11 +118,6 @@ export function CollaboratorsPage() {
       await fetchCollaborators()
       setIsModalOpen(false)
     } catch (error: any) {
-      // toast({
-      //   title: "Error",
-      //   description: `No se pudo guardar el colaborador: ${error.message}`,
-      //   variant: "destructive",
-      // })
 
       toast.error('No se pudieron cargar los colaboradores:', {
           style: {
@@ -244,7 +233,7 @@ export function CollaboratorsPage() {
                   {/* Add Button */}
                   <Button
                     onClick={handleAddCollaborator}
-                    className="bg-green-400 hover:bg-green-500 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="bg-green-gradient hover:bg-green-500 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Agregar colaborador

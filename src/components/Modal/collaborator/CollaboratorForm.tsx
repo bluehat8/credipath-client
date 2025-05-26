@@ -191,16 +191,16 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid grid-cols-3 mb-6 bg-zinc-800">
-              <TabsTrigger value="personal" className="data-[state=active]:bg-green-600 data-[state=active]:text-white">
+              <TabsTrigger value="personal" className="data-[state=active]:bg-green-gradient data-[state=active]:text-white">
                 Información Personal
               </TabsTrigger>
               <TabsTrigger
                 value="permissions"
-                className="data-[state=active]:bg-green-600 data-[state=active]:text-white"
+                className="data-[state=active]:bg-green-gradient data-[state=active]:text-white"
               >
                 Permisos
               </TabsTrigger>
-              <TabsTrigger value="contact" className="data-[state=active]:bg-green-600 data-[state=active]:text-white">
+              <TabsTrigger value="contact" className="data-[state=active]:bg-green-gradient data-[state=active]:text-white">
                 Contacto
               </TabsTrigger>
             </TabsList>
@@ -226,7 +226,7 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                             isActive
                               ? (action === 'Eliminar'
                                   ? 'bg-red-600 text-white hover:bg-red-500'
-                                  : 'bg-green-600 text-white hover:bg-green-500')
+                                  : 'bg-green-gradient text-white hover:bg-green-500')
                               : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                           }`}
                           onClick={() => togglePermission(permKey)}
@@ -259,7 +259,7 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                             isActive
                               ? (action === 'Eliminar'
                                   ? 'bg-red-600 text-white hover:bg-red-500'
-                                  : 'bg-green-600 text-white hover:bg-green-500')
+                                  : 'bg-green-gradient text-white hover:bg-green-500')
                               : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                           }`}
                           onClick={() => togglePermission(permKey)}
@@ -295,7 +295,7 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                             type="button"
                             className={`px-4 py-2 rounded-lg transition-colors ${
                               isActive
-                                ? 'bg-green-600 text-white hover:bg-green-500'
+                                ? 'bg-green-gradient text-white hover:bg-green-500'
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                             }`}
                             onClick={() => togglePermission(permKey)}
@@ -322,7 +322,7 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
                             type="button"
                             className={`px-4 py-2 rounded-lg transition-colors ${
                               isActive
-                                ? 'bg-green-600 text-white hover:bg-green-500'
+                                ? 'bg-green-gradient text-white hover:bg-green-500'
                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                             }`}
                             onClick={() => togglePermission(permKey)}
@@ -469,7 +469,7 @@ const CollaboratorForm = ({ isOpen, onClose, onSave, collaborator, isEditMode = 
             >
               Cancelar
             </Button>
-            <Button type="submit" className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500">
+            <Button type="submit" className="px-6 py-2 bg-green-gradient text-white rounded-lg hover:bg-green-500">
               Guardar
             </Button>
           </div>
