@@ -19,6 +19,8 @@ import {
   AlertDialogTitle,
 } from "components/components/ui/alert-dialog"
 import { Badge } from "components/components/ui/badge"
+import Pagination from "../utils/Pagination"
+import PageSizeSelector from "../utils/PageSizeSelector"
 
 export function CollaboratorsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -121,6 +123,10 @@ export function CollaboratorsPage() {
   }
 
   // Filtrar colaboradores por término de búsqueda
+  // Paginación
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+
   const filteredCollaborators = Array.isArray(collaborators)
     ? collaborators.filter(
         (collaborator) =>
@@ -128,6 +134,18 @@ export function CollaboratorsPage() {
           collaborator.email?.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     : []
+
+  // Calcular los elementos de la página actual
+  const totalPages = Math.max(1, Math.ceil(filteredCollaborators.length / pageSize))
+  const paginatedCollaborators = filteredCollaborators.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  )
+
+  // Resetear página si cambia el filtro o el tamaño de página
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm, pageSize])
 
   const CollaboratorSkeleton = () => (
     <div className="w-full animate-pulse">
@@ -246,7 +264,7 @@ export function CollaboratorsPage() {
                 <EmptyState />
               ) : (
                 <div className="space-y-4">
-                  {filteredCollaborators.map((collaborator, index) => (
+                  {paginatedCollaborators.map((collaborator, index) => (
                     <div
                       key={collaborator.id}
                       className="transform transition-all duration-200 hover:scale-[1.01]"
@@ -264,6 +282,21 @@ export function CollaboratorsPage() {
                       />
                     </div>
                   ))}
+
+                  {/* Paginación y selector de tamaño */}
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-8">
+                    <PageSizeSelector
+                      pageSize={pageSize}
+                      onPageSizeChange={setPageSize}
+                      options={[5, 10, 25, 50]}
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={setCurrentPage}
+                      disabled={filteredCollaborators.length === 0}
+                    />
+                  </div>
                 </div>
               )}
             </div>
