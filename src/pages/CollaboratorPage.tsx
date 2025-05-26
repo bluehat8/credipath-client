@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { CollaboratorCard } from "components/common/CollaboratorCard"
 import CollaboratorForm from "../components/Modal/collaborator/CollaboratorForm"
 import { useCollaboratorService, type Collaborator } from "../hooks/collaborator/use-collaborator-service"
-import { toast } from "../components/components/ui/use-toast"
 import { Button } from "components/components/ui/button"
 import { Plus, Users, Search } from "lucide-react"
 import { Input } from "components/components/ui/input"
@@ -21,6 +20,7 @@ import {
 import { Badge } from "components/components/ui/badge"
 import Pagination from "../utils/Pagination"
 import PageSizeSelector from "../utils/PageSizeSelector"
+import toast from "react-hot-toast"
 
 export function CollaboratorsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -42,11 +42,17 @@ export function CollaboratorsPage() {
 
   useEffect(() => {
     fetchCollaborators().catch((error) => {
-      toast({
-        title: "Error",
-        description: `No se pudieron cargar los colaboradores: ${error.message}`,
-        variant: "destructive",
-      })
+      // toast({
+      //   title: "Error",
+      //   description: `No se pudieron cargar los colaboradores: ${error.message}`,
+      //   variant: "destructive",
+      // })
+
+      toast.error('No se pudieron cargar los colaboradores:', {
+          style: {
+            borderLeft: '4px solid #10b981',
+          },
+      });
     })
   }, [fetchCollaborators])
 
@@ -73,16 +79,17 @@ export function CollaboratorsPage() {
 
     try {
       await deleteCollaborator(collaboratorToDelete)
-      toast({
-        title: "Éxito",
-        description: "Colaborador eliminado correctamente",
-      })
+      toast.success('Colaborador eliminado correctamente', {
+          style: {
+            borderLeft: '4px solid #10b981',
+          },
+        });
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: `No se pudo eliminar el colaborador: ${error.message}`,
-        variant: "destructive",
-      })
+      toast.error('No se pudo elimar el colaborador', {
+          style: {
+            borderLeft: '4px solid #10b981',
+          },
+      });
     } finally {
       setDeleteDialogOpen(false)
       setCollaboratorToDelete(null)
@@ -99,26 +106,35 @@ export function CollaboratorsPage() {
 
       if (isEditMode && selectedCollaborator?.id) {
         await updateCollaborator(selectedCollaborator.id, data)
-        toast({
-          title: "Éxito",
-          description: "Colaborador actualizado correctamente",
-        })
+
+        toast.success('Colaborador actualizado correctamente', {
+          style: {
+            borderLeft: '4px solid #10b981',
+          },
+        });
       } else {
         await createCollaborator(data)
-        toast({
-          title: "Éxito",
-          description: "Colaborador creado correctamente",
-        })
+        toast.success('Colaborador creado correctamente', {
+          style: {
+            borderLeft: '4px solid #10b981',
+          },
+        });
       }
 
       await fetchCollaborators()
       setIsModalOpen(false)
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: `No se pudo guardar el colaborador: ${error.message}`,
-        variant: "destructive",
-      })
+      // toast({
+      //   title: "Error",
+      //   description: `No se pudo guardar el colaborador: ${error.message}`,
+      //   variant: "destructive",
+      // })
+
+      toast.error('No se pudieron cargar los colaboradores:', {
+          style: {
+            borderLeft: '4px solid #10b981',
+          },
+      });
     }
   }
 

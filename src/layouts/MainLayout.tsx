@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { MainSidebar } from '../components/sidebar/Sidebar';
 import { ThemeProvider } from '../context/ThemeContext';
 import { usePermissionStore } from '../store/usePermissionStore';
+import { Toaster } from 'react-hot-toast';
+
 
 export const MainLayout = () => {
   const fetchPermissions = usePermissionStore(state => state.fetchPermissions);
@@ -23,6 +25,36 @@ export const MainLayout = () => {
 
   return (
     <ThemeProvider>
+      <Toaster
+        position="top-right"
+        gutter={16}
+        toastOptions={{
+          className: 'toast-glass',
+          duration: 4000,
+          style: {
+            background: 'transparent',
+            color: 'white',
+          },
+          success: {
+            iconTheme: {
+              primary: '#10b981',
+              secondary: 'white',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: 'white',
+            },
+          },
+          loading: {
+            iconTheme: {
+              primary: '#3b82f6',
+              secondary: 'transparent',
+            },
+          },
+        }}
+      />
       <MainSidebar>
         <Outlet />
       </MainSidebar>

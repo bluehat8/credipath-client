@@ -67,6 +67,51 @@ code {
 }
 
 
+/* toast-styles.css */
+.toast-glass {
+  background: rgba(40, 42, 46, 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36) !important;
+  color: white !important;
+  padding: 16px !important;
+  max-width: 400px !important;
+}
+
+.toast-glass .toast-icon {
+  color: #3b82f6 !important; /* Color azul para los íconos */
+}
+
+.toast-glass .toast-close {
+  color: rgba(255, 255, 255, 0.6) !important;
+  transition: all 0.2s ease !important;
+}
+
+.toast-glass .toast-close:hover {
+  color: white !important;
+  transform: scale(1.1) !important;
+}
+
+/* Estilos específicos para cada tipo de toast */
+.toast-glass.success {
+  border-left: 4px solid #10b981 !important;
+}
+
+.toast-glass.error {
+  border-left: 4px solid #ef4444 !important;
+}
+
+.toast-glass.loading {
+  border-left: 4px solid #3b82f6 !important;
+}
+
+.toast-glass.custom {
+  border-left: 4px solid #8b5cf6 !important;
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
