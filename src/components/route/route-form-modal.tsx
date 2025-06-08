@@ -20,6 +20,7 @@ interface RouteFormModalProps {
 export function RouteFormModal({ isOpen, onClose, onSubmit, mode, initialData, isSubmitting }: RouteFormModalProps) {
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
+    description: initialData?.description || "",
     district: initialData?.district || "",
     location: initialData?.location || "",
     status: initialData?.status || "active",
@@ -51,6 +52,16 @@ export function RouteFormModal({ isOpen, onClose, onSubmit, mode, initialData, i
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="bg-slate-700 border-slate-600 text-white"
               required
+            />
+          </div>
+          <div>
+            <Label htmlFor="description">Descripción</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="bg-slate-700 border-slate-600 text-white min-h-[100px]"
+              placeholder="Agrega una descripción de la ruta..."
             />
           </div>
           <div>

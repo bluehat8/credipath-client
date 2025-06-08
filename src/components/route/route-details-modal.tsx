@@ -70,6 +70,15 @@ export function RouteDetailsModal({ isOpen, onClose, route }: RouteDetailsModalP
           </div>
 
           <div className="space-y-3">
+            <h4 className="text-sm font-medium text-white">Descripción</h4>
+            <div className="bg-slate-700 rounded-lg p-4">
+              <p className="text-sm text-slate-300">
+                {route.description || 'No hay descripción disponible'}
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
             <h4 className="text-sm font-medium text-white">Información de ubicación</h4>
             <div className="bg-slate-700 rounded-lg p-4 space-y-2">
               <div className="flex items-center gap-2">

@@ -7,6 +7,7 @@ import { ROUTES_ENDPOINTS } from 'constants/endpoints';
 export interface Route {
   id: string;
   name: string;
+  description?: string;
   district: string;
   location: string;
   status: 'active' | 'inactive';
