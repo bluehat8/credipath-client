@@ -2,190 +2,290 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "components/components/ui/button"
 import { Input } from "components/components/ui/input"
 import { Label } from "components/components/ui/label"
-import { Link, useNavigate } from "react-router-dom"
+import { Github, Shield, Zap, Users, ArrowRight, Eye, EyeOff } from "lucide-react"
 import { useAuthService } from "../../hooks/auth/use-auth-service"
 import { PATHS } from "../../routes/routes"
-
+import { useNavigate } from "react-router-dom"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("") 
+  const [step, setStep] = useState<"email" | "password">("email")
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
   const navigate = useNavigate()
-  const { login, isLoading, user, navigateByRole } = useAuthService() // Ahora también extraemos navigateByRole
+  const { login, isLoading: isLoadingAuth, user, navigateByRole } = useAuthService() 
 
-  // Efecto para manejar redirección cuando el usuario cambia (login exitoso)
+
   useEffect(() => {
     // Solo si el usuario está autenticado y terminamos de cargar
     if (user && !isLoading) {
-      // Usar el método centralizado para redirección basada en roles
       navigateByRole();
     }
-  }, [user, isLoading, navigateByRole]) // Se ejecuta cuando cambia el usuario o isLoading
+  }, [user, isLoading, navigateByRole]) 
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleEmailContinue = (e: React.FormEvent) => {
     e.preventDefault()
-    setError("") // Limpiar errores anteriores
-    
+    if (!email) {
+      setError("Please enter your email")
+      return
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError("Please enter a valid email address")
+      return
+    }
+    setError("")
+    setStep("password")
+  }
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+    setIsLoading(true)
+
     try {
-      // El login actualizará el estado del usuario en el contexto
-      // lo que activará el useEffect de arriba para la redirección
+      console.log("Login attempt:", { email, password, rememberMe })
       await login({ email, password })
-      // No necesitamos redirección aquí, el useEffect se encargará
     } catch (error) {
-      console.error("Error de autenticación:", error)
-      setError("Credenciales incorrectas. Por favor, inténtalo de nuevo.")
+      console.error("Authentication error:", error)
+      setError("Invalid credentials. Please try again.")
+    } finally {
+      setIsLoading(false)
     }
   }
 
+  const handleBack = () => {
+    setStep("email")
+    setPassword("")
+    setError("")
+  }
 
   return (
-    <div className="relative flex min-h-screen w-full overflow-hidden p-4 flex-col justify-center items-center text-sm font-light tracking-wide text-white">
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-950 to-gray-950 animate-gradient-shift z-0"></div>
-      <StarField />
-      <div className="relative z-10 flex flex-col px-10 py-10 max-w-full rounded-3xl border border-solid border-slate-700/30 w-[554px] max-md:px-5 backdrop-blur-xl bg-slate-900/40 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)] backdrop-filter">
-        <div className="flex gap-9 self-start text-2xl font-extrabold text-green-400 whitespace-nowrap tracking-[3.75px]">
-          <img
-            loading="lazy"
-            src="/icons/credipath.svg"
-            alt="Credipath logo"
-            className="object-contain shrink-0 rounded-none aspect-[1.98] w-[89px]"
-          />
-          <div className="basis-auto glow-text">CREDIPATH</div>
-        </div>
-        <h1 className="self-start mt-11 text-2xl font-medium tracking-wider max-md:mt-10">Bienvenido a Credipath</h1>
+    <div className="min-h-screen bg-zinc-950 flex">
+      {/* Left Side - Branding & Features */}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-10 mt-12">
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-white">
-              Ingresa email o nombre de usuario
-            </Label>
-            <Input
-              placeholder="example@gmail.com"
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-white/5 border-white/20 focus:border-green-400/70 transition-all duration-300 text-white"
-            />
-          </div>
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden p-12 flex-col justify-between">
+        <div 
+          className="absolute inset-0 bg-[url('https://images.pexels.com/photos/4968382/pexels-photo-4968382.jpeg')] bg-cover bg-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/20"></div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-white">
-              Contraseña
-            </Label>
-            <Input
-              placeholder="mínimo 8 caracteres"
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-white/5 border-white/20 focus:border-green-400/70 transition-all duration-300 text-white"
-            />
-          </div>
-
-          {error && (
-            <div className="text-red-400 text-sm mt-2 bg-red-400/10 px-3 py-2 rounded border border-red-400/20">
-              {error}
+        <div className="relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="w-16 h-16 rounded-lg flex items-center justify-center">
+              <img
+                loading="lazy"
+                src="/icons/credipath.svg"
+                alt="Credipath logo"
+                className="object-contain shrink-0 rounded-none aspect-[1.98] w-[89px]"
+              />
             </div>
-          )}
-          
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="bg-white/5 border-white/20 to-emerald-400 hover:from-green-400 hover:to-emerald-300 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
-          </Button>
-        </form>
+            <h1 className="text-white text-xl font-bold">CREDIPATH</h1>
+          </div>
+        </div>
 
-        <div className="flex flex-col items-center gap-2 mt-7">
-          <div className="flex w-full justify-between items-center">
-            <div className="flex shrink-0 h-px bg-white/20 w-[172px] max-md:ml-1.5" />
-            <span className="text-white/60">o</span>
-            <div className="flex shrink-0 h-px bg-white/20 w-[172px] max-md:mr-2" />
+        <div className="relative z-10 flex flex-col justify-center flex-1">
+              <h1 className="text-4xl font-monserrat font-bold text-white mb-4 text-center">
+                Bienvenido a CREDIPATH
+              </h1>
+        </div>
+
+      </div>
+     
+      {/* Right Side - Login Form */}
+      <div className="flex-1 flex items-center justify-center p-4 lg:p-12">
+        <div className="w-full max-w-md">
+          {/* Mobile Logo */}
+          <div className="flex lg:hidden justify-center mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-16 h-16  rounded-lg flex items-center justify-center backdrop-blur-sm">
+              <img
+                loading="lazy"
+                src="/icons/credipath.svg"
+                alt="Credipath logo"
+                className="object-contain shrink-0 rounded-none aspect-[1.98] w-[89px]"
+                />
+              </div>
+            </div>
           </div>
 
-          <button className="flex gap-10 px-5 py-4 w-full rounded-md border border-solid border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 max-md:max-w-full">
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/f28c1fec9bca4815bc4fb444cc5ef2a5/2f6856cd9a643f159a00b92378bd3b25a75d083811bbb2299ed0e29c8c0c60c6?apiKey=f28c1fec9bca4815bc4fb444cc5ef2a5&"
-              alt="Google logo"
-              className="object-contain shrink-0 w-6 aspect-square"
-            />
-            <span className="flex-auto my-auto">Continuar con Google</span>
-          </button>
+          {/* Title */}
+          <div className="text-center mb-8">
+            <h1 className="text-white text-3xl font-bold mb-2">Iniciar sesión</h1>
+            <p className="text-zinc-400">Ingresa a tu dashboard de Credipath</p>
+          </div>
 
-          <button className="self-center mt-5 font-semibold text-green-400 hover:text-green-300 transition-colors duration-300">
-            Registrate
-          </button>
+          {/* Main Card */}
+          <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-8 border border-zinc-800">
+            {step === "email" ? (
+              <form onSubmit={handleEmailContinue} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-white text-sm font-medium">
+                    Correo electrónico
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Ingresa tu correo electrónico"
+                    className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-zinc-600 focus:ring-0 h-12"
+                    autoFocus
+                  />
+                </div>
+
+                {error && (
+                  <div className="text-red-400 text-sm bg-red-500/10 p-3 rounded-lg border border-red-500/20">
+                    {error}
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  className="w-full bg-white text-black hover:bg-gray-100 font-medium h-12 text-base"
+                >
+                  Continuar
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={handleLogin} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="email-display" className="text-white text-sm font-medium">
+                    Correo electrónico
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="email-display"
+                      type="email"
+                      value={email}
+                      readOnly
+                      className="bg-zinc-800/50 border-zinc-700 text-white flex-1 h-12"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleBack}
+                      className="text-zinc-400 hover:text-white px-3"
+                    >
+                      Editar
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-white text-sm font-medium">
+                    Contraseña
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Ingresa tu contraseña"
+                      className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-zinc-600 focus:ring-0 h-12 pr-12"
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="w-4 h-4 rounded border-zinc-700 bg-zinc-800 text-white focus:ring-0 focus:ring-offset-0"
+                    />
+                    <span className="text-zinc-400 text-sm">Recordarme</span>
+                  </label>
+                  <a href="/forgot-password" className="text-white text-sm hover:underline">
+                    ¿Olvidaste tu contraseña?
+                  </a>
+                </div>
+
+                {error && (
+                  <div className="text-red-400 text-sm bg-red-500/10 p-3 rounded-lg border border-red-500/20">
+                    {error}
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-white text-black hover:bg-gray-100 font-medium disabled:opacity-50 h-12 text-base"
+                >
+                  {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
+                  {!isLoading && <ArrowRight className="w-4 h-4 ml-2" />}
+                </Button>
+              </form>
+            )}
+
+            {/* Divider */}
+            <div className="flex items-center gap-4 my-8">
+              <div className="flex-1 h-px bg-zinc-700"></div>
+              <span className="text-zinc-400 text-sm font-medium">O CONTINUAR CON</span>
+              <div className="flex-1 h-px bg-zinc-700"></div>
+            </div>
+
+            {/* OAuth Buttons */}
+            <div className="space-y-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full bg-transparent border-zinc-700 text-white hover:bg-zinc-800 hover:text-white h-12"
+              >
+                <img src="/icons/google.svg" alt="Google" className="w-5 h-5 mr-3" />
+                Continuar con Google
+              </Button>
+
+             
+            </div>
+
+            {/* Sign up link */}
+            <div className="text-center mt-8 pt-6 border-t border-zinc-800">
+              <span className="text-zinc-400 text-sm">
+                {"¿No tienes una cuenta? "}
+                <a href="/signup" className="text-white hover:underline font-medium">
+                  Crear una ahora
+                </a>
+              </span>
+            </div>
+          </div>
+
+          {/* Footer Links */}
+          <div className="flex justify-center gap-6 mt-8 text-sm text-zinc-500">
+            <a href="/privacy" className="hover:text-white transition-colors">
+              Política de Privacidad
+            </a>
+            <a href="/terms" className="hover:text-white transition-colors">
+              Términos de Servicio
+            </a>
+            <a href="/help" className="hover:text-white transition-colors">
+              Centro de Ayuda
+            </a>
+          </div>
         </div>
       </div>
     </div>
   )
 }
-
-// Star animation component
-const StarField = () => {
-  const [stars, setStars] = useState<{ x: number; y: number; size: number; opacity: number; speed: number }[]>([])
-
-  useEffect(() => {
-    // Create stars
-    const createStars = () => {
-      const starCount = 150
-      const newStars = []
-
-      for (let i = 0; i < starCount; i++) {
-        newStars.push({
-          x: Math.random() * 100,
-          y: Math.random() * 100,
-          size: Math.random() * 1 + 1,
-          opacity: Math.random() * 0.8 + 0.2,
-          speed: Math.random() * 0.05 + 0.01,
-        })
-      }
-
-      setStars(newStars)
-    }
-
-    createStars()
-
-    // Animate stars
-    const animateStars = () => {
-      setStars((prevStars) =>
-        prevStars.map((star) => ({
-          ...star,
-          y: star.y > 100 ? 0 : star.y + star.speed,
-          opacity: Math.sin((Date.now() / 1000) * star.speed) * 0.5 + 0.5,
-        })),
-      )
-    }
-
-    const interval = setInterval(animateStars, 50)
-    return () => clearInterval(interval)
-  }, [])
-
-  return (
-    <div className="absolute inset-0 z-0 overflow-hidden">
-      {stars.map((star, index) => (
-        <div
-          key={index}
-          className="absolute rounded-full bg-slate-300"
-          style={{
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            width: `${star.size}px`,
-            height: `${star.size}px`,
-            opacity: star.opacity * 0.6, // Reduce opacity for subtlety
-            boxShadow: `0 0 ${star.size * 1.5}px ${star.size * 0.7}px rgba(226, 232, 240, ${star.opacity * 0.4})`,
-            transition: "opacity 0.5s ease",
-          }}
-        />
-      ))}
-    </div>
-  )
+function navigateByRole() {
+  throw new Error("Function not implemented.")
 }
+

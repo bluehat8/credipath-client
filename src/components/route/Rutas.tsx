@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Plus, Search, MapPin, Users, Building2, MoreHorizontal, Edit, Trash2, Eye, Filter, Calendar, TrendingUp } from "lucide-react"
 import { Button } from "components/components/ui/button"
 import { Input } from "components/components/ui/input"
@@ -23,136 +23,200 @@ import { Separator } from "components/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/components/ui/tabs"
 import { RouteFormModal } from "./route-form-modal"
 import { RouteDetailsModal } from "./route-details-modal"
+import { useRoutesContext } from "context/RoutesContext"
+import type { Route } from "hooks/routes/useRoutes";
 
-// Mock data
-const mockRoutes = [
-  {
-    id: "1",
-    name: "Ruta Centro",
-    district: "Lima Cercado",
-    location: "Av. Abancay 123, Lima Centro",
-    clientsCount: 25,
-    collaboratorsCount: 3,
-    status: "active",
-    createdAt: "2024-01-15",
-    lastVisit: "2024-01-20",
-  },
-  {
-    id: "2",
-    name: "Ruta Norte",
-    district: "San Martín de Porres",
-    location: "Av. Universitaria 456, SMP",
-    clientsCount: 18,
-    collaboratorsCount: 2,
-    status: "active",
-    createdAt: "2024-01-10",
-    lastVisit: "2024-01-19",
-  },
-  {
-    id: "3",
-    name: "Ruta Sur",
-    district: "Villa El Salvador",
-    location: "Av. Pachacútec 789, VES",
-    clientsCount: 32,
-    collaboratorsCount: 4,
-    status: "inactive",
-    createdAt: "2024-01-05",
-    lastVisit: "2024-01-18",
-  },
-  {
-    id: "4",
-    name: "Ruta Este",
-    district: "Ate",
-    location: "Av. Nicolás Ayllón 321, Ate",
-    clientsCount: 12,
-    collaboratorsCount: 2,
-    status: "active",
-    createdAt: "2024-01-12",
-    lastVisit: "2024-01-21",
-  },
-]
+type RouteStatus = "active" | "inactive";
+type SortBy = 'name' | 'clients' | 'recent';
+type ViewMode = 'grid' | 'list';
+
+interface RouteWithOptionalId extends Omit<Route, 'id'> {
+  id?: string;
+}
 
 export default function RutasPage() {
-  const [routes, setRoutes] = useState(mockRoutes)
-  const [isLoading, setIsLoading] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [sortBy, setSortBy] = useState("name")
-  const [selectedRoute, setSelectedRoute] = useState(null)
+  // Usar el contexto de rutas
+  const context = useRoutesContext();
+  
+  // Desestructurar los valores del contexto
+  const {
+    routes: contextRoutes,
+    isLoading,
+    isError,
+    error,
+    pagination,
+    createRoute,
+    updateRoute,
+    deleteRoute,
+    setPage: setCurrentPage,
+    setPageSize,
+    setSearchQuery,
+  } = context;
+  
+  // Asegurarse de que routes sea un array
+  const routes = Array.isArray(contextRoutes) ? contextRoutes : [];
+
+  // Estados locales
+  const [searchTerm, setSearchTerm] = useState("")
+  const [statusFilter, setStatusFilter] = useState<'all' | RouteStatus>('all');
+  const [selectedRoute, setSelectedRoute] = useState<RouteWithOptionalId | null>(null)
+  const [routeToDelete, setRouteToDelete] = useState<Route | null>(null)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [routeToDelete, setRouteToDelete] = useState(null)
-  const [pageSize, setPageSize] = useState("12")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [viewMode, setViewMode] = useState("grid")
+  const [viewMode, setViewMode] = useState<ViewMode>("grid")
+  const [sortBy, setSortBy] = useState<SortBy>("name")
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Efecto para manejar la búsqueda con debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchTerm)
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [searchTerm, setSearchQuery])
+
+  // Filtrar rutas localmente por estado y término de búsqueda
   const filteredRoutes = routes
     .filter((route) => {
+      if (!route || typeof route !== 'object') {
+        return false;
+      }
+      
+      const matchesStatus = statusFilter === "all" || route.status === statusFilter;
+      
+      if (searchTerm === '') {
+        return matchesStatus;
+      }
+      
+      const searchTermLower = searchTerm.toLowerCase();
       const matchesSearch = 
-        route.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        route.district.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        route.location.toLowerCase().includes(searchQuery.toLowerCase())
+        (route.name || '').toLowerCase().includes(searchTermLower) ||
+        (route.district && route.district.toLowerCase().includes(searchTermLower)) ||
+        (route.location && route.location.toLowerCase().includes(searchTermLower));
       
-      const matchesStatus = statusFilter === "all" || route.status === statusFilter
-      
-      return matchesSearch && matchesStatus
+      return matchesStatus && Boolean(matchesSearch);
     })
-    .sort((a, b) => {
+    .sort((a: Route, b: Route) => {
+      if (!a || !b) return 0;
+      
       switch (sortBy) {
         case "name":
-          return a.name.localeCompare(b.name)
+          return (a.name || '').localeCompare(b.name || '');
         case "clients":
-          return b.clientsCount - a.clientsCount
-        case "recent":
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          return (b.clientsCount || 0) - (a.clientsCount || 0);
+        case "recent": {
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA;
+        }
         default:
-          return 0
+          return 0;
       }
-    })
+    });
 
-  const handleAddRoute = async (data: any) => {
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    const newRoute = {
-      id: Date.now().toString(),
-      ...data,
-      clientsCount: 0,
-      collaboratorsCount: 0,
-      status: "active",
-      createdAt: new Date().toISOString().split("T")[0],
-      lastVisit: null,
+  const handleAddRoute = async (routeData: Omit<Route, 'id'>) => {
+    try {
+      setIsSubmitting(true);
+      await createRoute(routeData);
+      setIsAddModalOpen(false);
+      return true;
+    } catch (error) {
+      console.error('Error al crear la ruta:', error);
+      return false;
+    } finally {
+      setIsSubmitting(false);
     }
-    setRoutes((prev) => [...prev, newRoute])
-    setIsAddModalOpen(false)
-    setIsLoading(false)
-  }
+  };
 
-  const handleEditRoute = async (data: any) => {
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    // setRoutes((prev) => prev.map((route) => (route.id === selectedRoute.id ? { ...route, ...data } : route)))
-    setIsEditModalOpen(false)
-    setSelectedRoute(null)
-    setIsLoading(false)
-  }
+  const handleUpdateRoute = async (data: Partial<Route>) => {
+    if (!selectedRoute) return;
+    
+    try {
+      setIsSubmitting(true);
+      await updateRoute({ ...selectedRoute, ...data } as Route);
+      setIsEditModalOpen(false);
+      setSelectedRoute(null);
+    } catch (error) {
+      console.error("Error al actualizar la ruta:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleDeleteRoute = async () => {
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    // setRoutes((prev) => prev.filter((route) => route.id !== routeToDelete.id))
-    setIsDeleteDialogOpen(false)
-    setRouteToDelete(null)
-    setIsLoading(false)
-  }
+    if (!routeToDelete?.id) return;
+    
+    try {
+      setIsSubmitting(true);
+      await deleteRoute(routeToDelete.id);
+      setIsDeleteDialogOpen(false);
+      setRouteToDelete(null);
+    } catch (error) {
+      console.error("Error al eliminar la ruta:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSortChange = (value: string | boolean) => {
+    const stringValue = String(value);
+    if (stringValue === 'name' || stringValue === 'clients' || stringValue === 'recent') {
+      setSortBy(stringValue as SortBy);
+    }
+  };
+
+  const handleStatusFilterChange = (value: string | boolean) => {
+    const stringValue = String(value);
+    if (stringValue === 'all' || stringValue === 'active' || stringValue === 'inactive') {
+      setStatusFilter(stringValue as 'all' | RouteStatus);
+    }
+  };
+
+  const handleViewDetails = (route: Route) => {
+    setSelectedRoute(route);
+    setIsDetailsModalOpen(true);
+  };
+
+  const handleEditRoute = async (routeData: Omit<Route, 'id'>): Promise<boolean> => {
+    if (!selectedRoute || !selectedRoute.id) {
+      console.error('No se puede actualizar la ruta: ID no proporcionado');
+      return false;
+    }
+    
+    try {
+      setIsSubmitting(true);
+      // Crear un objeto Route completo con el ID y los datos actualizados
+      const updatedRoute: Route = {
+        ...selectedRoute,
+        ...routeData,
+        id: selectedRoute.id,
+      };
+      
+      await updateRoute(updatedRoute);
+      setIsEditModalOpen(false);
+      setSelectedRoute(null);
+      return true;
+    } catch (error) {
+      console.error('Error al actualizar la ruta:', error);
+      return false;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  // No necesitamos crear un nuevo contexto, ya que estamos usando useRoutesContext()
 
   const statsData = {
-    totalRoutes: routes.length,
-    activeRoutes: routes.filter((r) => r.status === "active").length,
-    totalClients: routes.reduce((sum, route) => sum + route.clientsCount, 0),
-    totalCollaborators: routes.reduce((sum, route) => sum + route.collaboratorsCount, 0),
-    avgClientsPerRoute: routes.length > 0 ? Math.round(routes.reduce((sum, route) => sum + route.clientsCount, 0) / routes.length) : 0
+    totalRoutes: pagination?.total || 0,
+    totalClients: routes.reduce((sum, route) => sum + (route.clientsCount || 0), 0),
+    totalCollaborators: routes.reduce((sum, route) => sum + (route.collaboratorsCount || 0), 0),
+    activeRoutes: routes.filter(route => route.status === 'active').length,
+    avgClientsPerRoute: routes.length > 0 
+      ? Math.round(routes.reduce((sum, route) => sum + (route.clientsCount || 0), 0) / routes.length) 
+      : 0
   }
 
   if (isLoading && routes.length === 0) {
@@ -233,8 +297,8 @@ export default function RutasPage() {
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <Input
                     placeholder="Buscar por nombre, distrito o ubicación..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10 bg-zinc-600 border-slate-600 text-white placeholder-slate-400 focus:border-purple-400 focus:ring-purple-400"
                   />
                 </div>
@@ -246,35 +310,38 @@ export default function RutasPage() {
                 <div className="flex items-center gap-2">
                   <Filter className="h-4 w-4 text-slate-400" />
                   {/* <span className="text-sm text-slate-400">Estado:</span> */}
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
                     <SelectTrigger className="w-28 bg-zinc-600 border-slate-600 text-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
                       <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="active">Activas</SelectItem>
-                      <SelectItem value="inactive">Inactivas</SelectItem>
+                      <SelectItem value="active">Activos</SelectItem>
+                      <SelectItem value="inactive">Inactivos</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="flex items-center gap-2">
                   {/* <span className="text-sm text-slate-400">Ordenar:</span> */}
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="w-36 bg-zinc-600 border-zinc-600 text-white">
+                  <Select value={sortBy} onValueChange={handleSortChange}>
+                    <SelectTrigger className="w-36 bg-zinc-600 border-slate-600 text-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-800 border-zinc-700 text-white">
-                      <SelectItem value="name">Por nombre</SelectItem>
-                      <SelectItem value="clients">Por clientes</SelectItem>
-                      <SelectItem value="recent">Más recientes</SelectItem>
+                      <SelectItem value="name">Ordenar por nombre</SelectItem>
+                      <SelectItem value="clients">Ordenar por clientes</SelectItem>
+                      <SelectItem value="recent">Recientes primero</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-slate-400">Mostrar:</span>
-                  <Select value={pageSize} onValueChange={setPageSize}>
+                  <Select 
+                    value={String(pagination.limit)} 
+                    onValueChange={(value) => setPageSize(Number(value))}
+                  >
                     <SelectTrigger className="w-16 bg-zinc-600 border-zinc-600 text-white">
                       <SelectValue />
                     </SelectTrigger>
@@ -317,11 +384,11 @@ export default function RutasPage() {
               <MapPin className="h-16 w-16 text-slate-500 mb-4" />
               <h3 className="text-xl font-semibold mb-2 text-white">No hay rutas disponibles</h3>
               <p className="text-slate-400 mb-6 max-w-sm">
-                {searchQuery
+                {searchTerm
                   ? "No se encontraron rutas que coincidan con tu búsqueda."
                   : "Empieza agregando tu primera ruta para comenzar a organizar tus clientes."}
               </p>
-              {!searchQuery && (
+              {!searchTerm && (
                 <Button 
                   onClick={() => setIsAddModalOpen(true)} 
                   className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
@@ -388,7 +455,7 @@ export default function RutasPage() {
                     <div className="col-span-2 text-center">
                       <div className="flex items-center justify-center gap-1">
                         <Users className="h-4 w-4 text-green-400" />
-                        <span className="text-white font-medium">{route.clientsCount}</span>
+                        <span className="text-white font-medium">{route.clientsCount || 0}</span>
                       </div>
                     </div>
 
@@ -396,7 +463,7 @@ export default function RutasPage() {
                     <div className="col-span-2 text-center">
                       <div className="flex items-center justify-center gap-1">
                         <Building2 className="h-4 w-4 text-green-400" />
-                        <span className="text-white font-medium">{route.collaboratorsCount}</span>
+                        <span className="text-white font-medium">{route.collaboratorsCount || 0}</span>
                       </div>
                     </div>
 
@@ -426,34 +493,22 @@ export default function RutasPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700 text-white">
                           <DropdownMenuItem
-                            onClick={() => {
-                              // setSelectedRoute(route)
-                              setIsDetailsModalOpen(true)
-                            }}
+                            onClick={() => handleViewDetails(route)}
                             className="hover:bg-slate-700 cursor-pointer"
                           >
-                            <Eye className="mr-2 h-4 w-4" />
                             Ver detalles
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              // setSelectedRoute(route)
-                              setIsEditModalOpen(true)
-                            }}
-                            className="hover:bg-slate-700 cursor-pointer"
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              // setRouteToDelete(route)
-                              setIsDeleteDialogOpen(true)
-                            }}
-                            className="text-red-400 hover:bg-red-900/30 hover:text-red-300 cursor-pointer"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
+                          <DropdownMenuItem asChild>
+                            <div 
+                              onClick={() => {
+                                setRouteToDelete(route);
+                                setIsDeleteDialogOpen(true);
+                              }}
+                              className="text-red-400 hover:bg-red-900/30 hover:text-red-300 cursor-pointer flex items-center px-2 py-1.5 text-sm"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              <span>Eliminar</span>
+                            </div>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -465,15 +520,13 @@ export default function RutasPage() {
           </div>
         )}
 
-        {/* Pagination could go here */}
-        
         {/* Modals */}
         <RouteFormModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
           onSubmit={handleAddRoute}
           mode="add"
-          isSubmitting={isLoading}
+          isSubmitting={isSubmitting}
         />
 
         <RouteFormModal
@@ -485,7 +538,7 @@ export default function RutasPage() {
           onSubmit={handleEditRoute}
           initialData={selectedRoute}
           mode="edit"
-          isSubmitting={isLoading}
+          isSubmitting={isSubmitting}
         />
 
         <RouteDetailsModal
@@ -504,15 +557,21 @@ export default function RutasPage() {
               <AlertDialogTitle className="text-white">¿Estás seguro?</AlertDialogTitle>
               <AlertDialogDescription className="text-slate-400">
                 Esta acción no se puede deshacer. Se eliminará permanentemente la ruta
-                {/* <strong className="text-white"> "{routeToDelete?.name}"</strong> y todos sus datos asociados. */}
+                {routeToDelete && (
+                  <strong className="text-white"> "{routeToDelete.name}"</strong>
+                )} y todos sus datos asociados.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel className="bg-slate-700 text-slate-300 border-slate-600 hover:bg-slate-600">
                 Cancelar
               </AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteRoute} className="bg-red-600 hover:bg-red-700 text-white">
-                Eliminar
+              <AlertDialogAction 
+                onClick={handleDeleteRoute} 
+                className="bg-red-600 hover:bg-red-700 text-white"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Eliminando...' : 'Eliminar'}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

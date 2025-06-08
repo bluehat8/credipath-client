@@ -1,17 +1,27 @@
 "use client";
 import React from "react";
 import Rutas from "components/route/Rutas";
-import QueryProvider from "utils/QueryProvider";
-import { RouteProvider } from "context/RouteContext";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { RoutesProvider } from "context/RoutesContext";
 
-const App: React.FC = () => {
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+
+const RoutesPage: React.FC = () => {
   return (
-    <QueryProvider>
-      <RouteProvider>
-        <Rutas/>
-      </RouteProvider>
-    </QueryProvider>
+    <QueryClientProvider client={queryClient}>
+      <RoutesProvider>
+        <Rutas />
+      </RoutesProvider>
+    </QueryClientProvider>
   );
 };
 
-export default App;
+export default RoutesPage;
