@@ -42,11 +42,11 @@ export const useRoutes = () => {
 
   // Obtener lista de rutas con paginación
   const { 
-    data: routesData, 
+    data: apiResponse, 
     isLoading, 
     isError, 
     error 
-  } = useQuery<PaginatedResponse<Route>, Error>(
+  } = useQuery<{ data: { items: Route[], pagination: any } }, Error>(
     ['routes', page, limit, searchQuery],
     async () => {
       try {
@@ -57,7 +57,7 @@ export const useRoutes = () => {
         };
         
         const response = await apiClient.get(ROUTES_ENDPOINTS.GET_ROUTES, { params });
-        return handleAxiosResponse(response);
+        return handleAxiosResponse<{ data: { items: Route[], pagination: any } }>(response);
       } catch (error) {
         throw handleAxiosError(error as AxiosError);
       }
@@ -67,6 +67,15 @@ export const useRoutes = () => {
       refetchOnWindowFocus: false,
     }
   );
+
+  // Transform the API response to match the expected format
+  const routesData = {
+    data: apiResponse?.data.items || [],
+    total: apiResponse?.data.pagination?.total || 0,
+    page: apiResponse?.data.pagination?.page || page,
+    limit: apiResponse?.data.pagination?.pageSize || limit,
+    totalPages: apiResponse?.data.pagination?.totalPages || 1
+  };
 
   // Mutación para crear una nueva ruta
   const createRouteMutation = useMutation<ApiResponse<Route>, Error, Omit<Route, 'id'>>(
