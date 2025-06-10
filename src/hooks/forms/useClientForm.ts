@@ -3,11 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useToast } from "components/hooks/use-toast"
+import { useClientRegistration } from "hooks/clients/useClientRegistration"
 
-const clientFormSchema = z.object({
+export const clientFormSchema = z.object({
   name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
   lastname: z.string().min(2, { message: "Los apellidos deben tener al menos 2 caracteres" }),
-  route: z.string({ required_error: "Por favor selecciona una ruta" }),
+  routeId: z.number({ required_error: "Por favor selecciona una ruta" }),
   note: z.string().optional(),
   direction: z.string().min(5, { message: "La dirección debe tener al menos 5 caracteres" }),
   cellphone: z.string().regex(/^\d{8}$/, { message: "El número debe tener 8 dígitos" }),
@@ -21,16 +22,16 @@ const clientFormSchema = z.object({
 type ClientFormValues = z.infer<typeof clientFormSchema>
 
 export const useClientForm = () => {
-  const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [isSuccess, setIsSuccess] = React.useState(false)
   const { toast } = useToast()
+  const { registerClient, isLoading: isSubmitting } = useClientRegistration()
 
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientFormSchema),
     defaultValues: {
       name: "",
       lastname: "",
-      route: "",
+      routeId: 0, // Default to 0 or null, will be required by the form
       note: "",
       direction: "",
       cellphone: "",
@@ -39,31 +40,28 @@ export const useClientForm = () => {
     },
   })
 
-  const onSubmit = async (data: ClientFormValues) => {
-    setIsSubmitting(true)
-
+  const onSubmit = async (formData: ClientFormValues) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      console.log("Form data submitted:", data)
+      // Prepare the data for the API
+      const clientData = {
+        ...formData,
+        // routeId is already a number from the form
+      }
 
+      // Call the API through our hook
+      await registerClient(clientData)
+      
+      // Reset form on success
+      form.reset()
       setIsSuccess(true)
-      toast({
-        title: "Cliente registrado",
-        description: `${data.name} ${data.lastname} ha sido registrado exitosamente.`,
-      })
-
+      
+      // Reset success state after showing success message
       setTimeout(() => {
-        form.reset()
         setIsSuccess(false)
       }, 2000)
     } catch (error) {
-      toast({
-        title: "Error al registrar",
-        description: "Hubo un problema al registrar el cliente. Intenta nuevamente.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsSubmitting(false)
+      // Error handling is done in the useClientRegistration hook
+      console.error("Error in form submission:", error)
     }
   }
 
@@ -71,6 +69,6 @@ export const useClientForm = () => {
     form,
     isSubmitting,
     isSuccess,
-    onSubmit,
+    onSubmit: form.handleSubmit(onSubmit),
   }
 }

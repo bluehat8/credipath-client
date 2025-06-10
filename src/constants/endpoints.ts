@@ -16,3 +16,11 @@ export const ROUTES_ENDPOINTS = {
     UPDATE_ROUTE: (id: number) => `${API_URL}/Route/updateRoute/${id}`,
     DELETE_ROUTE: (id: number) => `${API_URL}/Route/deleteRoutes/${id}`,
 };
+
+export const CLIENT_ENDPOINTS = {
+    REGISTER_CLIENT: `${API_URL}/Client/register`,
+    GET_CLIENTS: `${API_URL}/Client/getClients`,
+    GET_CLIENT_BY_ID: (id: number) => `${API_URL}/Client/getClient/${id}`,
+    UPDATE_CLIENT: (id: number) => `${API_URL}/Client/updateClient/${id}`,
+    DELETE_CLIENT: (id: number) => `${API_URL}/Client/deleteClient/${id}`,
+};
