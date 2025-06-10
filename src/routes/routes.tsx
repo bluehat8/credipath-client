@@ -33,7 +33,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children, requiredRoles = [] }) =
 
   // Show loading state while checking authentication
   if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    return <div className="flex items-center justify-center min-h-screen"></div>;
   }
 
   // If not authenticated, redirect to login
