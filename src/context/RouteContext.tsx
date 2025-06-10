@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import * as api from 'services/routesApi';
+import { mockRoutesApi } from 'services/routesApi';
 import { Route, Pagination, RouteContextType } from 'types/routesTypes';
 
 const RouteContext = createContext<RouteContextType | undefined>(undefined);
@@ -29,7 +29,7 @@ export const RouteProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     error: queryError 
   } = useQuery(
     ['routes', page, limit, searchQuery],
-    () => api.mockRoutesApi.getRoutes(page, limit, searchQuery),
+    () => mockRoutesApi.getRoutes(page, limit, searchQuery),
     { keepPreviousData: true }
   );
 
@@ -37,7 +37,7 @@ export const RouteProvider: React.FC<{ children: React.ReactNode }> = ({ childre
              queryError ? new Error(String(queryError)) : null;
 
   // Mutation for adding a route
-  const addMutation = useMutation(api.mockRoutesApi.createRoute, {
+  const addMutation = useMutation(mockRoutesApi.createRoute, {
     onSuccess: () => {
       queryClient.invalidateQueries('routes');
       closeModals();
@@ -46,7 +46,11 @@ export const RouteProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Mutation for updating a route
   const updateMutation = useMutation(
-    (route: Route) => api.updateRoute(route.id, route),
+    (route: Route) => {
+      // Extraer el ID y el resto de los datos
+      const { id, ...updateData } = route;
+      return mockRoutesApi.updateRoute(id, updateData);
+    },
     {
       onSuccess: () => {
         queryClient.invalidateQueries('routes');
@@ -56,12 +60,15 @@ export const RouteProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 
   // Mutation for deleting a route
-  const deleteMutation = useMutation(api.deleteRoute, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('routes');
-      closeModals();
-    },
-  });
+  const deleteMutation = useMutation(
+    (id: string) => mockRoutesApi.deleteRoute(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('routes');
+        closeModals();
+      },
+    }
+  );
 
   // Helper functions
   const openAddModal = () => setIsAddModalOpen(true);
@@ -115,7 +122,9 @@ export const RouteProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       await updateMutation.mutateAsync(routeData);
     },
     deleteRoute: async (id) => {
+      if (id) {
       await deleteMutation.mutateAsync(id);
+    }
     },
     
     // UI actions

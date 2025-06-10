@@ -3,14 +3,21 @@
 import { Badge } from "components/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "components/components/ui/card"
 import { Button } from "components/components/ui/button"
-import { MapPin, Users, Building2, Calendar, TrendingUp, ArrowLeft, MoreVertical } from "lucide-react"
+import { MapPin, Users, Building2, Calendar, TrendingUp, ArrowLeft, MoreVertical, Pencil } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "components/components/ui/dropdown-menu"
 
 interface RouteDetailsPageProps {
   route: any
   onBack: () => void
+  onEdit: () => void
 }
 
-export function RouteDetailsPage({ route, onBack }: RouteDetailsPageProps) {
+export function RouteDetailsPage({ route, onBack, onEdit }: RouteDetailsPageProps) {
   if (!route) return null
 
   return (
@@ -73,14 +80,28 @@ export function RouteDetailsPage({ route, onBack }: RouteDetailsPageProps) {
                     {route.status === "active" ? "Activa" : "Inactiva"}
                   </Badge>
 
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-gray-400 hover:text-white hover:bg-zinc-600/50 rounded-xl p-2"
-                  >
-                    <MoreVertical className="h-4 w-4" />
-                    <span className="sr-only">Más opciones</span>
-                  </Button>
+                                    <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-gray-400 hover:text-white hover:bg-zinc-600/50 rounded-xl p-2"
+                      >
+                        <MoreVertical className="h-4 w-4" />
+                        <span className="sr-only">Más opciones</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-40 bg-zinc-800 border-zinc-700" align="end">
+                      <DropdownMenuItem 
+                        onClick={onEdit}
+                        className="text-sm text-gray-300 hover:bg-zinc-700 cursor-pointer"
+                      >
+                        <Pencil className="h-4 w-4 mr-2" />
+                        Editar
+                      </DropdownMenuItem>
+                      {/* Agrega más opciones aquí si es necesario */}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
             </div>

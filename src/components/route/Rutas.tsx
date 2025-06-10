@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import toast from "react-hot-toast"
+import { useQuery, useQueryClient } from "react-query"
 import {
   Plus,
   Search,
@@ -12,6 +14,7 @@ import {
   Filter,
   Calendar,
   TrendingUp,
+  Pencil,
 } from "lucide-react"
 import { Button } from "components/components/ui/button"
 import { Input } from "components/components/ui/input"
@@ -51,6 +54,7 @@ interface RouteWithOptionalId extends Omit<Route, "id"> {
 export default function RutasPage() {
   // Usar el contexto de rutas
   const context = useRoutesContext()
+  const queryClient = useQueryClient()
 
   // Desestructurar los valores del contexto
   const {
@@ -145,16 +149,41 @@ export default function RutasPage() {
     }
   }
 
-  const handleUpdateRoute = async (data: Partial<Route>) => {
-    if (!selectedRoute) return
+  const handleUpdateRoute = async (formData: Omit<Route, 'id'>) => {
+    if (!selectedRoute?.id) {
+      console.error("No se puede actualizar la ruta: ID no proporcionado")
+      return false
+    }
 
     try {
       setIsSubmitting(true)
-      await updateRoute({ ...selectedRoute, ...data } as Route)
-      setIsEditModalOpen(false)
-      setSelectedRoute(null)
+      
+      // Solo enviar los campos editables más el ID
+      const updateData = {
+        id: selectedRoute.id,
+        name: formData.name,
+        description: formData.description,
+        district: formData.district,
+        location: formData.location,
+        status: formData.status
+      }
+      
+      console.log("Enviando datos de actualización:", updateData)
+      
+      await updateRoute(updateData as Route)
+      
+      // Forzar una actualización de la lista de rutas
+      await queryClient.invalidateQueries('routes')
+      
+      // Mostrar notificación de éxito
+      toast.success("Ruta actualizada correctamente")
+      
+      return true
     } catch (error) {
       console.error("Error al actualizar la ruta:", error)
+      // Mostrar notificación de error
+      toast.error(error instanceof Error ? error.message : "Error al actualizar la ruta")
+      return false
     } finally {
       setIsSubmitting(false)
     }
@@ -194,37 +223,24 @@ export default function RutasPage() {
     setCurrentView("details")
   }
 
+  const handleEditRoute = (route: Route) => {
+    // Cerrar cualquier modal abierto primero
+    setIsEditModalOpen(false)
+    setIsAddModalOpen(false)
+    
+    // Usar un pequeño retraso para asegurar que el estado se actualice correctamente
+    setTimeout(() => {
+      setSelectedRoute(route)
+      setIsEditModalOpen(true)
+    }, 50)
+  }
+
   const handleBackToList = () => {
     setCurrentView("list")
     setSelectedRoute(null)
   }
 
-  const handleEditRoute = async (routeData: Omit<Route, "id">): Promise<boolean> => {
-    if (!selectedRoute || !selectedRoute.id) {
-      console.error("No se puede actualizar la ruta: ID no proporcionado")
-      return false
-    }
 
-    try {
-      setIsSubmitting(true)
-      // Crear un objeto Route completo con el ID y los datos actualizados
-      const updatedRoute: Route = {
-        ...selectedRoute,
-        ...routeData,
-        id: selectedRoute.id,
-      }
-
-      await updateRoute(updatedRoute)
-      setIsEditModalOpen(false)
-      setSelectedRoute(null)
-      return true
-    } catch (error) {
-      console.error("Error al actualizar la ruta:", error)
-      return false
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
 
   const statsData = {
     totalRoutes: pagination?.total || 0,
@@ -239,7 +255,24 @@ export default function RutasPage() {
 
   // Si estamos en la vista de detalles, mostrar el componente de detalles
   if (currentView === "details" && selectedRoute) {
-    return <RouteDetailsPage route={selectedRoute} onBack={handleBackToList} />
+    return (
+      <>
+        <RouteDetailsPage 
+          route={selectedRoute} 
+          onBack={handleBackToList} 
+          onEdit={() => setIsEditModalOpen(true)}
+        />
+        {/* Modal de edición */}
+        <RouteFormModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSubmit={handleUpdateRoute}
+          mode="edit"
+          initialData={selectedRoute}
+          isSubmitting={isSubmitting}
+        />
+      </>
+    )
   }
 
   if (isLoading && routes.length === 0) {
@@ -509,12 +542,20 @@ export default function RutasPage() {
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700 text-white">
+                        <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700 text-white w-40">
                           <DropdownMenuItem
                             onClick={() => handleViewDetails(route)}
-                            className="hover:bg-slate-700 cursor-pointer"
+                            className="hover:bg-slate-700 cursor-pointer flex items-center px-3 py-2 text-sm"
                           >
-                            Ver detalles
+                            <MapPin className="mr-2 h-4 w-4" />
+                            <span>Ver detalles</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onSelect={() => handleEditRoute(route)}
+                            className="flex items-center gap-2 cursor-pointer"
+                          >
+                            <Pencil className="mr-2 h-4 w-4" />
+                            <span>Editar</span>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
                             <div
@@ -522,7 +563,7 @@ export default function RutasPage() {
                                 setRouteToDelete(route)
                                 setIsDeleteDialogOpen(true)
                               }}
-                              className="text-red-400 hover:bg-red-900/30 hover:text-red-300 cursor-pointer flex items-center px-2 py-1.5 text-sm"
+                              className="text-red-400 hover:bg-red-900/30 hover:text-red-300 cursor-pointer flex items-center px-3 py-2 text-sm"
                             >
                               <Trash2 className="mr-2 h-4 w-4" />
                               <span>Eliminar</span>
@@ -539,25 +580,45 @@ export default function RutasPage() {
         )}
 
         {/* Modals */}
-        <RouteFormModal
-          isOpen={isAddModalOpen}
-          onClose={() => setIsAddModalOpen(false)}
-          onSubmit={handleAddRoute}
-          mode="add"
-          isSubmitting={isSubmitting}
-        />
+        {isAddModalOpen && (
+          <RouteFormModal
+            isOpen={isAddModalOpen}
+            onClose={() => {
+              setIsAddModalOpen(false)
+            }}
+            onSubmit={async (data) => {
+              const success = await handleAddRoute(data)
+              if (success) {
+                setIsAddModalOpen(false)
+              }
+              return success
+            }}
+            mode="add"
+            isSubmitting={isSubmitting}
+          />
+        )}
 
-        <RouteFormModal
-          isOpen={isEditModalOpen}
-          onClose={() => {
-            setIsEditModalOpen(false)
-            setSelectedRoute(null)
-          }}
-          onSubmit={handleEditRoute}
-          initialData={selectedRoute}
-          mode="edit"
-          isSubmitting={isSubmitting}
-        />
+        {isEditModalOpen && selectedRoute && (
+          <RouteFormModal
+            key={`edit-${selectedRoute.id}`}
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false)
+              setSelectedRoute(null)
+            }}
+            onSubmit={async (data) => {
+              const success = await handleUpdateRoute(data)
+              if (success) {
+                setIsEditModalOpen(false)
+                setSelectedRoute(null)
+              }
+              return success
+            }}
+            mode="edit"
+            initialData={selectedRoute}
+            isSubmitting={isSubmitting}
+          />
+        )}
 
         {/* Delete Dialog */}
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>

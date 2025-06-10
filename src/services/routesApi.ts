@@ -53,7 +53,7 @@ export const routesApi = {
   ): Promise<ApiResponse<Route>> {
     try {
       const response = await routesClient.put<ApiResponse<Route>>(
-        `${ROUTES_ENDPOINTS.UPDATE_ROUTE}/${id}`,
+        ROUTES_ENDPOINTS.UPDATE_ROUTE(Number(id)),
         routeData
       );
       return handleAxiosResponse(response);

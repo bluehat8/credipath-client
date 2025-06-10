@@ -100,7 +100,7 @@ export const useRoutes = () => {
       try {
         const { id, ...data } = updatedRoute;
         const response = await apiClient.put(
-          `${ROUTES_ENDPOINTS.UPDATE_ROUTE}/${id}`,
+          ROUTES_ENDPOINTS.UPDATE_ROUTE(Number(id)),
           data
         );
         return handleAxiosResponse(response);
