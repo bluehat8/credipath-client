@@ -1,4 +1,6 @@
-import * as React from "react"
+"use client"
+
+import type * as React from "react"
 import { Check, Loader2, UserPlus, MapPin, Phone, Mail, FileText, User, Contact } from "lucide-react"
 import { Button } from "components/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "components/components/ui/card"
@@ -13,58 +15,52 @@ export const ClientForm: React.FC = () => {
   const { form, isSubmitting, isSuccess, onSubmit } = useClientForm()
 
   return (
-    <Card className="w-full max-w-6xl mx-auto shadow-2xl border-0 bg-zinc-800">
-      <CardHeader className="space-y-4 bg-card text-white rounded-t-xl pb-8">
-        <div className="flex items-center gap-3">
-          <UserPlus className="h-8 w-8" />
-          <div>
+    <Card className="w-full max-w-6xl mx-auto shadow-xl border-0 bg-gradient-to-b from-zinc-800 to-zinc-900 overflow-hidden">
+      <CardHeader className="space-y-4 bg-gradient-to-r from-green-900/80 to-zinc-800 text-white rounded-t-xl border-b border-green-800/30">
+        <div className="flex items-center gap-4">
             <CardTitle className="text-2xl font-medium">Registro de clientes</CardTitle>
-          </div>
         </div>
       </CardHeader>
 
-      <CardContent className="pt-8 px-8 sm:px-12">
+      <CardContent className="pt-8 px-6 sm:px-8 lg:px-12">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-8">
             <Tabs defaultValue="personal" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-sidebar">
+              <TabsList className="grid w-full grid-cols-2 bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-1">
                 <TabsTrigger
                   value="personal"
-                  className="data-[state=active]:bg-green-native data-[state=active]:text-white"
+                  className="data-[state=active]:bg-green-600 data-[state=active]:text-white rounded-md transition-all duration-200"
                 >
                   <User className="mr-2 h-4 w-4" />
                   Información Personal
                 </TabsTrigger>
                 <TabsTrigger
                   value="contact"
-                  className="data-[state=active]:bg-green-native data-[state=active]:text-white"
+                  className="data-[state=active]:bg-green-600 data-[state=active]:text-white rounded-md transition-all duration-200"
                 >
                   <Contact className="mr-2 h-4 w-4" />
                   Información de Contacto
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="personal" className="mt-6">
-                <div className="space-y-6">
-                  <div className="flex items-center gap-2 text-green-cpt border-b border-[#3c5543] pb-2">
-                    <UserPlus size={20} />
-                    <h3 className="text-lg font-semibold">Datos Personales</h3>
-                  </div>
+              <TabsContent value="personal" className="mt-8">
+                <div className="space-y-8">
+                  
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                     <FormField
                       control={form.control}
                       name="name"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-300">
+                        <FormItem className="space-y-3">
+                          <FormLabel className="text-gray-200 font-medium">
                             Nombre del cliente <span className="text-red-400">*</span>
                           </FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Ingresa nombre"
                               {...field}
-                              className="bg-sidebar text-white placeholder:text-gray-500 focus:border-[#50C271]"
+                              className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-gray-500 focus:border-green-500 focus:ring-green-500/20 transition-all"
                             />
                           </FormControl>
                           <FormMessage className="text-red-400" />
@@ -76,15 +72,15 @@ export const ClientForm: React.FC = () => {
                       control={form.control}
                       name="lastname"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-300">
+                        <FormItem className="space-y-3">
+                          <FormLabel className="text-gray-200 font-medium">
                             Apellidos <span className="text-red-400">*</span>
                           </FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Ingresa apellidos"
                               {...field}
-                              className="border-[#3c5543] bg-sidebar text-white placeholder:text-gray-500 focus:border-[#50C271] focus:ring-[#50C271]/20"
+                              className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-gray-500 focus:border-green-500 focus:ring-green-500/20 transition-all"
                             />
                           </FormControl>
                           <FormMessage className="text-red-400" />
@@ -93,25 +89,31 @@ export const ClientForm: React.FC = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                     <FormField
                       control={form.control}
-                      name="route"
+                      name="routeId"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-300">
+                        <FormItem className="space-y-3">
+                          <FormLabel className="text-gray-200 font-medium">
                             Ruta a asignar <span className="text-red-400">*</span>
                           </FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                             <FormControl>
-                              <SelectTrigger className="border-[#3c5543] bg-sidebar text-white focus:border-[#50C271] focus:ring-[#50C271]/20">
+                              <SelectTrigger className="bg-zinc-800/50 border-zinc-700 text-white focus:border-green-500 focus:ring-green-500/20 transition-all">
                                 <SelectValue placeholder="Selecciona una ruta" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="bg-sidebar border-[#3c5543]">
-                              <SelectItem value="1">Ruta del norte</SelectItem>
-                              <SelectItem value="2">Masaya</SelectItem>
-                              <SelectItem value="3">Ruta del sur</SelectItem>
+                            <SelectContent className="bg-zinc-900 border-zinc-700">
+                              <SelectItem value="1" className="focus:bg-green-800/30 focus:text-white">
+                                Ruta del norte
+                              </SelectItem>
+                              <SelectItem value="2" className="focus:bg-green-800/30 focus:text-white">
+                                Masaya
+                              </SelectItem>
+                              <SelectItem value="3" className="focus:bg-green-800/30 focus:text-white">
+                                Ruta del sur
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage className="text-red-400" />
@@ -123,15 +125,17 @@ export const ClientForm: React.FC = () => {
                       control={form.control}
                       name="note"
                       render={({ field }) => (
-                        <FormItem className="col-span-full mt-4">
-                          <FormLabel className="text-gray-300 flex items-center gap-2">
-                            <FileText size={16} />
+                        <FormItem className="col-span-full mt-2 space-y-3">
+                          <FormLabel className="text-gray-200 font-medium flex items-center gap-2">
+                            <div className="bg-green-900/30 p-1 rounded-md">
+                              <FileText size={14} className="text-green-400" />
+                            </div>
                             Notas
                           </FormLabel>
                           <FormControl>
                             <Textarea
                               placeholder="Información adicional sobre el cliente"
-                              className="resize-none border-[#3c5543] bg-sidebar text-white placeholder:text-gray-500 focus:border-[#50C271] focus:ring-[#50C271]/20 min-h-[100px]"
+                              className="resize-none bg-zinc-800/50 border-zinc-700 text-white placeholder:text-gray-500 focus:border-green-500 focus:ring-green-500/20 min-h-[120px] transition-all"
                               {...field}
                             />
                           </FormControl>
@@ -143,26 +147,25 @@ export const ClientForm: React.FC = () => {
                 </div>
               </TabsContent>
 
-              <TabsContent value="contact" className="mt-6">
-                <div className="space-y-6">
-                  <div className="flex items-center gap-2 text-green-cpt border-b pb-2">
-                    <Mail size={20} />
-                    <h3 className="text-lg font-semibold">Datos de Contacto</h3>
-                  </div>
+              <TabsContent value="contact" className="mt-8">
+                <div className="space-y-8">
+              
 
                   <FormField
                     control={form.control}
                     name="direction"
                     render={({ field }) => (
-                      <FormItem className="col-span-full">
-                        <FormLabel className="text-gray-300 flex items-center gap-2">
-                          <MapPin size={16} />
+                      <FormItem className="col-span-full space-y-3">
+                        <FormLabel className="text-gray-200 font-medium flex items-center gap-2">
+                          <div className="bg-green-900/30 p-1 rounded-md">
+                            <MapPin size={14} className="text-green-400" />
+                          </div>
                           Dirección <span className="text-red-400">*</span>
                         </FormLabel>
                         <FormControl>
                           <Textarea
                             placeholder="Ingresa la dirección completa"
-                            className="resize-none border-[#3c5543] bg-sidebar text-white placeholder:text-gray-500 focus:border-[#50C271] focus:ring-[#50C271]/20 min-h-[100px]"
+                            className="resize-none bg-zinc-800/50 border-zinc-700 text-white placeholder:text-gray-500 focus:border-green-500 focus:ring-green-500/20 min-h-[120px] transition-all"
                             {...field}
                           />
                         </FormControl>
@@ -171,14 +174,16 @@ export const ClientForm: React.FC = () => {
                     )}
                   />
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                     <FormField
                       control={form.control}
                       name="cellphone"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-300 flex items-center gap-2">
-                            <Phone size={16} />
+                        <FormItem className="space-y-3">
+                          <FormLabel className="text-gray-200 font-medium flex items-center gap-2">
+                            <div className="bg-green-900/30 p-1 rounded-md">
+                              <Phone size={14} className="text-green-400" />
+                            </div>
                             Teléfono celular <span className="text-red-400">*</span>
                           </FormLabel>
                           <FormControl>
@@ -186,7 +191,7 @@ export const ClientForm: React.FC = () => {
                               placeholder="Ej: 88888888"
                               type="tel"
                               {...field}
-                              className="border-[#3c5543] bg-sidebar text-white placeholder:text-gray-500 focus:border-[#50C271] focus:ring-[#50C271]/20"
+                              className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-gray-500 focus:border-green-500 focus:ring-green-500/20 transition-all"
                             />
                           </FormControl>
                           <FormMessage className="text-red-400" />
@@ -198,9 +203,11 @@ export const ClientForm: React.FC = () => {
                       control={form.control}
                       name="email"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-300 flex items-center gap-2">
-                            <Mail size={16} />
+                        <FormItem className="space-y-3">
+                          <FormLabel className="text-gray-200 font-medium flex items-center gap-2">
+                            <div className="bg-green-900/30 p-1 rounded-md">
+                              <Mail size={14} className="text-green-400" />
+                            </div>
                             Correo electrónico <span className="text-red-400">*</span>
                           </FormLabel>
                           <FormControl>
@@ -208,7 +215,7 @@ export const ClientForm: React.FC = () => {
                               placeholder="ejemplo@correo.com"
                               type="email"
                               {...field}
-                              className="border-[#3c5543] bg-sidebar text-white placeholder:text-gray-500 focus:border-[#50C271] focus:ring-[#50C271]/20"
+                              className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-gray-500 focus:border-green-500 focus:ring-green-500/20 transition-all"
                             />
                           </FormControl>
                           <FormMessage className="text-red-400" />
@@ -221,9 +228,11 @@ export const ClientForm: React.FC = () => {
                     control={form.control}
                     name="landlinePhone"
                     render={({ field }) => (
-                      <FormItem className="mt-4">
-                        <FormLabel className="text-gray-300 flex items-center gap-2">
-                          <Phone size={16} />
+                      <FormItem className="space-y-3">
+                        <FormLabel className="text-gray-200 font-medium flex items-center gap-2">
+                          <div className="bg-green-900/30 p-1 rounded-md">
+                            <Phone size={14} className="text-green-400" />
+                          </div>
                           Teléfono fijo
                         </FormLabel>
                         <FormControl>
@@ -231,7 +240,7 @@ export const ClientForm: React.FC = () => {
                             placeholder="Ej: 22222222"
                             type="tel"
                             {...field}
-                            className="border-[#3c5543] bg-sidebar text-white placeholder:text-gray-500 focus:border-[#50C271] focus:ring-[#50C271]/20"
+                            className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-gray-500 focus:border-green-500 focus:ring-green-500/20 transition-all"
                           />
                         </FormControl>
                         <FormMessage className="text-red-400" />
@@ -242,10 +251,10 @@ export const ClientForm: React.FC = () => {
               </TabsContent>
             </Tabs>
 
-            <CardFooter className="flex justify-center pt-8 px-0">
+            <CardFooter className="flex justify-center pt-10 px-0">
               <Button
                 type="submit"
-                className="w-full sm:w-auto min-w-[250px] px-8 py-3 bg-green-native hover:bg-[#44995C] transition-all duration-300 shadow-lg shadow-[#50C271]/25 text-lg"
+                className="w-full sm:w-auto min-w-[250px] px-8 py-6 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 transition-all duration-300 shadow-lg shadow-green-600/20 text-lg rounded-xl font-medium"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
