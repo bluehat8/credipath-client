@@ -9,10 +9,12 @@ import { Input } from "components/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/components/ui/select"
 import { Textarea } from "components/components/ui/textarea"
 import { useClientForm } from "hooks/forms/useClientForm"
+import { useSimpleRoutes } from "hooks/routes/useSimpleRoutes"
 
 export const ClientForm: React.FC = () => {
   const { form, isSubmitting, isSuccess, onSubmit } = useClientForm()
   const [activeTab, setActiveTab] = React.useState("personal")
+  const { routes, isLoading: isLoadingRoutes, error: routesError } = useSimpleRoutes()
 
   return (
     <div className="rounded-xl bg-zinc-900 p-6">
@@ -112,7 +114,7 @@ export const ClientForm: React.FC = () => {
                         </FormLabel>
                         <Select 
                           onValueChange={(value) => field.onChange(Number(value))} 
-                          value={field.value?.toString()}
+                          value={field.value ? field.value.toString() : ""}
                         >
                           <FormControl>
                             <SelectTrigger className="bg-zinc-700 border-zinc-600 text-white focus:ring-green-500">
@@ -120,9 +122,19 @@ export const ClientForm: React.FC = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="bg-zinc-800 border-zinc-700 text-white">
-                            <SelectItem value="1">Ruta del norte</SelectItem>
-                            <SelectItem value="2">Masaya</SelectItem>
-                            <SelectItem value="3">Ruta del sur</SelectItem>
+                            {isLoadingRoutes ? (
+                              <div className="py-2 px-4 text-sm text-zinc-400">Cargando rutas...</div>
+                            ) : routesError ? (
+                              <div className="py-2 px-4 text-sm text-red-400">{routesError}</div>
+                            ) : routes.length > 0 ? (
+                              routes.map((route) => (
+                                <SelectItem key={route.id} value={route.id.toString()}>
+                                  {route.name}
+                                </SelectItem>
+                              ))
+                            ) : (
+                              <div className="py-2 px-4 text-sm text-zinc-400">No hay rutas disponibles</div>
+                            )}
                           </SelectContent>
                         </Select>
                         <FormMessage className="text-red-300" /> {/* Rojo más claro */}
