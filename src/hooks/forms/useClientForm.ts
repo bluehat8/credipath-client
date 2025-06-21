@@ -2,7 +2,7 @@ import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { useToast } from "components/hooks/use-toast"
+import toast from "react-hot-toast"
 import { useClientRegistration } from "hooks/clients/useClientRegistration"
 
 export const clientFormSchema = z.object({
@@ -23,7 +23,6 @@ type ClientFormValues = z.infer<typeof clientFormSchema>
 
 export const useClientForm = () => {
   const [isSuccess, setIsSuccess] = React.useState(false)
-  const { toast } = useToast()
   const { registerClient, isLoading: isSubmitting } = useClientRegistration()
 
   const form = useForm<ClientFormValues>({
@@ -51,6 +50,9 @@ export const useClientForm = () => {
       // Call the API through our hook
       await registerClient(clientData)
       
+      // Show success toast
+      toast.success("Cliente registrado exitosamente")
+      
       // Reset form on success
       form.reset()
       setIsSuccess(true)
@@ -60,7 +62,8 @@ export const useClientForm = () => {
         setIsSuccess(false)
       }, 2000)
     } catch (error) {
-      // Error handling is done in the useClientRegistration hook
+      // Show error toast
+      toast.error("Error al registrar el cliente. Por favor, inténtalo de nuevo.")
       console.error("Error in form submission:", error)
     }
   }
