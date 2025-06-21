@@ -10,7 +10,7 @@ export const AUTH_ENDPOINTS = {
 };
 
 export const ROUTES_ENDPOINTS = {
-    GET_ROUTES: `${API_URL}/Route/getRoutes`,
+    GET_ROUTES: `${API_URL}/Route/my-routes`,
     ADD_ROUTES: `${API_URL}/Route/addRoutes`,
     GET_ROUTE_BY_ID: (id: number) => `${API_URL}/Route/getRoute/${id}`,
     UPDATE_ROUTE: (id: number) => `${API_URL}/Route/updateRoute/${id}`,
