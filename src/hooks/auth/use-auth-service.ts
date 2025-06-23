@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../utils/axios';
+import { AUTH_ENDPOINTS } from 'constants/endpoints';
 
 interface AuthPayload {
   email: string;
@@ -9,6 +10,7 @@ interface AuthPayload {
 
 interface RegisterPayload extends AuthPayload {
   name: string;
+  username: string;
   role?: string;
 }
 
@@ -32,7 +34,7 @@ export const useAuthService = () => {
   const register = useCallback(
     async (payload: RegisterPayload): Promise<void> => {
       try {
-        await axiosInstance.post('/auth/register', payload);
+        await axiosInstance.post(AUTH_ENDPOINTS.REGISTER, payload);
         // Automatically login after successful registration
         await contextLogin(payload.email, payload.password);
       } catch (error) {

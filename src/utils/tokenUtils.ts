@@ -40,9 +40,21 @@ export const checkTokenOnPageLoad = (): void => {
     // Limpiar datos de autenticación
     clearAuthData();
     
-    // Solo redirigir si no estamos ya en la página de login
-    const isLoginPage = window.location.pathname.includes(PATHS.LOGIN);
-    if (!isLoginPage) {
+    // Definir las rutas públicas que no requieren redirección
+    const publicRoutes = [
+      PATHS.LOGIN,
+      PATHS.REGISTER,
+      PATHS.FORGOT_PASSWORD,
+      PATHS.RESET_PASSWORD
+    ];
+    
+    // Verificar si la ruta actual es una ruta pública
+    const isPublicRoute = publicRoutes.some(route => 
+      window.location.pathname.includes(route)
+    );
+    
+    // Solo redirigir si no estamos en una ruta pública
+    if (!isPublicRoute) {
       window.location.href = PATHS.LOGIN;
     }
   }

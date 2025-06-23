@@ -6,7 +6,7 @@ export const API_URL = (import.meta as any).env?.VITE_API_URL;
  */
 export const AUTH_ENDPOINTS = {
   LOGIN: `${API_URL}/User/login`,
-  REGISTER: `${API_URL}/User/register`,
+  REGISTER: `${API_URL}/User/RegisterAdmin`,
 };
 
 export const ROUTES_ENDPOINTS = {

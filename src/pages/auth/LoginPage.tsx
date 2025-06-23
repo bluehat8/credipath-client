@@ -261,7 +261,12 @@ export default function LoginPage() {
             <div className="text-center mt-8 pt-6 border-t border-zinc-800">
               <span className="text-zinc-400 text-sm">
                 {"¿No tienes una cuenta? "}
-                <a href="/signup" className="text-white hover:underline font-medium">
+                <a 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate(PATHS.REGISTER);
+                  }}
+                  className="text-white hover:underline font-medium">
                   Crear una ahora
                 </a>
               </span>

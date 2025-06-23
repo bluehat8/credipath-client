@@ -20,6 +20,7 @@ import SolicitudRetanqueo from '../components/retanqueo/SolicitudRetanqueo';
 import Desembolso from '../components/retanqueo/Desembolso';
 import GestionRetanqueo from '../pages/GestionRetanqueo';
 import SettingsPage from '../pages/SettingsPage';
+import RegisterPage from '../pages/auth/register-page';
 
 // Auth Guard component to protect routes
 interface AuthGuardProps {
@@ -69,6 +70,7 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ children, restricted = false 
 
   // If the route is restricted and the user is authenticated, redirect to home
   if (restricted && isAuthenticated) {
+    // Si ya está autenticado y trata de acceder a login/register, redirigir al dashboard
     return <Navigate to={PATHS.HOME} replace />;
   }
 
@@ -86,6 +88,14 @@ export const AppRouter: React.FC = () => {
         element={
           <PublicRoute restricted>
             <LoginPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path={PATHS.REGISTER}
+        element={
+          <PublicRoute restricted={false}>
+            <RegisterPage />
           </PublicRoute>
         }
       />
