@@ -1,19 +1,5 @@
 import * as React from "react"
-import axiosInstance from "../../utils/axios"
-
-interface ClientResponseDTO {
-  id: number
-  identification: string
-  name: string
-  code: string | null
-  routeId: number
-  routeName: string
-  homeAddress: string
-  businessAddress: string | null
-  gender: string | null
-  municipality: string | null
-  // Agregar más campos según sea necesario
-}
+import { useClientRegistration, type Client } from "hooks/clients/useClientRegistration"
 
 interface PaginationState {
   currentPage: number
@@ -22,22 +8,8 @@ interface PaginationState {
   totalPages: number
 }
 
-interface ApiResponse<T> {
-  success: boolean
-  message: string
-  data: T | null
-}
-
-interface PaginatedClientsResponse {
-  items: ClientResponseDTO[]
-  totalCount: number
-  pageNumber: number
-  pageSize: number
-  totalPages: number
-}
-
 interface UseClientDashboardReturn {
-  clients: ClientResponseDTO[]
+  clients: Client[]
   routes: string[]
   pagination: PaginationState
   isFormVisible: boolean
@@ -46,7 +18,7 @@ interface UseClientDashboardReturn {
   isFilterExpanded: boolean
   isLoading: boolean
   error: string | null
-  filteredClients: ClientResponseDTO[]
+  filteredClients: Client[]
   handleOpenForm: () => void
   handleCloseForm: () => void
   toggleFilters: () => void
@@ -54,13 +26,12 @@ interface UseClientDashboardReturn {
   setSearchTerm: (term: string) => void
   setSelectedRoute: (route: string) => void
   setIsFilterExpanded: (expanded: boolean) => void
-  refetch: () => Promise<void>
+  refetch: () => void
   handlePageChange: (page: number) => void
   handlePageSizeChange: (size: number) => void
 }
 
 export const useClientDashboard = (): UseClientDashboardReturn => {
-  const [clients, setClients] = React.useState<ClientResponseDTO[]>([])
   const [routes, setRoutes] = React.useState<string[]>([])
   const [pagination, setPagination] = React.useState<PaginationState>({
     currentPage: 1,
@@ -68,77 +39,35 @@ export const useClientDashboard = (): UseClientDashboardReturn => {
     totalItems: 0,
     totalPages: 1
   })
-  const [isLoading, setIsLoading] = React.useState(true)
-  const [error, setError] = React.useState<string | null>(null)
   const [isFormVisible, setIsFormVisible] = React.useState(false)
   const [searchTerm, setSearchTerm] = React.useState("")
   const [selectedRoute, setSelectedRoute] = React.useState("")
   const [isFilterExpanded, setIsFilterExpanded] = React.useState(false)
-  const initialLoadRef = React.useRef(false)
-  const isFetchingRef = React.useRef(false)
+  
+  // Use the useClients hook from useClientRegistration
+  const { data: clients = [], isLoading, error, refetch } = useClientRegistration().useClients({
+    page: pagination.currentPage,
+    pageSize: pagination.pageSize,
+    searchTerm: searchTerm || undefined
+  })
 
-  // Fetch clients from API with pagination and filters
-  const fetchClients = React.useCallback(async () => {
-    // Evitar múltiples peticiones simultáneas
-    if (isFetchingRef.current) return
-    
-    try {
-      isFetchingRef.current = true
-      setIsLoading(true)
-      setError(null)
-      
-      // Construir query params
-      const params = new URLSearchParams()
-      params.append('pageNumber', pagination.currentPage.toString())
-      params.append('pageSize', pagination.pageSize.toString())
-      
-      if (searchTerm) {
-        params.append('search', searchTerm)
-      }
-      
-      if (selectedRoute) {
-        params.append('routeName', selectedRoute)
-      }
-      
-      // Hacer la petición
-      const response = await axiosInstance.get<ApiResponse<PaginatedClientsResponse>>(
-        `/Client?${params.toString()}`
+  // Extract unique routes from clients
+  React.useEffect(() => {
+    if (clients && clients.length > 0) {
+      const uniqueRoutes = Array.from(
+        new Set(clients.map(client => client.routeName).filter(Boolean) as string[])
       )
-      
-      if (response.data.success && response.data.data) {
-        const { items, totalCount, pageNumber, pageSize, totalPages } = response.data.data
-        
-        setClients(items)
-        setPagination({
-          currentPage: pageNumber,
-          pageSize,
-          totalItems: totalCount,
-          totalPages
-        })
-        
-        // Extraer rutas únicas (esto probablemente debería venir del backend)
-        const uniqueRoutes = Array.from(
-          new Set(items.map(client => client.routeName).filter(Boolean))
-        ) as string[]
-        setRoutes(prevRoutes => {
-          // Mantener las rutas existentes y agregar las nuevas
-          const routeSet = new Set([...prevRoutes, ...uniqueRoutes])
-          return Array.from(routeSet)
-        })
-      }
-    } catch (err) {
-      console.error('Error fetching clients:', err)
-      setError('No se pudieron cargar los clientes. Por favor, intente de nuevo.')
-    } finally {
-      setIsLoading(false)
-      isFetchingRef.current = false
-      initialLoadRef.current = true
+      setRoutes(prevRoutes => {
+        // Mantener las rutas existentes y agregar las nuevas
+        const routeSet = new Set([...prevRoutes, ...uniqueRoutes])
+        return Array.from(routeSet)
+      })
     }
-  }, [pagination.currentPage, pagination.pageSize, searchTerm, selectedRoute])
+  }, [clients])
 
   const handleOpenForm = () => setIsFormVisible(true)
   const handleCloseForm = () => setIsFormVisible(false)
-  const toggleFilters = () => setIsFilterExpanded(true)
+  const toggleFilters = () => setIsFilterExpanded(prev => !prev)
 
   const clearFilters = () => {
     setSearchTerm("")
@@ -154,6 +83,7 @@ export const useClientDashboard = (): UseClientDashboardReturn => {
       ...prev,
       currentPage: page
     }))
+    refetch()
   }
   
   const handlePageSizeChange = (size: number) => {
@@ -162,34 +92,21 @@ export const useClientDashboard = (): UseClientDashboardReturn => {
       pageSize: size,
       currentPage: 1 // Resetear a la primera página al cambiar el tamaño
     }))
+    refetch()
   }
 
-  // Efecto para la carga inicial y cuando cambian los filtros
+  // Refetch when filters change
   React.useEffect(() => {
-    // Resetear a la primera página cuando cambian los filtros
-    if (initialLoadRef.current) {
-      setPagination(prev => ({
-        ...prev,
-        currentPage: 1
-      }))
-    } else {
-      fetchClients()
-    }
+    refetch()
+  }, [searchTerm, selectedRoute, pagination.pageSize, pagination.currentPage])
+  
+  // Reset to first page when filters change
+  React.useEffect(() => {
+    setPagination(prev => ({
+      ...prev,
+      currentPage: 1
+    }))
   }, [searchTerm, selectedRoute, pagination.pageSize])
-  
-  // Efecto para cargar datos cuando cambia la página
-  React.useEffect(() => {
-    if (initialLoadRef.current) {
-      fetchClients()
-    }
-  }, [pagination.currentPage])
-  
-  // Limpieza al desmontar
-  React.useEffect(() => {
-    return () => {
-      isFetchingRef.current = false
-    }
-  }, [])
 
   return {
     clients,
@@ -199,9 +116,9 @@ export const useClientDashboard = (): UseClientDashboardReturn => {
     searchTerm,
     selectedRoute,
     isFilterExpanded,
-    filteredClients,
     isLoading,
-    error,
+    error: error?.message || null,
+    filteredClients,
     handleOpenForm,
     handleCloseForm,
     toggleFilters,
@@ -209,8 +126,8 @@ export const useClientDashboard = (): UseClientDashboardReturn => {
     setSearchTerm,
     setSelectedRoute,
     setIsFilterExpanded,
-    refetch: fetchClients,
+    refetch,
     handlePageChange,
-    handlePageSizeChange
+    handlePageSizeChange,
   }
 }

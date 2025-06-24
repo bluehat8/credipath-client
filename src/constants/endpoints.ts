@@ -20,7 +20,7 @@ export const ROUTES_ENDPOINTS = {
 
 export const CLIENT_ENDPOINTS = {
     REGISTER_CLIENT: `${API_URL}/Client/register`,
-    GET_CLIENTS: `${API_URL}/Client/getClients`,
+    GET_CLIENTS: `${API_URL}/Client`,
     GET_CLIENT_BY_ID: (id: number) => `${API_URL}/Client/getClient/${id}`,
     UPDATE_CLIENT: (id: number) => `${API_URL}/Client/updateClient/${id}`,
     DELETE_CLIENT: (id: number) => `${API_URL}/Client/deleteClient/${id}`,

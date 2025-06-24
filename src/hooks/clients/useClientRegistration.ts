@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { CLIENT_ENDPOINTS } from 'constants/endpoints';
-import axios from 'utils/axios';
+import axiosInstance from 'utils/axios';
 import { useToast } from 'components/hooks/use-toast';
 
 export interface Client {
@@ -39,7 +39,7 @@ export interface ClientsFilters {
 // Base API functions (not React hooks)
 const registerClientAPI = async (clientData: ClientRegistrationData) => {
   try {
-    const response = await axios.post(CLIENT_ENDPOINTS.REGISTER_CLIENT, clientData);
+    const response = await axiosInstance.post(CLIENT_ENDPOINTS.REGISTER_CLIENT, clientData);
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message || 'Error al registrar el cliente';
@@ -49,8 +49,18 @@ const registerClientAPI = async (clientData: ClientRegistrationData) => {
 
 const getClientsAPI = async (filters: ClientsFilters = {}) => {
   try {
-    const { data } = await axios.get(CLIENT_ENDPOINTS.GET_CLIENTS, { params: filters });
-    return data as Client[];
+    const { data } = await axiosInstance.get(CLIENT_ENDPOINTS.GET_CLIENTS, { 
+      params: {
+        pageNumber: filters.page || 1,
+        pageSize: filters.pageSize || 10,
+        search: filters.searchTerm || '',
+      } 
+    });
+    
+    if (data.success && data.data) {
+      return data.data.items || [];
+    }
+    return [];
   } catch (error: any) {
     const errorMessage = error.response?.data?.message || 'Error al obtener la lista de clientes';
     throw new Error(errorMessage);
@@ -59,7 +69,7 @@ const getClientsAPI = async (filters: ClientsFilters = {}) => {
 
 const getClientByIdAPI = async (id: number) => {
   try {
-    const { data } = await axios.get(CLIENT_ENDPOINTS.GET_CLIENT_BY_ID(id));
+    const { data } = await axiosInstance.get(CLIENT_ENDPOINTS.GET_CLIENT_BY_ID(id));
     return data as Client;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message || 'Error al obtener el cliente';

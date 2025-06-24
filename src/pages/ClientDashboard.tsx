@@ -213,7 +213,13 @@ export const ClientDashboard: React.FC = () => {
 
           {/* Formulario emergente */}
           {isFormVisible && (
-            <ClientForm onClose={handleCloseForm} />
+            <ClientForm 
+              onClose={handleCloseForm} 
+              onSuccess={() => {
+                handleCloseForm();
+                refetch();
+              }} 
+            />
           )}
         </div>
 

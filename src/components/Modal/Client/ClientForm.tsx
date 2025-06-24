@@ -13,12 +13,20 @@ import { useSimpleRoutes } from "hooks/routes/useSimpleRoutes"
 
 export interface ClientFormProps {
   onClose?: () => void;
+  onSuccess?: () => void;
 }
 
-export const ClientForm: React.FC<ClientFormProps> = ({ onClose }) => {
+export const ClientForm: React.FC<ClientFormProps> = ({ onClose, onSuccess }) => {
   const { form, isSubmitting, isSuccess, onSubmit } = useClientForm()
   const [activeTab, setActiveTab] = React.useState<"personal" | "contact">("personal")
   const { routes = [], isLoading: isLoadingRoutes, error: routesError } = useSimpleRoutes()
+  
+  // Close the form and call onSuccess after successful submission
+  React.useEffect(() => {
+    if (isSuccess && onSuccess) {
+      onSuccess();
+    }
+  }, [isSuccess, onSuccess]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
