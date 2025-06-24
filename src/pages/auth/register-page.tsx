@@ -72,7 +72,7 @@ export default function RegisterPage() {
         username: formData.username,
         email: formData.email,
         password: formData.password,
-        role: 'user' // Default role for new registrations
+        role: 'user' // a eliminar
       });
       
       // The auth service will handle login automatically after registration
