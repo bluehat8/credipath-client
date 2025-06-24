@@ -53,7 +53,7 @@ const getClientsAPI = async (filters: ClientsFilters = {}) => {
       params: {
         pageNumber: filters.page || 1,
         pageSize: filters.pageSize || 10,
-        search: filters.searchTerm || '',
+        searchTerm: filters.searchTerm || '',
       } 
     });
     
