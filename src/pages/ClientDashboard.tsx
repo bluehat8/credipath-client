@@ -136,7 +136,7 @@ export const ClientDashboard: React.FC = () => {
                       </button>
                     </div>
                   ) : (
-                    <div className="grid md:grid-cols-1 lg:grid-cols-1 gap-4">
+                    <div className="grid md:grid-cols-1 lg:grid-cols-1">
                       {filteredClients.length > 0 ? (
                         filteredClients.map((client) => (
                           <ClientCard key={client.id} {...client} />
