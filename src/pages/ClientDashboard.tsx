@@ -11,11 +11,14 @@ export const ClientDashboard: React.FC = () => {
   const {
     clients,
     routes,
+    pagination,
     isFormVisible,
     searchTerm,
     selectedRoute,
     isFilterExpanded,
     filteredClients,
+    isLoading,
+    error,
     handleOpenForm,
     handleCloseForm,
     toggleFilters,
@@ -23,6 +26,9 @@ export const ClientDashboard: React.FC = () => {
     setSearchTerm,
     setSelectedRoute,
     setIsFilterExpanded,
+    refetch,
+    handlePageChange,
+    handlePageSizeChange
   } = useClientDashboard()
 
   return (
@@ -107,23 +113,99 @@ export const ClientDashboard: React.FC = () => {
                 </div>
 
                 {/* Lista de clientes */}
-                <div className="w-full grid md:grid-cols-1 lg:grid-cols-1">
-                  {filteredClients.length > 0 ? (
-                    filteredClients.map((client, index) => <ClientCard key={index} {...client} />)
-                  ) : (
-                    <div className="col-span-full flex flex-col items-center justify-center p-8 text-center">
-                      <div className="text-gray-400 mb-2">
-                        <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <div className="w-full">
+                  {isLoading ? (
+                    <div className="flex flex-col items-center justify-center p-8 text-center">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-native mb-4" />
+                      <p className="text-white">Cargando clientes...</p>
+                    </div>
+                  ) : error ? (
+                    <div className="flex flex-col items-center justify-center p-8 text-center">
+                      <div className="text-red-500 mb-4">
+                        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
                       </div>
-                      <p className="text-white text-lg font-medium mb-2">No se encontraron clientes</p>
-                      <p className="text-gray-400">Intenta con otros criterios de búsqueda o agrega un nuevo cliente</p>
+                      <p className="text-red-400 text-lg font-medium mb-2">Error al cargar los clientes</p>
+                      <p className="text-gray-400 mb-4">{error}</p>
+                      <button
+                        onClick={refetch}
+                        className="px-4 py-2 bg-primary-native text-white rounded-md hover:bg-opacity-90 transition-colors"
+                      >
+                        Reintentar
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="grid md:grid-cols-1 lg:grid-cols-1 gap-4">
+                      {filteredClients.length > 0 ? (
+                        filteredClients.map((client) => (
+                          <ClientCard key={client.id} {...client} />
+                        ))
+                      ) : (
+                        <div className="col-span-full flex flex-col items-center justify-center p-8 text-center">
+                          <div className="text-gray-400 mb-2">
+                            <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                          </div>
+                          <p className="text-white text-lg font-medium mb-2">No se encontraron clientes</p>
+                          <p className="text-gray-400">Intenta con otros criterios de búsqueda o agrega un nuevo cliente</p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
 
-                {/* Results Count */}
-                <div className="w-full mt-5 mb-4 text-sm text-gray-400">
-                  Mostrando {filteredClients.length} de {clients.length} clientes
+                {/* Paginación y contador de resultados */}
+                <div className="w-full mt-5 mb-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+                  <div>
+                    Mostrando {filteredClients.length} de {pagination.totalItems} clientes
+                    {searchTerm && ` para "${searchTerm}"`}
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <span>Mostrar:</span>
+                      <select
+                        value={pagination.pageSize}
+                        onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+                        className="bg-zinc-700 text-white text-sm rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary-native"
+                      >
+                        {[5, 10, 20, 50].map(size => (
+                          <option key={size} value={size} className="bg-zinc-800">
+                            {size}
+                          </option>
+                        ))}
+                      </select>
+                      <span>por página</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handlePageChange(pagination.currentPage - 1)}
+                        disabled={pagination.currentPage === 1}
+                        className="p-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zinc-700"
+                        aria-label="Página anterior"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      
+                      <span>
+                        Página {pagination.currentPage} de {pagination.totalPages}
+                      </span>
+                      
+                      <button
+                        onClick={() => handlePageChange(pagination.currentPage + 1)}
+                        disabled={pagination.currentPage >= pagination.totalPages}
+                        className="p-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zinc-700"
+                        aria-label="Página siguiente"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
