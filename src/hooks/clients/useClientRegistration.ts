@@ -11,10 +11,18 @@ export interface Client {
   routeId: number;
   routeName?: string;
   note?: string;
-  direction: string;
-  cellphone: string;
+  direction?: string;
+  phone: string;
   email: string;
   landlinePhone?: string;
+  identification: string;
+  code?: string;
+  homeAddress?: string;
+  businessAddress?: string;
+  gender?: string;
+  municipality?: string;
+  city?: string;
+  neighborhood?: string;
   createdAt?: string;
   updatedAt?: string;
 }

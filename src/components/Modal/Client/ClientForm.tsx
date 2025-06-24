@@ -11,19 +11,35 @@ import { Textarea } from "components/components/ui/textarea"
 import { useClientForm } from "hooks/forms/useClientForm"
 import { useSimpleRoutes } from "hooks/routes/useSimpleRoutes"
 
-export const ClientForm: React.FC = () => {
+export interface ClientFormProps {
+  onClose?: () => void;
+}
+
+export const ClientForm: React.FC<ClientFormProps> = ({ onClose }) => {
   const { form, isSubmitting, isSuccess, onSubmit } = useClientForm()
   const [activeTab, setActiveTab] = React.useState<"personal" | "contact">("personal")
   const { routes = [], isLoading: isLoadingRoutes, error: routesError } = useSimpleRoutes()
 
   return (
-    <div className="rounded-xl bg-zinc-900 p-6">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold text-white mb-2">Registro de clientes</h1>
-          <p className="text-zinc-400">Complete la información del cliente</p>
-        </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl bg-zinc-900 p-6">
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-zinc-400 hover:text-white transition-colors"
+            aria-label="Cerrar formulario"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        )}
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-semibold text-white mb-2">Registro de clientes</h1>
+          </div>
 
         {/* Formulario */}
         <Form {...form}>
@@ -189,75 +205,56 @@ export const ClientForm: React.FC = () => {
               {activeTab === "contact" && (
                 <div className="space-y-6">
                   <div className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="direction"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-zinc-200">
-                            Dirección <span className="text-red-400">*</span>
-                          </FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Ingresa la dirección completa"
-                              {...field}
-                              className="bg-zinc-700 border-zinc-600 text-white focus:ring-green-500"
-                              rows={2}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-300" />
-                        </FormItem>
-                      )}
-                    />
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="homeAddress"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-zinc-200">
+                              Dirección de casa
+                            </FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Dirección de residencia"
+                                {...field}
+                                className="bg-zinc-700 border-zinc-600 text-white focus:ring-green-500 w-full"
+                                rows={2}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-300" />
+                          </FormItem>
+                        )}
+                      />
 
-                    <FormField
-                      control={form.control}
-                      name="homeAddress"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-zinc-200">
-                            Dirección de casa
-                          </FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Dirección de residencia"
-                              {...field}
-                              className="bg-zinc-700 border-zinc-600 text-white focus:ring-green-500"
-                              rows={2}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-300" />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="businessAddress"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-zinc-200">
-                            Dirección de negocio
-                          </FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Dirección del negocio"
-                              {...field}
-                              className="bg-zinc-700 border-zinc-600 text-white focus:ring-green-500"
-                              rows={2}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-300" />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={form.control}
+                        name="businessAddress"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-zinc-200">
+                              Dirección de negocio
+                            </FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Dirección del negocio"
+                                {...field}
+                                className="bg-zinc-700 border-zinc-600 text-white focus:ring-green-500 w-full"
+                                rows={2}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-300" />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-4">
                       <FormField
                         control={form.control}
-                        name="cellphone"
+                        name="phone"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-zinc-200">
@@ -449,13 +446,14 @@ export const ClientForm: React.FC = () => {
               </div>
             </div>
           </div>
-          </form>
-        </Form>
+            </form>
+          </Form>
 
-        {/* Footer */}
-        <p className="text-center text-sm text-zinc-500 mt-4">
-          Los campos marcados con <span className="text-red-400">*</span> son obligatorios
-        </p>
+          {/* Footer */}
+          <p className="text-center text-sm text-zinc-500 mt-4">
+            Los campos marcados con <span className="text-red-400">*</span> son obligatorios
+          </p>
+        </div>
       </div>
     </div>
   )

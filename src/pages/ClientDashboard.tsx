@@ -131,20 +131,7 @@ export const ClientDashboard: React.FC = () => {
 
           {/* Formulario emergente */}
           {isFormVisible && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70 backdrop-blur-sm">
-              <div className="relative rounded-lg max-w-3xl w-full max-h-[90vh]">
-                <button
-                  onClick={handleCloseForm}
-                  className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-zinc-700 text-white hover:bg-zinc-600 transition-colors z-10"
-                  aria-label="Cerrar"
-                >
-                  ×
-                </button>
-                <div>
-                  <ClientForm />
-                </div>
-              </div>
-            </div>
+            <ClientForm onClose={handleCloseForm} />
           )}
         </div>
 
